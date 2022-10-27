@@ -1,0 +1,4 @@
+INSERT INTO data (name, value)
+VALUES("temperature", 20),
+("barometre",1013),
+("temperature 2", 32);
