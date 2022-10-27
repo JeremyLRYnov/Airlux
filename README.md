@@ -15,3 +15,14 @@
 **VOLUME** qui permet de définir les volumes utilisables ;
 
 **CMD** qui permet de définir la commande par défaut lors de l’exécution de vos conteneurs Docker.
+
+# Instructions
+
+Pour la création d'une image Docker, il faut créer un dockerfile pour lui indiquer le nécessaire :
+
+1. Il faut pouvoir lui installer avec "RUN" les dépendances sqlite pour son fonctionnement
+2. Faire une "COPY" ou "ADD" les fichiers nécessaires dans l'image Docker (fichiers .sqlite)
+3. Il faut lui configurer un "VOLUME" pour la persistance des données
+4. Définir un port avec "EXPOSE" (3306 par exemple)
+
+On peut ensuite build l'image docker avec "docker run"
