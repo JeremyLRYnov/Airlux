@@ -8,3 +8,4 @@ redis.set('temperature', 23)
 redis.set('humidity', 20)
 value = redis.get('temperature', 'humidity')
 print(value)
+
