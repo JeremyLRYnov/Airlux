@@ -1,11 +1,10 @@
 import redis
+import random
 
 redis = redis.Redis(
-    host= 'localhost',
+    host= 'redis',
     port= '6379')
-
-redis.set('temperature', 23)
-redis.set('humidity', 20)
-value = redis.get('temperature', 'humidity')
-print(value)
-
+while(True):
+    redis.set('temperature', random.randint(0, 40))
+    value = redis.get('temperature')
+    print(value)
