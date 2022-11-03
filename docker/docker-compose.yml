@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+    redis:
+        image: redis
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        #volumes:
+        #  - './redis/data'
+        ports:
+          - 6379:81
+        networks:
+          - local
+
+    mysql:
+        image: mysql
+        environment:
+          - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+        #volumes:
+        #  - './mysql/data'
+        ports:        
+          - 3306:80
+        networks:
+          - distant
+
+    pulseur:
+        image: debian
+        stdin_open: true
+        tty: true
+        networks:
+          - local
+  
+    testeur:
+        image: debian
+        stdin_open: true
+        tty: true
+        #ports:
+        #  - 7080:83
+        networks:
+          - local
+
+networks:
+    local:
+        driver: bridge
+    distant: 
+        driver: bridge  
