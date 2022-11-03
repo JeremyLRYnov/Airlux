@@ -6,35 +6,29 @@ services:
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
-          - ./redis:/data
+          - redis:/data
         ports:
           - 6379
-        networks:
-          - local
-
+          
     mysql:
         image: mysql
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         volumes:
-          - ./mysql:/data
+          - mysql:/data
         ports:        
           - 3306:80
-        networks:
-          - distant
 
     pulseur:
         image: debian
         stdin_open: true
         tty: true
+        volumes:
+          - pulseur:/data
         ports:
           - 7080:83
-        networks:
-          - local
-
-networks:
-    local:
-        driver: bridge
-    distant: 
-        driver: bridge  
         
+volumes:
+    mysql:
+    redis:
+    pulseur:
