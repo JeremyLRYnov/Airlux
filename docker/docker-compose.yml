@@ -5,10 +5,10 @@ services:
         image: redis
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
-        #volumes:
-        #  - './redis/data'
+        volumes:
+          - ./redis:/data
         ports:
-          - 6379:81
+          - 6379
         networks:
           - local
 
@@ -16,8 +16,8 @@ services:
         image: mysql
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-        #volumes:
-        #  - './mysql/data'
+        volumes:
+          - ./mysql:/data
         ports:        
           - 3306:80
         networks:
@@ -27,15 +27,8 @@ services:
         image: debian
         stdin_open: true
         tty: true
-        networks:
-          - local
-  
-    testeur:
-        image: debian
-        stdin_open: true
-        tty: true
-        #ports:
-        #  - 7080:83
+        ports:
+          - 7080:83
         networks:
           - local
 
