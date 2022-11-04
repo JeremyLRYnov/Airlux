@@ -2,6 +2,7 @@ import redis
 import random
 import asyncio
 import time
+import filter_script
 
 redis = redis.Redis(
     host= 'redis',
@@ -10,17 +11,22 @@ redis = redis.Redis(
 async def main():
     temperature = random.randint(0, 40)
     humidity = random.randint(0, 100)
-    while(True):
-        redis.mset({'temperature' : temperature, 'humidity' : humidity})
-        value = redis.get('temperature')
-        print(value)
-        value = redis.get('humidity')
-        print(value)
+    boucle = True
+    while(boucle):
+        if filter_script.filter_temp(temperature) and filter_script.filter_humid(humidity):
+            redis.mset({'temperature' : temperature, 'humidity' : humidity})
+            value = redis.get('temperature')
+            print(value)
+            value = redis.get('humidity')
+            print(value)
 
-        temperature = await set_temperature(temperature)
-        humidity = await set_humidity(humidity)
+            temperature = await set_temperature(temperature)
+            humidity = await set_humidity(humidity)
 
-        time.sleep(10)
+            time.sleep(10)
+        else:
+            boucle = False
+            print('Erreur de données')
 
 async def set_temperature(value):
     random_value = random.randint(0,1)

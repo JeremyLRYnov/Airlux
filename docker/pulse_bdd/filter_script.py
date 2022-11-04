@@ -1,4 +1,3 @@
-import script
 
 def filter_temp(temperature):
 
