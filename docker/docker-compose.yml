@@ -20,7 +20,7 @@ services:
           - 3306:80
 
     pulseur:
-        image: pulse
+        image: pulseur
         stdin_open: true
         tty: true
         volumes:

@@ -10,13 +10,9 @@ async def main():
     temperature = random.randint(0, 40)
     humidity = random.randint(0, 100)
     while(True):
-        redis.set('temperature', temperature)
-        value = redis.get('temperature')
-        
-        print(value)
-        redis.set('humidity', humidity)
-        value = redis.get('humidity')
-        print(value)
+        redis.mset({'temperature' : temperature, 'humidity' : humidity})
+        redis.get('temperature')
+        redis.get('humidity')
 
         temperature = await set_humidity(5000,temperature)
         humidity = await set_temperature(5000,humidity)
