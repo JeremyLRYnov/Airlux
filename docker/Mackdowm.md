@@ -15,3 +15,7 @@ docker network ls
 ## Pour vérifier si ils sont dans le même réseau
 
 docker network inspect docker_nom-network
+
+## Pour arrêter les dockers
+
+docker-compose stop

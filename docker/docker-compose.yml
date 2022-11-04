@@ -7,6 +7,7 @@ services:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
           - redis:/data
+        build: local_server
         ports:
           - 6379
           
@@ -16,6 +17,7 @@ services:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
         volumes:
           - mysql:/data
+        build: cloud_server
         ports:        
           - 3306:80
 
@@ -25,6 +27,7 @@ services:
         tty: true
         volumes:
           - pulseur:/data
+        build: pulse_bdd
         ports:
           - 7080:83
         
