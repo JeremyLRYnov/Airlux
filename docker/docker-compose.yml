@@ -30,4 +30,14 @@ services:
         build: pulse_bdd
         ports:
           - 7080:83
+    
+    reader:
+        image: reader
+        stdin_open: true
+        tty: true
+        volumes:
+          - ./reader:/data
+        build: reader
+        ports:
+          - 8000
         
