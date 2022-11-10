@@ -9,8 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip3 install redis
 RUN mkdir data
-ADD reader.py ./reader.py
-ADD filter_script.py /data/filter_script.py 
+ADD reader.py ./data/reader.py
 RUN cd data
 WORKDIR /data
 
