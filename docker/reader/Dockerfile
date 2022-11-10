@@ -8,9 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install redis
+RUN pip3 install mysql.connector
 RUN mkdir data
 ADD reader.py ./data/reader.py
 RUN cd data
 WORKDIR /data
 
-ENTRYPOINT [ "python3" , "reader.py" ]
+ENTRYPOINT [ "python3" , "script.py" ,"reader.py" ]
