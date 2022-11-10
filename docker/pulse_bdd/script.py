@@ -13,20 +13,10 @@ async def main():
     humidity = random.randint(0, 100)
     boucle = True
     while(boucle):
-        if filter_script.filter_temp(temperature) and filter_script.filter_humid(humidity):
-            redis.mset({'temperature' : temperature, 'humidity' : humidity})
-            value = redis.get('temperature')
-            print(value)
-            value = redis.get('humidity')
-            print(value)
 
-            temperature = await set_temperature(temperature)
-            humidity = await set_humidity(humidity)
-
-            time.sleep(10)
-        else:
-            print('Erreur de données')
-            time.sleep(10)
+        filter_script.filter(temperature, humidity)
+        temperature = await set_temperature(temperature)
+        humidity = await set_humidity(humidity)
 
 async def set_temperature(value):
     random_value = random.randint(0,1)
