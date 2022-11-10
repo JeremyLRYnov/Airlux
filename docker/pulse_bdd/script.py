@@ -25,8 +25,8 @@ async def main():
 
             time.sleep(10)
         else:
-            boucle = False
             print('Erreur de données')
+            time.sleep(10)
 
 async def set_temperature(value):
     random_value = random.randint(0,1)
