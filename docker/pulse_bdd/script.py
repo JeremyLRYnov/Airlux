@@ -9,7 +9,7 @@ redis = redis.Redis(
     port= '6379')
 
 async def main():
-    temperature = random.randint(0, 40)
+    temperature = random.randint(-10, 50)
     humidity = random.randint(0, 100)
     boucle = True
     while(boucle):
@@ -19,7 +19,7 @@ async def main():
         humidity = await set_humidity(humidity)
 
 async def set_temperature(value):
-    random_value = random.randint(0,1)
+    random_value = random.randint(0,2)
     if random_value == 0 :
         value = value + 1
     if random_value == 1:
@@ -43,10 +43,10 @@ async def set_humidity(value):
     if random_value == 2:
         value = value
     
-    if value > 50:
-        value = 50
-    if value < -10:
-        value = -10
+    if value > 100:
+        value = 100
+    if value < 0:
+        value = 0
         
     return value
 
