@@ -15,6 +15,7 @@ services:
         image: mysql
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+          - MYSQL_DATABASE=db
         volumes:
           - ./cloud_server:/data
         build: cloud_server

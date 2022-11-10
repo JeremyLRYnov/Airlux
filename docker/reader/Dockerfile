@@ -15,4 +15,4 @@ ADD reader.py ./data/reader.py
 RUN cd data
 WORKDIR /data
 
-ENTRYPOINT [ "python3" , "script.py" ,"reader.py" ]
+ENTRYPOINT [ "python3" , "script.py" , "reader.py" ]
