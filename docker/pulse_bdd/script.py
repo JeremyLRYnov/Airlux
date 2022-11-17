@@ -16,7 +16,9 @@ async def main():
     boucle = True
     while(boucle):
 
+        #Call of the filter function
         filter_script.filter(temperature, humidity)
+        #Change the value of temperature and humidity
         temperature = await set_temperature(temperature)
         humidity = await set_humidity(humidity) 
 
