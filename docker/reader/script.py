@@ -4,8 +4,8 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host="mysql",
     user="user",
-    database="db",
-    port=3306)
+    password="",
+    database="db")
     
 # mysql Channel
 mycursor = mydb.cursor()
