@@ -21,6 +21,7 @@ def filter(temperature, humidity):
             value = redis.get('humidity')
             print(value)
 
+            #10 second pause
             time.sleep(10)
 
         #If datas are not correct
@@ -28,6 +29,7 @@ def filter(temperature, humidity):
 
             #Print error message in the logs 
             print('Erreur de données')
+            #10 second pause
             time.sleep(10)
 
 #Function that checks that the temperature data is correct
