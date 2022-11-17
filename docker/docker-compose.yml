@@ -1,6 +1,8 @@
 version: '3.8'
 
+#Création des Container
 services:
+    #Création du container Redis
     redis:
         image: redis
         environment:
@@ -11,6 +13,7 @@ services:
         ports:
           - 6379
           
+    #Création du container MySQL      
     mysql:
         image: mysql
         environment:
@@ -22,6 +25,7 @@ services:
         ports:        
           - 3306:80
 
+    #Création du container Debian
     pulseur:
         image: pulseur
         stdin_open: true
@@ -32,6 +36,7 @@ services:
         ports:
           - 7080:83
     
+    #Création du container Debian
     reader:
         image: reader
         stdin_open: true
