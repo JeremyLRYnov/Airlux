@@ -56,7 +56,7 @@ conteneurs :
 
 Téléchargez [Docker Desktop](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
 
-#### Linux :
+#### Linux :
 
 Suivez le guide pour l'installation de [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
