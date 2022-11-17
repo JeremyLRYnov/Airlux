@@ -12,7 +12,11 @@ données liées à la température ou à l'humidité par exemple.
 
 ## Authors
 
-- [@alexisbrouard](https://www.github.com/alexibrouard)
+- [@AlexisB](https://www.github.com/alexibrouard)
+- [@JeremyLR](https://github.com/JeremyLRYnov)
+- [@JérémyG](https://github.com/Zetsuy)
+- [@EnzoP](https://github.com/DaoGod)
+- [@NicolasS](https://github.com/Nicolas-3050)
 
 
 # Architecture Logicielle
