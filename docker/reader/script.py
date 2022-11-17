@@ -4,8 +4,8 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host="mysql",
     user="user",
-    database="db",
-    port=3306)
+    password="",
+    database="db")
     
 mycursor = mydb.cursor()
 mycursor.execute("CREATE TABLE IF NOT EXISTS temperature (id INT AUTO_INCREMENT PRIMARY KEY, value INT)")
