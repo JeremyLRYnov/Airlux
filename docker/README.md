@@ -1,21 +1,50 @@
+
 # Comment utiliser Docker-compose
 
-## Pour lancer le docker-compose
 
-docker-compose up -d
+## Docker Compose
 
-## Pour vérifier si les container se sont lancer
+### Pour lancer le docker-compose
 
-docker ps
+```$ docker-compose up -d ```
 
-## Pour connaître les différent réseau
+### Pour arrêter les dockers
 
-docker network ls
+```$ docker-compose stop ```
 
-## Pour vérifier si ils sont dans le même réseau
+## Docker Container
 
-docker network inspect docker_nom-network
+### Pour vérifier si les container se sont lancer
 
-## Pour arrêter les dockers
+```$ docker ps ```
 
-docker-compose stop
+### Pour supprimer des container dockers
+
+```$ docker rm ID_or_Name ID_or_Name ```
+
+### Pour supprimer touts les container dockers
+ 
+```$ docker rm -vf ```
+## Docker Images
+
+### Pour vérifier les images
+
+```$ docker images ``` 
+
+### Pour supprimer une images
+
+```$ docker rmi nom-image ```
+
+### Pour supprimer toutes les images
+
+```$ docker rmi -f ```
+## Docker Network
+
+### Pour connaître les différent réseau
+
+```$ docker network ls ```
+
+### Pour vérifier si ils sont dans le même réseau
+
+```$ docker network inspect docker_nom-network ```
+

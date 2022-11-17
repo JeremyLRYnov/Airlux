@@ -12,7 +12,11 @@ données liées à la température ou à l'humidité par exemple.
 
 ## Authors
 
-- [@alexisbrouard](https://www.github.com/alexibrouard)
+- [@AlexisB](https://www.github.com/alexibrouard)
+- [@JeremyLR](https://github.com/JeremyLRYnov)
+- [@JérémyG](https://github.com/Zetsuy)
+- [@EnzoP](https://github.com/DaoGod)
+- [@NicolasS](https://github.com/Nicolas-3050)
 
 
 # Architecture Logicielle
@@ -52,12 +56,10 @@ conteneurs :
 
 Téléchargez [Docker Desktop](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
 
-#### Linux :
+#### Linux :
 
 Suivez le guide pour l'installation de [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
 ## Déploiement
 
-Pour déployer le projet, vous trouverez un `README` à l'adresse :
-
-[README](/docker/README.md)
+Pour déployer le projet, vous trouverez un `README` juste [ici](/docker/README.md)
