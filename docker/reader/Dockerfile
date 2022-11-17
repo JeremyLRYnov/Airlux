@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install redis
-RUN pip3 install mysql.connector
+RUN pip3 install mysql-connector-python
 RUN mkdir data
 ADD script.py ./data/script.py
 ADD reader.py ./data/reader.py

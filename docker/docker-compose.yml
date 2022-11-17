@@ -5,6 +5,7 @@ services:
     #Création du container Redis
     redis:
         image: redis
+        container_name: redis
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
@@ -16,18 +17,24 @@ services:
     #Création du container MySQL      
     mysql:
         image: mysql
+        container_name: db
+        restart: unless-stopped
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+          - MYSQL_USER=root
           - MYSQL_DATABASE=db
         volumes:
           - ./cloud_server:/data
         build: cloud_server
         ports:        
-          - 3306:80
+          - 3306:3306
+        expose :
+          - 3306
 
     #Création du container Debian
     pulseur:
         image: pulseur
+        container_name: pulseur
         stdin_open: true
         tty: true
         volumes:
@@ -39,6 +46,8 @@ services:
     #Création du container Debian
     reader:
         image: reader
+        container_name: reader
+        restart: unless-stopped
         stdin_open: true
         tty: true
         volumes:
