@@ -60,4 +60,4 @@ Suivez le guide pour l'installation de [Docker](https://docs.docker.com/engine/i
 
 Pour déployer le projet, vous trouverez un `README` à l'adresse :
 
-`./docker/README.md`
+[README](/docker/README.md)
