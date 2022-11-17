@@ -1,28 +1,63 @@
-# Airlux
 
-# Docker commands
+![Logo](https://pcdt.fr/images/pd/brand/airlux.svg)
 
-**FROM** qui vous permet de définir l'image source ;
 
-**RUN** qui vous permet d’exécuter des commandes dans votre conteneur ;
+# AirLux
 
-**ADD** qui vous permet d'ajouter des fichiers dans votre conteneur ;
+AirLux est une application de domotique avec une architecture complète permettant
+à un utilisateur de se connecter, gérer ses appareils et accéder aux différentes
+données liées à la température ou à l'humidité par exemple.
 
-**WORKDIR** qui vous permet de définir votre répertoire de travail ;
 
-**EXPOSE** qui permet de définir les ports d'écoute par défaut ;
 
-**VOLUME** qui permet de définir les volumes utilisables ;
+## Authors
 
-**CMD** qui permet de définir la commande par défaut lors de l’exécution de vos conteneurs Docker.
+- [@alexisbrouard](https://www.github.com/alexibrouard)
 
-# Instructions
 
-Pour la création d'une image Docker, il faut créer un dockerfile pour lui indiquer le nécessaire :
+# Architecture Logicielle
 
-1. Il faut pouvoir lui installer avec "RUN" les dépendances sqlite pour son fonctionnement
-2. Faire une "COPY" ou "ADD" les fichiers nécessaires dans l'image Docker (fichiers .sqlite)
-3. Il faut lui configurer un "VOLUME" pour la persistance des données
-4. Définir un port avec "EXPOSE" (3306 par exemple)
+## Schéma
 
-On peut ensuite build l'image docker avec "docker run"
+Vous trouverez ci-dessous le schéma de l'architecture suivie concernant les
+différents conteneurs ainsi que leur fonctionnement / importance.
+
+![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1040260860616114187/Page_1_2.png)
+
+## Installation
+
+Dans un premier temps, pour faire fonctionner la simulation de notre architecture,
+il est nécessaire de suivre plusieurs étapes clés.
+
+### Installation de Git
+
+Si ce n'est pas déjà fait, installez Git :
+
+#### Windows :
+
+Cliquez sur le lien vers [git](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git)
+
+#### Linux :
+```bash
+  $ sudo apt-get update
+  $ sudo apt-get install git
+```
+
+### Installation de Docker
+
+Pour la simulation, nous utilisons Docker, pour la facilité de gestion de ses
+conteneurs :
+
+#### Windows :
+
+Téléchargez [Docker Desktop](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
+
+#### Linux :
+
+Suivez le guide pour l'installation de [Docker](https://docs.docker.com/engine/install/ubuntu/)
+
+## Déploiement
+
+Pour déployer le projet, vous trouverez un `README` à l'adresse :
+
+`./docker/README.md`
