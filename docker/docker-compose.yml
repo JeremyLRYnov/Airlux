@@ -47,3 +47,15 @@ services:
         ports:
           - 8000
         
+    mosquitto:
+        image: eclipse-mosquitto
+        container_name: mosquitto
+        network_mode: host
+        volumes:
+          - ./conf:/mosquitto/conf
+          - ./data:/mosquitto/data
+          - ./log:/mosquitto/log
+        build: mosquitto
+        ports:
+          - "1883:1883" # MQTT Port
+          - "9001:9001" # WS Port
