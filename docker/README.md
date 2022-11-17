@@ -6,45 +6,45 @@
 
 ### Pour lancer le docker-compose
 
-docker-compose up -d
+```$ docker-compose up -d ```
 
 ### Pour arrêter les dockers
 
-docker-compose stop
+```$ docker-compose stop ```
 
 ## Docker Container
 
 ### Pour vérifier si les container se sont lancer
 
-docker ps
+```$ docker ps ```
 
 ### Pour supprimer des container dockers
 
-docker rm ID_or_Name ID_or_Name
+```$ docker rm ID_or_Name ID_or_Name ```
 
 ### Pour supprimer touts les container dockers
-
-docker rm -vf
+ 
+```$ docker rm -vf ```
 ## Docker Images
 
 ### Pour vérifier les images
 
-docker images
+```$ docker images ``` 
 
 ### Pour supprimer une images
 
-docker rmi nom-image
+```$ docker rmi nom-image ```
 
 ### Pour supprimer toutes les images
 
-docker rmi -f
+```$ docker rmi -f ```
 ## Docker Network
 
 ### Pour connaître les différent réseau
 
-docker network ls
+```$ docker network ls ```
 
 ### Pour vérifier si ils sont dans le même réseau
 
-docker network inspect docker_nom-network
+```$ docker network inspect docker_nom-network ```
 
