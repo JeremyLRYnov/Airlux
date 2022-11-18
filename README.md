@@ -32,7 +32,7 @@ différents conteneurs ainsi que leur fonctionnement / importance.
 
 
 Obligatoire |
-:----------:|:----------:|
+:----------:|
  ~~Pulseur~~ |
  ~~Base de données locale - Redis~~|
  ~~Base de données distante - MySQL~~ |
