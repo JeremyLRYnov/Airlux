@@ -28,6 +28,15 @@ différents conteneurs ainsi que leur fonctionnement / importance.
 
 ![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1040260860616114187/Page_1_2.png)
 
+## Tableau
+
+
+Obligatoire |
+:----------:|:----------:|
+ ~~Pulseur~~ |
+ ~~Base de données locale - Redis~~|
+ ~~Base de données distante - MySQL~~ |
+
 ## Installation
 
 Dans un premier temps, pour faire fonctionner la simulation de notre architecture,
