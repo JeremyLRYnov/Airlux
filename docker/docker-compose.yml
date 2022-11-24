@@ -26,8 +26,24 @@ services:
         volumes:
           - ./cloud_server:/data
         build: cloud_server
-        ports:        
-          - 3306:3306
+
+    #création de l'API distante
+    app:
+      depends_on:
+        - mysql
+      build: ./distant_api/
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - $NODE_LOCAL_PORT:$NODE_LOCAL_PORT
+      environment:
+        - DB_HOST=mysqldb
+        - DB_USER=$MYSQLDB_USER
+        - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+        - DB_NAME=$MYSQLDB_DATABASE
+        - DB_PORT=$MYSQLDB_DOCKER_PORT
+      stdin_open: true
+      tty: true
 
     #Création du container Debian
     pulseur:
@@ -40,20 +56,3 @@ services:
         build: pulse_bdd
         ports:
           - 7080:83
-    
-    #Création du container Debian
-    reader:
-        image: reader
-        container_name: reader
-        restart: unless-stopped
-        stdin_open: true
-        tty: true
-        volumes:
-          - ./reader:/data
-        build: reader
-        ports:
-          - 8000
-        command: sh -c "sleep 10s"
-        depends_on :
-          - mysql
-        
