@@ -1,10 +1,18 @@
-import redis
 import time
+import paho.mqtt.client as mqtt
 
-#Redis database connection
-redis = redis.Redis(
-    host= 'redis',
-    port= '6379')
+broker="mosquitto"
+
+port=1883
+
+def on_publish(client,data,result):
+    print("Device 1: Data published")
+    pass
+
+client = mqtt.Client()
+client.on_publish=on_publish
+client.connect(broker, port, keepalive=60, bind_address="")
+
 
 #Filter function who sends the data to Redis database if they are correct
 def filter(temperature, humidity):
@@ -12,14 +20,8 @@ def filter(temperature, humidity):
         #If datas are correct
         if filter_temp(temperature) and filter_humid(humidity):
 
-            #Send datas to Redis Database
-            redis.mset({'temperature' : temperature, 'humidity' : humidity})
-
-            #check that the data is present on the Redis database
-            value = redis.get('temperature')
-            print(value)
-            value = redis.get('humidity')
-            print(value)
+            client.publish("/temperature",temperature)
+            client.publish("/humidity",humidity)
 
             #10 second pause
             time.sleep(10)

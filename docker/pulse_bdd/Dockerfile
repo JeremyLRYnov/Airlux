@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install redis
+RUN pip install paho-mqtt
 RUN mkdir data
 ADD script.py /data/script.py
 ADD filter_script.py /data/filter_script.py
@@ -15,3 +16,5 @@ RUN cd data
 WORKDIR /data
 
 ENTRYPOINT [ "python3", "script.py" ]
+
+EXPOSE 7080
