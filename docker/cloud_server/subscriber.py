@@ -9,7 +9,7 @@ r = redis.Redis(
 mysql = r.pubsub()
 
 # Inscription au canal "temperature"
-mysql.subscribe('temeprature')
+mysql.subscribe('temperature')
 
 # Obtention du premier message disponible à lire du canal "temperature"
 firstMessage = r.get_message()

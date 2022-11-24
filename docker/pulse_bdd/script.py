@@ -1,14 +1,8 @@
-import redis
 import random
 import asyncio
 import time
 import filter_script
-
-# Redis Authentication
-redis = redis.Redis(
-    host= 'redis',
-    port= '6379')
-
+        
 # Pulsor
 async def main():
     temperature = random.randint(-10, 50)
