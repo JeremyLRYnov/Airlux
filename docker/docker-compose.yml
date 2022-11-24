@@ -49,6 +49,7 @@ services:
         
     mosquitto:
         image: eclipse-mosquitto
+        restart: unless-stopped
         container_name: mosquitto
         network_mode: host
         volumes:
