@@ -21,15 +21,13 @@ services:
         restart: unless-stopped
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-          - MYSQL_USER=user
+          - MYSQL_USER=users
           - MYSQL_DATABASE=db
         volumes:
           - ./cloud_server:/data
         build: cloud_server
         ports:        
           - 3306:3306
-        expose :
-          - 3306
 
     #Création du container Debian
     pulseur:
