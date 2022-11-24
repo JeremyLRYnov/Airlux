@@ -28,6 +28,8 @@ services:
         build: cloud_server
         ports:        
           - 3306:3306
+        expose :
+          - 3306
 
     #Création du container Debian
     pulseur:
