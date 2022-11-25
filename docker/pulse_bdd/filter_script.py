@@ -24,6 +24,8 @@ def filter(temperature, humidity):
             client.publish("/temperature",temperature)
             client.publish("/humidity",humidity)
 
+            print(temperature)
+            print(humidity)
             #10 second pause
             time.sleep(10)
 
