@@ -57,7 +57,7 @@ Cliquez sur le lien vers [Git Desktop](https://desktop.github.com/)
 Pour récupérer le code à partir d'un github.
 
 ```bash 
-    $ got clone URL_GitHub.com
+    $ git clone URL_GitHub.com
 ```
 
 Pour Commit et Push son progrès.
@@ -95,15 +95,16 @@ différents conteneurs ainsi que leur fonctionnement / importance.
 
 ## Docker
 
-Pour la création d'un container, il faut d'abord créer une image.
+Pour la création d'un conteneur, il faut d'abord créer une image.
 Une Image est composée de plusieurs couches empaquetant toutes les installations, dépendances, bibliothèques, processus et codes d'application nécessaires pour un environnement de conteneur pleinement opérationnel.
 
-Ensuite il faut build cette image, ce qui créer un container.
+Ensuite il faut build cette image, ce qui créer un conteneur.
 
-Pour la création de plusieurs container dans un seul fichier, il faut utiliser un **Docker-Compose**. 
+Pour la création de plusieurs conteneurs dans un seul fichier, il faut utiliser un **Docker-Compose**. 
 
 Exemple Docker-compose : 
 ```yml
+Service:
     redis:
         image: redis
         environment:
@@ -114,39 +115,55 @@ Exemple Docker-compose :
         ports:
           - 6379
 ```
+Dans l'exemple ci-dessus, le service va permettre la création des conteneurs. En dessous du service, on peut voir **Image** qui va indiqué qu'elle image on va utilisé. Ensuite vu que Redis esst une base de données, on va lui demander dans l'**environement** tout les spécificités qu'on veut donner à notre conteneur. A la suite, il y a le **volume** qui va permettre le stockage de donner pour que les données soit toujours stocker même après la fermeture du conteneur. A la fin, il y a le **ports** qui va indiqué qu'elle port du conteneur sera ouvert pour de futur communication.
+
+### Pour Build un image Docker
+
+Pour build une image docker dans un conteneur :
+
+```$ docker build -t nom_conteneur . ```
+
+### Pour vérifier les conteneurs
+
+```$ docker ps ```
+Cette commande va permmtre de voir les conteneurs 
+
 ### Pour lancer un docker-compose
 
 ```$ docker-compose up -d```
 
-Cette commande va créer les images automatiquement ensuite build ces images pour créer des containers.
+Cette commande va créer les images automatiquement ensuite build ces images pour créer des conteneurs.
 
 ### Pour arrêter un docker-compose
 
 ```$ docker-compose stop ```
 
-Cette commande va permettre d'arrêter les containers créer par le docker-compose.
+Cette commande va permettre d'arrêter les conteneurs créer par le docker-compose.
 
 ## Docker Desktop
 
 Dans le docker desktop, il y a trois catégories à voir, les **Containers**, les **Images** et les **Volumes**.
 
-- La catégorie **Containers** permet de visualiser les différents containers qu'ils soient en marche ou non.
+- La catégorie **conteneurs** permet de visualiser les différents conteneurs qu'ils soient en marche ou non.
 - La catégorie **Images** permet de visualiser les différentes images build.
-- La catégorie **Voulumes** permet de vidualiser les différents espaces de stockages utiliser par les containers.
+- La catégorie **Voulumes** permet de vidualiser les différents espaces de stockages utiliser par les conteneurs.
 
 ## Fonctionnement de l'Architecture
 
-Tout d'abord, notre container Pulseur est composé en 3 parties:
+Tout d'abord, notre conteneur Pulseur est composé en 3 parties:
 
 - Un Script Python qui créer des valeurs de façon random.
-- Un autre Script Python qui filtre les données pour qu'elle soit réaliste.
-- Un MQTT qui permet de faire office de parsserelle pour publish les données dans le container API.
+- Un autre Script Python qui filtre les données pour qu'elles soit réaliste.
+- Un MQTT qui permet de faire office de parsserelle pour publish les données dans le conteneur API.
 
-Deux container API qui permettent de faire la transition des données dans les différentes base de données.(voir schéma)
+Deux conteneur API qui permettent de faire la transition des données dans les différentes base de données. [Voir Schéma](#schéma)
 
-Un container Distant qui comporte 2 partie:
+Un conteneur Distant qui comporte 2 partie:
 
-- Une partie qui est la base de données MySQL sur Cloud.
+- Une partie qui est la base de données MySQL sur le Cloud.
 - Une autre partie qui est une base de données Prometheus pour les données Times Series.
 
-Enfin, un dernier container qui s'occupera de valider si les données dans les deux bases de données sont identique.
+Une données Times Series se présentent sous la forme d'une suite de valeurs numériques correspondant à l'évolution d'une variable dans le temps. Dans notre cas, elle va être utile pour notre machine learning pour pouvoir faire de futur scénario.
+
+Enfin, un dernier conteneur qui s'occupera de valider si les données dans les deux bases de données sont identique.
+
