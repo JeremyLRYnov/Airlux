@@ -16,30 +16,28 @@ services:
           
     #Création du container MySQL      
     mysql:
-        image: mysql
-        container_name: db
-        restart: unless-stopped
-        environment:
-          - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-          - MYSQL_USER=users
-          - MYSQL_DATABASE=db
-        volumes:
-          - ./cloud_server:/data
-        build: cloud_server
+      image: mysql
+      restart: unless-stopped
+      env_file: ./.env
+      environment:
+        - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+        - MYSQL_DATABASE=$MYSQLDB_DATABASE
+      ports:
+        - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
 
-    #création de l'API distante
-    app:
+    #Création du conteneur API distante
+    appmysql:
       depends_on:
         - mysql
-      build: ./distant_api/
+      build: ./distant_api
       restart: unless-stopped
       env_file: ./.env
       ports:
-        - $NODE_LOCAL_PORT:$NODE_LOCAL_PORT
+        - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
       environment:
-        - DB_HOST=mysqldb
+        - DB_HOST=mysql
         - DB_USER=$MYSQLDB_USER
-        - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+        - DB_PASSWORD=$MYSQLDB_PASSWORD
         - DB_NAME=$MYSQLDB_DATABASE
         - DB_PORT=$MYSQLDB_DOCKER_PORT
       stdin_open: true
