@@ -11,7 +11,18 @@ var connection = mysql.createPool({
 // open the MySQL connection
 connection.getConnection(error => {
   if (error) throw error;
+  connection.query("CREATE DATABASE IF NOT EXISTS distantdb", function (err, result) {
+    if (err) throw err;
+    console.log("Database created");
+  });
+  connection.query("USE distantdb", function (err, result) {
+    if (err) throw err;
+    console.log("USE distantdb");
+  });
+
   console.log("Successfully connected to the database.");
+
 });
+
 
 module.exports = connection;
