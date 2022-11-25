@@ -1,7 +1,7 @@
 import time
 import paho.mqtt.client as mqtt
 
-broker="mosquitto"
+broker="localhost"
 
 port=1883
 
@@ -11,7 +11,8 @@ def on_publish(client,data,result):
 
 client = mqtt.Client()
 client.on_publish=on_publish
-client.connect(broker, port, keepalive=60, bind_address="")
+
+client.connect(broker, port)
 
 
 #Filter function who sends the data to Redis database if they are correct
