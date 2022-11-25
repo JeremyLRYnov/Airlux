@@ -13,7 +13,7 @@ services:
           - ./local_server:/data
         build: local_server
         ports:
-          - 6379
+          - 6379:6379
           
     #Création du container MySQL      
     mysql:
