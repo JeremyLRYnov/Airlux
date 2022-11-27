@@ -4,13 +4,12 @@ version: '3.8'
 services:
     #Création du container Redis
     redis:
-        image: redis
         container_name: redis
-        network_mode: host
+        #network_mode: host
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
-          - ./local_server:/data
+          - ./local_server/data:/data
         build: local_server
         ports:
           - 6379
@@ -25,52 +24,35 @@ services:
           - MYSQL_USER=user
           - MYSQL_DATABASE=db
         volumes:
-          - ./cloud_server:/data
-        build: cloud_server
+          - ./cloud_server/data:/data
         ports:        
           - 3306:3306
-        expose :
-          - 3306
 
-    #Création du container Debian
+    #Création du container Debian Pulseur
     pulseur:
-        image: pulseur
         container_name: pulseur
+        restart: unless-stopped
         stdin_open: true
-        network_mode: host
+        #network_mode: host
         tty: true
         volumes:
           - ./pulse_bdd:/data
         build: pulse_bdd
         ports:
           - 7080:83
-    
-    #Création du container Debian
-    reader:
-        image: reader
-        container_name: reader
-        restart: unless-stopped
-        stdin_open: true
-        tty: true
-        volumes:
-          - ./reader:/data
-        build: reader
-        ports:
-          - 8000
-        command: sh -c "sleep 10s"
-        depends_on :
-          - mysql
-        
+        depends_on: 
+          - mosquitto
+
+    #Création du container Mosquitto       
     mosquitto:
         image: eclipse-mosquitto
         restart: unless-stopped
         container_name: mosquitto
-        network_mode: host
+        #network_mode: host
         volumes:
-          - ./conf:/mosquitto/conf
-          - ./data:/mosquitto/data
-          - ./log:/mosquitto/log
-        build: mosquitto
+          - ./mosquitto/config/:/mosquitto/config/:rw
+          - ./mosquitto/data:/mosquitto/data/
+          - ./mosquitto/log:/mosquitto/log/
         ports:
-          - "1883:1883" # MQTT Port
-          - "9001:9001" # WS Port
+          - 1883:1883 # MQTT Port
+          - 9001:9001 # WS Port

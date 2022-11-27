@@ -1,18 +1,24 @@
 import time
 import paho.mqtt.client as mqtt
 
-broker="localhost"
+IPADRESSE = "mosquitto"
+MQTT_HOST = IPADRESSE
+MQTT_PORT = 1883
+MQTT_KEEPALIVE_INTERNAL = 60
 
-port=1883
+def connect_mqtt():
+    print('host', MQTT_HOST)
+    print('port', MQTT_PORT)
+    client = mqtt.Client()
+    client.on_publish= on_publish
+    client.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE_INTERNAL)
 
 def on_publish(client,data,result):
     print("Device 1: Data published")
     pass
 
-client = mqtt.Client()
-client.on_publish=on_publish
 
-client.connect(broker, port)
+client = connect_mqtt()
 
 
 #Filter function who sends the data to Redis database if they are correct
