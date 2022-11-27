@@ -5,7 +5,6 @@ services:
     #Création du container Redis
     redis:
         container_name: redis
-        #network_mode: host
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
@@ -33,7 +32,6 @@ services:
         container_name: pulseur
         restart: unless-stopped
         stdin_open: true
-        #network_mode: host
         tty: true
         volumes:
           - ./pulse_bdd:/data
@@ -48,7 +46,6 @@ services:
         image: eclipse-mosquitto
         restart: unless-stopped
         container_name: mosquitto
-        #network_mode: host
         volumes:
           - ./mosquitto/config/:/mosquitto/config/:rw
           - ./mosquitto/data:/mosquitto/data/
