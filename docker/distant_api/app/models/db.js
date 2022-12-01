@@ -6,23 +6,24 @@ var connection = mysql.createPool({
   host: dbConfig.HOST,
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
+  database: dbConfig.DATABASE,
 });
 
 // open the MySQL connection
 connection.getConnection(error => {
   if (error) throw error;
-  connection.query("CREATE DATABASE IF NOT EXISTS distantdb", function (err, result) {
+
+  connection.query("CREATE TABLE IF NOT EXISTS Temperature (id INT, value INT);", function (err, result){
     if (err) throw err;
-    console.log("Database created");
+    console.log("Create table Temperature.");
   });
-  connection.query("USE distantdb", function (err, result) {
+  
+  connection.query("CREATE TABLE IF NOT EXISTS Humidity (id INT, value INT);", function (err, result){
     if (err) throw err;
-    console.log("USE distantdb");
+    console.log("Create table Humidity.");
   });
 
   console.log("Successfully connected to the database.");
-
 });
-
 
 module.exports = connection;
