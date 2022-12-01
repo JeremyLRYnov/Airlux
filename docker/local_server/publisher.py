@@ -2,7 +2,7 @@ import redis
 import paho.mqtt.client as mqtt
 
 #hostname
-broker="localhost"
+broker="mosquitto"
 #port
 port=1883
 #time to live
@@ -15,7 +15,10 @@ def on_message(client, userdata, msg):
     print(msg.payload.decode())
     
 client = mqtt.Client()
-client.connect(broker,port,timelive)
+
 client.on_connect = on_connect
 client.on_message = on_message
+
+client.connect(broker,port,timelive)
+
 client.loop_forever()
