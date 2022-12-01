@@ -1,12 +1,11 @@
-const sql = require('./db.js');
+const sql = require("./db.js");
 
+// constructor
 const Sensor = function(sensor) {
-  this.name = sensor.name;
+  this.title = sensor.title;
   this.description = sensor.description;
-  this.status = sensor.status;
-  this.created_at = sensor.created_at;
-  this.updated_at = sensor.updated_at;
-}
+  this.published = sensor.published;
+};
 
 Sensor.create = (newSensor, result) => {
   sql.query("INSERT INTO sensors SET ?", newSensor, (err, res) => {
@@ -19,10 +18,10 @@ Sensor.create = (newSensor, result) => {
     console.log("created sensor: ", { id: res.insertId, ...newSensor });
     result(null, { id: res.insertId, ...newSensor });
   });
-}
+};
 
-Sensor.findById = (sensorId, result) => {
-  sql.query(`SELECT * FROM sensors WHERE id = ${sensorId}`, (err, res) => {
+Sensor.findById = (id, result) => {
+  sql.query(`SELECT * FROM sensors WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -38,10 +37,16 @@ Sensor.findById = (sensorId, result) => {
     // not found Sensor with the id
     result({ kind: "not_found" }, null);
   });
-}
+};
 
-Sensor.getAll = result => {
-  sql.query("SELECT * FROM sensors", (err, res) => {
+Sensor.getAll = (title, result) => {
+  let query = "SELECT * FROM sensors";
+
+  if (title) {
+    query += ` WHERE title LIKE '%${title}%'`;
+  }
+
+  sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -51,12 +56,25 @@ Sensor.getAll = result => {
     console.log("sensors: ", res);
     result(null, res);
   });
-}
+};
+
+Sensor.getAllPublished = result => {
+  sql.query("SELECT * FROM sensors WHERE published=true", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("sensors: ", res);
+    result(null, res);
+  });
+};
 
 Sensor.updateById = (id, sensor, result) => {
   sql.query(
-    "UPDATE sensors SET name = ?, description = ?, status = ?, created_at = ?, updated_at = ? WHERE id = ?",
-    [sensor.name, sensor.description, sensor.status, sensor.created_at, sensor.updated_at, id],
+    "UPDATE sensors SET title = ?, description = ?, published = ? WHERE id = ?",
+    [sensor.title, sensor.description, sensor.published, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -74,7 +92,7 @@ Sensor.updateById = (id, sensor, result) => {
       result(null, { id: id, ...sensor });
     }
   );
-}
+};
 
 Sensor.remove = (id, result) => {
   sql.query("DELETE FROM sensors WHERE id = ?", id, (err, res) => {
@@ -93,7 +111,7 @@ Sensor.remove = (id, result) => {
     console.log("deleted sensor with id: ", id);
     result(null, res);
   });
-}
+};
 
 Sensor.removeAll = result => {
   sql.query("DELETE FROM sensors", (err, res) => {
@@ -106,6 +124,6 @@ Sensor.removeAll = result => {
     console.log(`deleted ${res.affectedRows} sensors`);
     result(null, res);
   });
-}
+};
 
 module.exports = Sensor;
