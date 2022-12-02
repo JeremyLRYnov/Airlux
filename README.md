@@ -36,8 +36,8 @@ Obligatoire |
  ~~Pulseur~~ |
  ~~Base de données locale - Redis~~|
  ~~Base de données distante - MySQL~~ |
-  MQTT Mosquitto|
-  Reader - en cours|
+ ~~MQTT Mosquitto~~|
+  API Distant/local - en cours|
   Validator|
 
 ## Installation
