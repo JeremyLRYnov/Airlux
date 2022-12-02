@@ -80,9 +80,6 @@ services:
       env_file: ./.env
       ports:
         - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
-      environment:
-        - DB_HOST=redis
-        - DB_PORT=6379
       stdin_open: true
       tty: true
 

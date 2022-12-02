@@ -1,25 +1,12 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const redis = require('redis');
 
 const app = express();
-
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
-
-app.use(cors(corsOptions));
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to my application." });
+const client = redis.createClient({
+    url: 'redis://redis:6379',
 });
 
-require("./app/routes/sensor.routes")(app);
-
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+client.connect();
+client.on('connect', () => {
+    console.log('Redis connected');
 });
