@@ -34,11 +34,14 @@ différents conteneurs ainsi que leur fonctionnement / importance.
 Obligatoire |
 :----------:|
  ~~Pulseur~~ |
- ~~Base de données locale - Redis~~|
+ ~~Base de données locale - Redis~~ |
  ~~Base de données distante - MySQL~~ |
  ~~MQTT Mosquitto~~|
-  API Distant/local - en cours|
-  Validator|
+  API Distant/local - en cours |
+  Connexion MQTT/API Local |
+  Connexion API Local/API Distant |
+  Prometheus |
+  Validator |
 
 ## Installation
 
