@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):
 
     #check that the data is present on the Redis database
     value = r.get('temperature')
-    print(value)
+    print("test temperature : " + value)
     
 client = mqtt.Client()
 
