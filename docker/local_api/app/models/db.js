@@ -1,15 +1,11 @@
-const redis = require("redis");
-const dbConfig = require("../config/db.config.js");
-
-const router = redis.createClient({
-  host: dbConfig.HOST,
-  port: dbConfig.PORT,
-  password: dbConfig.PASSWORD,
-  db: dbConfig.DB,
+const app = express();
+const client = redis.createClient({
+    port: 6379,
+    host: 'localhost',
 });
 
-router.on("error", function (error) {
-  console.error(error);
-});
+const port = process.env.PORT || 5050;
 
-module.exports = router;
+client.auth(process.env.REDIS_AUTH, (err, response) => {
+    if (err) throw err;
+})
