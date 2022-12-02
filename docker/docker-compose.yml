@@ -4,8 +4,8 @@ version: '3.8'
 services:
     #Création du container Redis
     redis:
-        image: redis
         container_name: redis
+        restart: unless-stopped
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
@@ -13,40 +13,44 @@ services:
         build: local_server
         ports:
           - 6379
+        depends_on: 
+          - mosquitto
+
+     #Création de l'insertion Redis
+    local_insertion:
+        container_name: redis_insertion
+        restart: unless-stopped
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        volumes:
+          - ./local_insertion:/data
+        build: local_insertion
+        ports:
+          - 6380
+        depends_on: 
+          - redis
           
     #Création du container MySQL      
     mysql:
-      image: mysql
-      restart: unless-stopped
-      env_file: ./.env
-      environment:
-        - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-        - MYSQL_DATABASE=$MYSQLDB_DATABASE
-      ports:
-        - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+        image: mysql
+        container_name: db
+        restart: unless-stopped
+        environment:
+          - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+          - MYSQL_USER=user
+          - MYSQL_DATABASE=db
+        volumes:
+          - ./cloud_server:/data
+        build: cloud_server
+        ports:        
+          - 3306:3306
+        expose :
+          - 3306
 
-    #Création du conteneur API distante
-    appmysql:
-      depends_on:
-        - mysql
-      build: ./distant_api
-      restart: unless-stopped
-      env_file: ./.env
-      ports:
-        - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-      environment:
-        - DB_HOST=mysql
-        - DB_USER=$MYSQLDB_USER
-        - DB_PASSWORD=$MYSQLDB_PASSWORD
-        - DB_NAME=$MYSQLDB_DATABASE
-        - DB_PORT=$MYSQLDB_DOCKER_PORT
-      stdin_open: true
-      tty: true
-
-    #Création du container Debian
+    #Création du container Debian Pulseur
     pulseur:
-        image: pulseur
         container_name: pulseur
+        restart: unless-stopped
         stdin_open: true
         tty: true
         volumes:
