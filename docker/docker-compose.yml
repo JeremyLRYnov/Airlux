@@ -58,3 +58,21 @@ services:
         build: pulse_bdd
         ports:
           - 7080:83
+          
+    #Création du conteneur API distante
+    appmysql:
+      depends_on:
+        - mysql
+      build: ./distant_api
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      environment:
+        - DB_HOST=mysql
+        - DB_USER=$MYSQLDB_USER
+        - DB_PASSWORD=$MYSQLDB_PASSWORD
+        - DB_NAME=$MYSQLDB_DATABASE
+        - DB_PORT=$MYSQLDB_DOCKER_PORT
+      stdin_open: true
+      tty: true
