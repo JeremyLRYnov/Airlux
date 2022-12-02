@@ -43,6 +43,21 @@ services:
       stdin_open: true
       tty: true
 
+    #Création du conteneur API distante
+    appredis:
+      depends_on:
+        - redis
+      build: ./local_api
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
+      environment:
+        - DB_HOST=redis
+        - DB_PORT=6379
+      stdin_open: true
+      tty: true
+
     #Création du container Debian
     pulseur:
         image: pulseur
