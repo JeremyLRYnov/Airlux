@@ -71,7 +71,7 @@ services:
       environment:
         - DB_HOST=mysql
         - DB_USER=$MYSQLDB_USER
-        - DB_PASSWORD=$MYSQLDB_PASSWORD
+        - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
         - DB_NAME=$MYSQLDB_DATABASE
         - DB_PORT=$MYSQLDB_DOCKER_PORT
       stdin_open: true
@@ -104,4 +104,3 @@ services:
         ports:
           - 1883:1883 # MQTT Port
           - 9001:9001 # WS Port
-          
