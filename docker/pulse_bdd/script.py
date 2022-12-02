@@ -1,6 +1,5 @@
 import random
 import asyncio
-import time
 import filter_script
         
 # Pulsor

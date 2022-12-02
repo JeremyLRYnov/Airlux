@@ -26,7 +26,7 @@ données liées à la température ou à l'humidité par exemple.
 Vous trouverez ci-dessous le schéma de l'architecture suivie concernant les
 différents conteneurs ainsi que leur fonctionnement / importance.
 
-![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1040260860616114187/Page_1_2.png)
+![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1045285690700726383/ArchiV4.png)
 
 ## Tableau
 
@@ -34,11 +34,14 @@ différents conteneurs ainsi que leur fonctionnement / importance.
 Obligatoire |
 :----------:|
  ~~Pulseur~~ |
- ~~Base de données locale - Redis~~|
+ ~~Base de données locale - Redis~~ |
  ~~Base de données distante - MySQL~~ |
-  MQTT Mosquitto|
-  Reader - en cours|
-  Validator|
+ ~~MQTT Mosquitto~~|
+  API Distant/local - en cours |
+  Connexion MQTT/API Local |
+  Connexion API Local/API Distant |
+  Prometheus |
+  Validator |
 
 ## Installation
 
