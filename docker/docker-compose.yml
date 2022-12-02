@@ -4,8 +4,8 @@ version: '3.8'
 services:
     #Création du container Redis
     redis:
-        image: redis
         container_name: redis
+        restart: unless-stopped
         environment:
           - ALLOW_EMPTY_PASSWORD=yes
         volumes:
@@ -13,6 +13,22 @@ services:
         build: local_server
         ports:
           - 6379
+        depends_on: 
+          - mosquitto
+
+     #Création de l'insertion Redis
+    local_insertion:
+        container_name: redis_insertion
+        restart: unless-stopped
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        volumes:
+          - ./local_insertion:/data
+        build: local_insertion
+        ports:
+          - 6380
+        depends_on: 
+          - redis
           
     #Création du container MySQL      
     mysql:
@@ -24,17 +40,14 @@ services:
           - MYSQL_USER=user
           - MYSQL_DATABASE=db
         volumes:
-          - ./cloud_server:/data
-        build: cloud_server
+          - ./cloud_server/data:/data
         ports:        
           - 3306:3306
-        expose :
-          - 3306
 
-    #Création du container Debian
+    #Création du container Debian Pulseur
     pulseur:
-        image: pulseur
         container_name: pulseur
+        restart: unless-stopped
         stdin_open: true
         tty: true
         volumes:
@@ -42,20 +55,18 @@ services:
         build: pulse_bdd
         ports:
           - 7080:83
-    
-    #Création du container Debian
-    reader:
-        image: reader
-        container_name: reader
+        depends_on: 
+          - mosquitto
+
+    #Création du container Mosquitto       
+    mosquitto:
+        image: eclipse-mosquitto
         restart: unless-stopped
-        stdin_open: true
-        tty: true
+        container_name: mosquitto
         volumes:
-          - ./reader:/data
-        build: reader
+          - ./mosquitto/config/:/mosquitto/config/:rw
+          - ./mosquitto/data:/mosquitto/data/
+          - ./mosquitto/log:/mosquitto/log/
         ports:
-          - 8000
-        command: sh -c "sleep 10s"
-        depends_on :
-          - mysql
-        
+          - 1883:1883 # MQTT Port
+          - 9001:9001 # WS Port
