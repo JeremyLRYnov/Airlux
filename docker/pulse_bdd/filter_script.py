@@ -35,7 +35,7 @@ def filter(temperature, humidity):
             print('Erreur de données')
             #10 second pause
             time.sleep(10)
-
+            
 #Function that checks that the temperature data is correct
 def filter_temp(temperature):
 
