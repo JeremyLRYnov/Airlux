@@ -10,3 +10,13 @@ client.connect();
 client.on('connect', () => {
     console.log('Redis connected');
 });
+
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});
+
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+  console.log(`App successfully started on http://localhost:${PORT}`);
+});

@@ -7,3 +7,5 @@ RUN npm install body-parser
 RUN npm install redis
 RUN npm install cors
 COPY . .
+
+CMD node server.js
