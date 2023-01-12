@@ -7,12 +7,8 @@ scrape_configs:
     static_configs:
     - targets: ["localhost:9090"]
 
-  - job_name: "node"
-    static_configs:
-    - targets: ["node-exporter:9100"]
-
 remote_write:
-  - url: "<Your Prometheus remote_write endpoint>"
+  - url: "https://eu1.app.sysdig.com/prometheus/remote/write"
     basic_auth:
       username: "seillenicolas"
       password: "airlux"
