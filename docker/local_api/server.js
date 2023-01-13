@@ -15,6 +15,13 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
+app.get('/api', (req, res) => {
+    client.get('visits', (err, visits) => {
+        res.send(`Number of visits is ${visits}`);
+        client.set('visits', parseInt(visits) + 1);
+    });
+});
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
