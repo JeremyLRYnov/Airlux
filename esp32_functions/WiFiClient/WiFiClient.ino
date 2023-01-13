@@ -1,49 +1,38 @@
 #include <WiFi.h>
-#include <ESP32Ping.h>
+#include <BluetoothSerial.h>
+
+BluetoothSerial ESP_BT;
 
 const char* ssid = "JeremyPointAcces"; //a changer selon wifi
 const char* password = "ewhj5675"; //a changer selon wifi
 
 IPAddress ip (192, 168, 0, 40); // Ip du pc a changer a chaque fois
 
+void setup() {
+  // Ouvrir la communication Bluetooth
+  ESP_BT.begin("ESP32_Jeremy");  // Remplacez "ESP32_DeviceName" par le nom de votre appareil
+  Serial.begin(115200);
 
-String get_wifi_status(int status){
-    switch(status){
-        case WL_IDLE_STATUS:
-        return "WL_IDLE_STATUS";
-        case WL_SCAN_COMPLETED:
-        return "WL_SCAN_COMPLETED";
-        case WL_NO_SSID_AVAIL:
-        return "WL_NO_SSID_AVAIL";
-        case WL_CONNECT_FAILED:
-        return "WL_CONNECT_FAILED";
-        case WL_CONNECTION_LOST:
-        return "WL_CONNECTION_LOST";
-        case WL_CONNECTED:
-        return "WL_CONNECTED";
-        case WL_DISCONNECTED:
-        return "WL_DISCONNECTED";
-    }
-}
-
-void setup(){
-    Serial.begin(115200);
+  // Attendre la connexion Bluetooth
+  while (!ESP_BT.connected()) {
     delay(1000);
-    int status = WL_IDLE_STATUS;
-    Serial.println("\nConnecting");
-    Serial.println(get_wifi_status(status));
-    WiFi.begin(ssid, password);
-    while(status != WL_CONNECTED){
-        delay(500);
-        status = WiFi.status();
-        Serial.println(get_wifi_status(status));
-    }
+    Serial.println("En attente de la connexion Bluetooth...");
+  }
+  Serial.println("Connecte au Bluetooth!");
 
-    Serial.println("\nConnected to the WiFi network");
-    Serial.print("Local ESP32 IP: ");
-    Serial.println(WiFi.localIP());
+  // Lire les données reçues via Bluetooth
+  String receivedData = ESP_BT.readString();
+  Serial.println("Received: " + receivedData);
+
+  // Se connecter au réseau WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connexion au WiFi...");
+  }
+  Serial.println("Connecte au WiFi!");
 }
 
-void loop(){
-
+void loop() {
+  // Faire quelque chose après la connexion WiFi...
 }
