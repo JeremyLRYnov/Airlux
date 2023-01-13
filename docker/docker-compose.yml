@@ -2,6 +2,7 @@ version: '3.8'
 
 #Création des Container
 services:
+
     #Création du container Redis
     redis:
         container_name: redis
@@ -42,6 +43,7 @@ services:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
       expose:
         - 8080
+
     #Création du container Debian Pulseur
     pulseur:
         container_name: pulseur
@@ -101,6 +103,7 @@ services:
     grafana:
         image: grafana/grafana:7.5.4
         restart: unless-stopped
+        env_file: ./.env
         ports:
           - 3000:3000
         depends_on:
