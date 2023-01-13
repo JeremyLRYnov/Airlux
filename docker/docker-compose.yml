@@ -99,6 +99,7 @@ services:
     #Création d'un container grafana
     grafana:
         image: grafana/grafana:7.5.4
+        restart: unless-stopped
         ports:
           - 3000:3000
         depends_on:
