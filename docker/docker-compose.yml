@@ -40,7 +40,8 @@ services:
         - MYSQL_DATABASE=$MYSQLDB_DATABASE
       ports:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-
+      expose:
+        - 8080
     #Création du container Debian Pulseur
     pulseur:
         container_name: pulseur
@@ -99,15 +100,16 @@ services:
     #Création d'un container grafana
     grafana:
         image: grafana/grafana:7.5.4
+        restart: unless-stopped
         ports:
           - 3000:3000
         depends_on:
           - mysql
         environment:
-          GF_SECURITY_ADMIN_USER: seillenicolas
-          GF_SECURITY_ADMIN_PASSWORD: OAsm,5j9.nico
-          GF_DATABASE_TYPE: mysql
-          GF_DATABASE_HOST: mysql:3306
-          GF_DATABASE_NAME: distant_db
-          GF_DATABASE_USER: root
-          GF_DATABASE_PASSWORD: 123456
+          GF_SECURITY_ADMIN_USER: $GF_USER
+          GF_SECURITY_ADMIN_PASSWORD: $GF_PASSWORD
+          GF_DATABASE_TYPE: $GF_DATABASE_TYPE
+          GF_DATABASE_HOST: $GF_DATABASE_HOST
+          GF_DATABASE_NAME: $MYSQLDB_DATABASE
+          GF_DATABASE_USER: $MYSQLDB_USER
+          GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
