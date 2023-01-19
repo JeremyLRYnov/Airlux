@@ -3,10 +3,12 @@
 
 BluetoothSerial ESP_BT;
 
-const char* ssid = "JeremyPointAcces"; //a changer selon wifi
-const char* password = "ewhj5675"; //a changer selon wifi
+const char* ssid = "SSID"; //a changer selon wifi
+const char* password = "MDP"; //a changer selon wifi
 
-IPAddress ip (192, 168, 0, 40); // Ip du pc a changer a chaque fois
+const int mqttPort = 1883;
+
+IPAddress ip (192, 168, 1, 72); // Ip du pc a changer a chaque fois
 
 void setup() {
   // Ouvrir la communication Bluetooth
@@ -20,10 +22,17 @@ void setup() {
   }
   Serial.println("Connecte au Bluetooth!");
 
-  // Lire les données reçues via Bluetooth
-  String receivedData = ESP_BT.readString();
-  Serial.println("Received: " + receivedData);
+  connexion_wifi();
 
+  deconnexion_bluetooth();
+  
+}
+
+void loop() {
+  // Faire quelque chose après la connexion WiFi...
+}
+
+void connexion_wifi(){
   // Se connecter au réseau WiFi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -33,6 +42,18 @@ void setup() {
   Serial.println("Connecte au WiFi!");
 }
 
-void loop() {
-  // Faire quelque chose après la connexion WiFi...
+void deconnexion_bluetooth(){
+  delay(1000);
+  Serial.println("Arret du Bluetooth");
+  ESP_BT.println("Arret du Bluetooth...");
+  delay(1000);
+  ESP_BT.flush();
+  ESP_BT.disconnect();
+  ESP_BT.end();
+  Serial.println("Bluetooth terminé");
+  delay(1000);
+}
+
+void send_data_mqtt(){
+
 }
