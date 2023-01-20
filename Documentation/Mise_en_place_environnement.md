@@ -167,3 +167,53 @@ Une données Times Series se présentent sous la forme d'une suite de valeurs nu
 
 Enfin, un dernier conteneur qui s'occupera de valider si les données dans les deux bases de données sont identique.
 
+## Mise en place de Grafana
+
+Tout d'abord, pour que Grafana marche, il faut lui crée un conteneur.
+Nous avons décidé d'utiliser Mysql comme base de données pour se connecter à Grafana. Pour ce faire, dans le docker compose, nous avons spécifié dans son environnement les paramètres de la db Mysql.
+
+A la suite de ça, il faut lancer les conteneurs avec la commande :
+
+```$ docker-compose up -d```
+
+Quand tout les conteneurs sont en marche et surtout celui de Grafana, on ouvre un navigateur et on écrit **localhost:3000** et on arrive devant une page de connexion de Grafana où on rentre les identifiants : 
+
+User : **seillenicolas**
+
+Password : **OAsm,5j9.nico**
+
+Comme expliqué précedement, Grafana à besoin d'une source de données. Pour cela, il faut rajouter des données dans la base données.
+
+### Ajout de données dans Mysql
+
+Pour ajouter des donnnées, il faut crée les Tables de données dans Mysql.
+
+Donc il faut aller dans le conteneur appmysql, allez à son terminal et écrire la commande :
+
+```$ node server.js```
+
+Ensuite, il faut allez dans le conteneur de Mysql. Dans ce conteneur, dans le terminal, on se connecte à mysql avec la commande : 
+
+```$ mysql -h mysql -u root -p123456```
+
+A la suite de ça, on sera connecter à Mysql, cependant, il faut se connecter à la bonne base de données qui est **distant_db** mais il faut vérifier qu'elle existe en utilisant la commande :
+
+```$ SHOW databases;```
+
+Ensuite on se connecte :
+
+```$ USE distant_db;```
+
+Pour ajouter des données dans la base : 
+
+```$ INSERT INTO Temperature VALUES(1,20);```
+
+Cela va ajouter la valeur de 20 avec l'id 1 dans la table Temperature.
+
+Pour vérifier les valeurs dans la table : 
+
+```$ SELECT * FROM Temperature;```
+
+### Utilisation de Grafana avec les données
+
+A la suite de l'ajout de données dans la db et de la connexion à Grafana, il faut faire la connexion entre les deux.
