@@ -7,7 +7,7 @@ class Sensors extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[295299],
+        backgroundColor: Colors.blue.shade900,
         child: Icon(
           Icons.add,
         ),
