@@ -222,15 +222,15 @@ Pour ce faire, il faut se connecter à Grafana. Quand on est connecté à Grafan
 
 La Data Sources, permet de préciser d'ou viennent les données :
 
-![Screenshot](Grafana1.gif)
+![Grafana1](images/Grafana1.gif)
 
 A la suite ça, on ajoute une Data Source : 
 
-![Screenshot](Grafana2.gif)
+![Grafana2](images/Grafana2.gif)
 
 Quand on arrive là, on choisi l'option Mysql : 
 
-![Screenshot](Grafana3.gif)
+![Grafana3](images/Grafana3.gif)
 
 On remplit les textes pour préciser quelle base de données utilisé. Grafana va trouver la base de données car ils sont dans le même réseau avec Docker : 
 
@@ -246,13 +246,13 @@ Ensuite il ne reste plus qu'à **Save & Test**.
 
 Quand vous revenez en arrière, il faudra créer un bouveau **Dashboard**, pour cela il faut : 
 
-![Screenshot](Grafana4.gif)
+![Grafana4](images/Grafana4.gif)
 
 Et ensuite cliquez sur **Add an empty panel**.
 
 Maintenant vous arrivez dans le graphique.
 
-![Screenshot](Grafana5.gif)
+![Grafana5](images/Grafana5.gif)
 
 En bas, vous voyez **FROM**, vous choississez la Table que voulez de la base de données précédement trouvé dans la Data Source.
 
@@ -264,7 +264,7 @@ Dans le **Format as**, vous selectionnez **Table**.
 
 Quand tout est fini, si des données sont existantes dans la base, il faut cliquez dans **Zoom to data**. Sinon il faudra créer manuellement des données pour tester la visualisation de données.
 
-![Screenshot](Grafana6.gif)
+![Grafana6](images/Grafana6.gif)
 
 Nous verrons enfin le graphique des données.
 
