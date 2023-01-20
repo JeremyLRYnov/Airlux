@@ -26,7 +26,7 @@ données liées à la température ou à l'humidité par exemple.
 Vous trouverez ci-dessous le schéma de l'architecture suivie concernant les
 différents conteneurs ainsi que leur fonctionnement / importance.
 
-![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1045285690700726383/ArchiV4.png)
+![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1065369946575605760/Page_1_1.png)
 
 ## Tableau
 
@@ -37,10 +37,14 @@ Obligatoire |
  ~~Base de données locale - Redis~~ |
  ~~Base de données distante - MySQL~~ |
  ~~MQTT Mosquitto~~|
-  API Distant/local - en cours |
-  Connexion MQTT/API Local |
-  Connexion API Local/API Distant |
-  Prometheus |
+ ~~Grafana~~ |
+  API Distante/locale - en cours |
+  Application mobile - en cours |
+  Mise en place de l'ESP32 - en cours |
+  Connexion MQTT/API Locale |
+  Post API Locale vers Redis |
+  Post API Distante vers MySQL |
+  Websocket entre API locale et distante |
   Validator |
 
 ## Installation
