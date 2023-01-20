@@ -37,10 +37,14 @@ Obligatoire |
  ~~Base de données locale - Redis~~ |
  ~~Base de données distante - MySQL~~ |
  ~~MQTT Mosquitto~~|
-  API Distant/local - en cours |
-  Connexion MQTT/API Local |
-  Connexion API Local/API Distant |
-  Prometheus |
+ ~~Grafana~~ |
+  API Distante/locale - en cours |
+  Application mobile - en cours |
+  Mise en place de l'ESP32 - en cours |
+  Connexion MQTT/API Locale |
+  Post API Locale vers Redis |
+  Post API Distante vers MySQL |
+  Websocket entre API locale et distante |
   Validator |
 
 ## Installation
