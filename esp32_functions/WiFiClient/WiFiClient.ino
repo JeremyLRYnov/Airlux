@@ -1,10 +1,12 @@
 #include <WiFi.h>
 #include <BluetoothSerial.h>
+#include <WiFiManager.h>
+#include "WifiConnexion.h"
 
 BluetoothSerial ESP_BT;
 
-const char* ssid = "SSID"; //a changer selon wifi
-const char* password = "MDP"; //a changer selon wifi
+const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
+const char* password = SECRET_PASS_POINT_ACCESS; //a changer selon wifi
 
 const int mqttPort = 1883;
 
@@ -33,12 +35,13 @@ void loop() {
 }
 
 void connexion_wifi(){
-  // Se connecter au réseau WiFi
+  
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connexion au WiFi...");
   }
+
   Serial.println("Connecte au WiFi!");
 }
 

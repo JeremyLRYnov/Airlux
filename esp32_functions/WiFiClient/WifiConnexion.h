@@ -1,0 +1,2 @@
+#define SECRET_SSID_POINT_ACCESS "JeremyPointAcces"
+#define SECRET_PASS_POINT_ACCESS "ewhj5675"
