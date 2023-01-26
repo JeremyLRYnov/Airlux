@@ -4,7 +4,7 @@ WORKDIR /distant_api
 COPY package.json .
 RUN npm install express
 RUN npm install body-parser
-RUN npm install ioredis
+RUN npm install redis
 RUN npm install cors
 COPY . .
 
