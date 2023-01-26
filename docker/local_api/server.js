@@ -8,6 +8,10 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+redis.on('connect', () => {
+    console.log('Connected to Redis');
+});
+
 app.get('/', (req, res) => {
     redis.incr('counter', (err, counter) => {
         res.send('Counter: ' + counter);
