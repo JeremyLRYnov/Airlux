@@ -12,12 +12,12 @@ redis.on('connect', () => {
     console.log('Connected to Redis');
 });
 
+app.listen(port, () => {
+    console.log('Listening on port ' + port);
+});
+
 app.get('/', (req, res) => {
     redis.incr('counter', (err, counter) => {
         res.send('Counter: ' + counter);
     });
-});
-
-app.listen(port, () => {
-    console.log('Listening on port ' + port);
 });
