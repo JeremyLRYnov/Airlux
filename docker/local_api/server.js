@@ -1,29 +1,19 @@
+const Redis = require('ioredis');
+const redis = new Redis({
+    host: 'redis',
+    port: 6379
+});
+
 const express = require('express');
-const redis = require('redis');
-
 const app = express();
-const client = redis.createClient({
-    url: 'redis://redis:6379',
-});
-
-client.connect();
-client.on('connect', () => {
-    console.log('Redis connected');
-});
+const port = 3000;
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-app.get('/api', (req, res) => {
-    client.get('visits', (err, visits) => {
-        res.send(`Number of visits is ${visits}`);
-        client.set('visits', parseInt(visits) + 1);
+    redis.incr('counter', (err, counter) => {
+        res.send('Counter: ' + counter);
     });
 });
 
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-  console.log(`App successfully started on http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log('Listening on port ' + port);
 });
