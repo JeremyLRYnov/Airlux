@@ -33,7 +33,7 @@ services:
           
     #Création du container MySQL      
     mysql:
-      image: mysql
+      build: cloud_server
       restart: unless-stopped
       env_file: ./.env
       environment:
@@ -43,6 +43,11 @@ services:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
       expose:
         - 8080
+
+    python:
+      build: Python
+      depends_on:
+        - mysql
 
     #Création du container Debian Pulseur
     pulseur:
