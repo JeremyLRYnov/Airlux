@@ -18,7 +18,15 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             height: 400,
             width: double.infinity,
-            color: Colors.blue,
+            child: Center(
+              child: Text(
+                'Home Page',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ),
         Expanded(
