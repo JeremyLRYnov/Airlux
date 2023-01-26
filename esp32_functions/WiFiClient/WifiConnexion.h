@@ -1,2 +1,2 @@
-#define SECRET_SSID_POINT_ACCESS "JeremyPointAcces"
-#define SECRET_PASS_POINT_ACCESS "ewhj5675"
+#define SECRET_SSID_POINT_ACCESS "reseau-jeremy"
+#define SECRET_PASS_POINT_ACCESS "123456789"
