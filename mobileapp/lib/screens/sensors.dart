@@ -1,9 +1,15 @@
+
 import 'package:flutter/material.dart';
 import './add_sensors.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
+
 import 'package:mobileapp/models/constants.dart';
 
+
 class Sensors extends StatelessWidget {
+  static const String id = 'Sensor';
+
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
