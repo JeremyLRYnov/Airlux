@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/sensors.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: WelcomeScreen(),
     );
   }
 }
