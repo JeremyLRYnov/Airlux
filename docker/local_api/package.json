@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-express-mysql",
+  "name": "nodejs-express-redis",
   "version": "1.0.0",
-  "description": "Node.js Restful CRUD API with Node.js, Express and MySQL",
+  "description": "Node.js Restful CRUD API with Node.js, Express and redis",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -9,7 +9,8 @@
   "keywords": [
     "nodejs",
     "express",
-    "restapi"
+    "restapi",
+    "ioredis"
   ],
   "author": "bezkoder",
   "license": "ISC",
