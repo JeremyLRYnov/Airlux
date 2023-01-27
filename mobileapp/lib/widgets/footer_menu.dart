@@ -45,6 +45,7 @@ class _FooterMenuState extends State<FooterMenu> {
           backgroundColor: kPrimaryBlue,
           icon: Icon(Icons.home),
           label: 'Home',
+
         ),
         BottomNavigationBarItem(
           backgroundColor: kPrimaryBlue,
