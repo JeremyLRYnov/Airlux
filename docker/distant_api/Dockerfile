@@ -7,3 +7,5 @@ RUN npm install body-parser
 RUN npm install mysql2
 RUN npm install cors
 COPY . .
+
+CMD node server.js

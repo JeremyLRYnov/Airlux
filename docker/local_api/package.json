@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-express-mysql",
+  "name": "nodejs-express-redis",
   "version": "1.0.0",
-  "description": "Node.js Restful CRUD API with Node.js, Express and MySQL",
+  "description": "Node.js Restful CRUD API with Node.js, Express and redis",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,14 +9,13 @@
   "keywords": [
     "nodejs",
     "express",
-    "mysql",
-    "restapi"
+    "restapi",
+    "ioredis"
   ],
   "author": "bezkoder",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.1",
-    "mysql": "^2.18.1"
+    "express": "^4.18.1"
   }
 }

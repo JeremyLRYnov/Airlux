@@ -1,28 +1,28 @@
 module.exports = app => {
-  const sensors = require("../controllers/sensor.controller.js");
+    const sensors = require("../controllers/sensor.controller.js");
 
-  var router = require("express").Router();
+    var router = require("express").Router();
 
-  // Create a new Tutorial
-  router.post("/", sensors.create);
+    // Create a new Sensor
+    router.post("/", sensors.create);
 
-  // Retrieve all Tutorials
-  router.get("/", sensors.findAll);
+    // Retrieve all Sensors
+    router.get("/", sensors.findAll);
 
-  // Retrieve all published Tutorials
-  router.get("/published", sensors.findAllPublished);
+    // Retrieve all published Sensors
+    router.get("/published", sensors.findAllPublished);
 
-  // Retrieve a single Tutorial with id
-  router.get("/:id", sensors.findOne);
+    // Retrieve a single Sensor with id
+    router.get("/:id", sensors.findOne);
 
-  // Update a Tutorial with id
-  router.put("/:id", sensors.update);
+    // Update a Sensor with id
+    router.put("/:id", sensors.update);
 
-  // Delete a Tutorial with id
-  router.delete("/:id", sensors.delete);
+    // Delete a Sensor with id
+    router.delete("/:id", sensors.delete);
 
-  // Delete all Tutorials
-  router.delete("/", sensors.deleteAll);
+    // Delete all Sensors
+    router.delete("/", sensors.deleteAll);
 
-  app.use('/api/sensors', router);
+    app.use('/api/sensors', router);
 };
