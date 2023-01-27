@@ -37,14 +37,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 48.0,
             ),
             RoudedButton(
-              Coulour: kPrimaryButtonActive,
               title: 'Log In',
               onPressed: () {
                 Navigator.pushNamed(context, Login.id);
               },
             ),
             RoudedButton(
-              Coulour: kPrimaryButtonInactive,
               title: 'Register',
               onPressed: () {
                 //Navigator.pushNamed(context, Register.id);
