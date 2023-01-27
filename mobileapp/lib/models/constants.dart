@@ -17,3 +17,7 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kPrimaryButtonBlue = Color(0xFF04567F);
+const kPrimaryButtonInactive = Color(0xFF073954);
+const kPrimaryButtonActive = Color(0xFF254B8C);
