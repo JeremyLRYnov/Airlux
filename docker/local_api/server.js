@@ -1,7 +1,7 @@
 const express = require('express');
 const redis = require('ioredis');
 
-const redisConfig = require('./app/config/db.config');
+const redisConfig = require('./app/config/db.config.js');
 
 const app = express();
 const client = redis.createClient({ redisConfig});
@@ -24,6 +24,8 @@ app.get('/key/:key', (req, res) => {
         res.send(value);
     });
 });
+
+require('./app/routes/sensor.routes')(app);
 
 const PORT = process.env.PORT || 8080;
 
