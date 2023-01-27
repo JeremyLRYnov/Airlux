@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/models/constants.dart';
 
 class AddSensors extends StatelessWidget {
   String sensor_name='';
@@ -9,7 +10,7 @@ class AddSensors extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(15.0),
         decoration: BoxDecoration(
-          color: Colors.blue.shade900,
+          color: kPrimaryBlue,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(10.0),
             topLeft: Radius.circular(10.0),
@@ -61,6 +62,7 @@ class AddSensors extends StatelessWidget {
                    child: Text(
                    'Add',
                      style: TextStyle(
+                       fontSize: 15,
                        color: Colors.black,
                      ),
                    ),
