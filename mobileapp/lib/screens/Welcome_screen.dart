@@ -3,6 +3,7 @@ import './add_sensors.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 import './Login.dart';
 import '../models/rouded_button.dart';
+import '../models/constants.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
@@ -36,14 +37,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 48.0,
             ),
             RoudedButton(
-              Coulour: Colors.lightBlueAccent,
+              Coulour: kPrimaryButtonActive,
               title: 'Log In',
               onPressed: () {
                 Navigator.pushNamed(context, Login.id);
               },
             ),
             RoudedButton(
-              Coulour: Colors.blueAccent,
+              Coulour: kPrimaryButtonInactive,
               title: 'Register',
               onPressed: () {
                 //Navigator.pushNamed(context, Register.id);

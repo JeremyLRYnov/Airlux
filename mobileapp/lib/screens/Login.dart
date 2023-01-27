@@ -22,68 +22,78 @@ class _Login extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-        body: ModalProgressHUD(
-        inAsyncCall: _saving,
-        child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              height: 200.0,
-              child: Image.asset('assets/images/logo.png'),
-            ),
-            SizedBox(
-              height: 48.0,
-            ),
-            TextField(
-              onChanged: (value) {
-                //Do something with the user input.
-              },
-              decoration:
-              kTextFieldDecoration.copyWith(hintText: 'Entrer your email'),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-
-            TextField(
-              obscureText: _obscureText,
-              decoration: kTextFieldDecoration.copyWith(
-                hintText: 'Entrer your password',
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                  child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                ),
-              ),
-            ),
-
-            SizedBox(
-              height: 24.0,
-            ),
-            RoudedButton(
-              Coulour: Colors.lightBlueAccent,
-              title: 'Log In',
-              onPressed: () async {
-                setState(() {
-                  _saving = true;
-                });
-                await Future.delayed(Duration(seconds: 2));
-                setState(() {
-                  _saving = false;
-                });
-                Navigator.pushNamed(context, HomePage.id);
-              },
-            ),
-          ],
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Action à effectuer lorsque le bouton est pressé
+            Navigator.pop(context);
+          },
         ),
       ),
-    ),
+
+      body: ModalProgressHUD(
+          inAsyncCall: _saving,
+          child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  height: 200.0,
+                  child: Image.asset('assets/images/logo.png'),
+                ),
+                SizedBox(
+                  height: 48.0,
+                ),
+                TextField(
+                  onChanged: (value) {
+                    //Do something with the user input.
+                  },
+                  decoration:
+                  kTextFieldDecoration.copyWith(hintText: 'Entrer your email'),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+
+                TextField(
+                  obscureText: _obscureText,
+                  decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Entrer your password',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 24.0,
+                ),
+                RoudedButton(
+                  Coulour: kPrimaryButtonBlue,
+                  title: 'Log In',
+                  onPressed: () async {
+                    setState(() {
+                      _saving = true;
+                    });
+                    await Future.delayed(Duration(seconds: 2));
+                    setState(() {
+                      _saving = false;
+                    });
+                    Navigator.pushNamed(context, HomePage.id);
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
     );
   }
 }

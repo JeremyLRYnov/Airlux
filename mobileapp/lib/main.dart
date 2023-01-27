@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/sensors.dart';
+import 'screens/Login.dart';
+import 'screens/Welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WelcomeScreen(),
+      initialRoute: WelcomeScreen.id,
+      routes: {
+        WelcomeScreen.id: (context) => WelcomeScreen(),
+        Login.id: (context) => Login(),
+        HomePage.id: (context) => HomePage(),
+        Sensors.id: (context) => Sensors(),
+      }
     );
   }
 }
