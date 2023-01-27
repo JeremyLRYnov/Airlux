@@ -194,7 +194,13 @@ Donc il faut aller dans le conteneur appmysql, allez à son terminal et écrire 
 
 Ensuite, il faut allez dans le conteneur de Mysql. Dans ce conteneur, dans le terminal, on se connecte à mysql avec la commande : 
 
-```$ mysql -h mysql -u root -p123456```
+```$ mysql -h mysql -u root -p123456```  
+
+ou
+
+```$ mysql -u root -p```
+
+Cela va ensuite vous demandez de rentrer le mot de passe.
 
 A la suite de ça, on sera connecter à Mysql, cependant, il faut se connecter à la bonne base de données qui est **distant_db** mais il faut vérifier qu'elle existe en utilisant la commande :
 
