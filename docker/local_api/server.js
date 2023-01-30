@@ -10,31 +10,58 @@ const app = express();
 const client = new redis(redisConfig.PORT, redisConfig.HOST);
 
 
-client.hmset('utilisateur:admin:batiment:maison:pieces:salon:capteurs:1',
- "type", "temperature", "valeur", "20", "unite", "°C", "date", "2020-01-01 12:00:00"
- ), function(err, reply) {
-    console.log(reply); // OK
+client.hset('utilisateurs:admin:batiments:maison:pieces:salon:capteurs:1',
+  "type", "temperature", "valeur", "20", "unite", "°C", "date", "2020-01-01 12:00:00"
+), function (err, reply) {
+  console.log(reply); // OK
 };
 
-// app.get('/utilisateur', function(req, res) {
-//     //var redisKey = req.query.redisKey
+client.hset('utilisateurs:admin:info', "prenom", "admin", "admin", "1", "unite", "bool"
+), function (err, reply) {
+  console.log(reply); // OK
+};
 
-//     client.hget("utilisateur:/:key", function(err, reply) {
-//         if(err){
-//             res.status(400).send(err);
-//             return;
-//         }
-//         res.status(200).send(reply);
-//     });
-// });
+client.hset('utilisateurs:admin:batiments:maison:info', "nom", "maison"
+), function (err, reply) {
+  console.log(reply); // OK
+};
+
+client.hset('utilisateurs:admin:batiments:maison:pieces:salon:info', "nom", "salon"
+), function (err, reply) {
+  console.log(reply); // OK
+};
+
+client.hset('utilisateurs:admin:batiments:maison:pieces:salon:capteurs:2', "type", "interrupteur", "valeur", "0", "unite", "bool", "date", "2020-01-01 12:00:00"
+), function (err, reply) {
+  console.log(reply); // OK
+};
 
 app.get('/sensors', (req, res) => {
-    client.hgetall('utilisateur:admin:batiment:maison:pieces:salon:capteurs:1', (err, result) => {
-      if (err) {
-        return res.status(500).send(err);
+  client.hgetall('utilisateurs:admin:batiments:maison:pieces:salon:capteurs:2', (err, result) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.send(result);
+  });
+});
+
+app.get('/scanData', (req, res) => {
+  const stream = client.scanStream({
+    match: 'utilisateurs:admin:batiments:maison:pieces:salon:capteurs:*',
+    count: 10
+  });
+  let keysArray = [];
+  stream.on('data', (resultKeys = []) => {
+    let key;
+    for (key of resultKeys) {
+      if (!keysArray.includes(key)) {
+        keysArray.push(key);
       }
-      res.send(result);
-    });
+    }
+  });
+  stream.on('end', () => {
+    res.send(keysArray);
+  });
 });
 
 //get all utilisateur in redis
@@ -56,5 +83,5 @@ app.get('/sensors', (req, res) => {
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-    console.log(`App successfully started on http://localhost:${PORT}`);
+  console.log(`App successfully started on http://localhost:${PORT}`);
 });
