@@ -45,6 +45,19 @@ app.get('/sensors', (req, res) => {
   });
 });
 
+function MHGETALL(keys, cb) {
+
+  client.multi({pipeline: false});
+
+  keys.forEach(function(key, index){
+    client.hgetall(key);
+  });
+
+  client.exec(function(err, result){
+      cb(err, result);
+  });
+}
+
 app.get('/scanData', (req, res) => {
   const stream = client.scanStream({
     match: 'utilisateurs:admin:batiments:maison:pieces:salon:capteurs:*',
@@ -59,8 +72,15 @@ app.get('/scanData', (req, res) => {
       }
     }
   });
+
   stream.on('end', () => {
-    res.send(keysArray);
+    MHGETALL(keysArray, function(err, result){
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.send(result);
+    });
+    //res.send(keysArray[1]);
   });
 });
 
