@@ -1,11 +1,8 @@
 const redis = require('ioredis');
 const redisConfig = require('../config/db.config.js');
 
-const client = redis.createClient({ redisConfig});
+//const client = redis.createClient({ redisConfig});
 
-client.connect();
-client.on('connect', () => {
-    console.log('Redis connected');
-});
+const client = new redis(redisConfig.PORT, redisConfig.HOST);
 
 module.exports = client;

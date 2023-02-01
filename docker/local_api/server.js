@@ -80,25 +80,11 @@ app.get('/scanData', (req, res) => {
       }
       res.send(result);
     });
-    //res.send(keysArray[1]);
   });
 });
 
-//get all utilisateur in redis
-// app.get('/utilisateur', async (req, res) => {
-//     await client.utilisateur('*', (err, utilisateur) => {
-//         res.send(utilisateur);
-//     });
-// });
 
-//get value of a key
-// app.get('/utilisateur/:key', async (req, res) => {
-//     await client.get(req.params.utilisateur, (err, value) => {
-//         res.send(value);
-//     });
-// });
-
-//require('./app/routes/sensor.routes')(app);
+require('./app/routes/user.routes')(app);
 
 const PORT = process.env.PORT || 8080;
 
