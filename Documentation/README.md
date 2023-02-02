@@ -90,7 +90,7 @@ Ne pas oublier de choisir "Add Python 3.7 to PATH (Ajouter Python 3.7 à PATH)".
 Vous trouverez ci-dessous le schéma de l'architecture suivie concernant les
 différents conteneurs ainsi que leur fonctionnement / importance.
 
-![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1045285690700726383/ArchiV4.png)
+![Logo](https://cdn.discordapp.com/attachments/1030042569519923221/1065369946575605760/Page_1_1.png)
 
 
 ## Docker
@@ -150,20 +150,24 @@ Dans le docker desktop, il y a trois catégories à voir, les **Containers**, le
 
 ## Fonctionnement de l'Architecture
 
-Tout d'abord, notre conteneur Pulseur est composé en 3 parties:
+Nous avons un **ESP32** qui est un microcontrôleurs comme une Arduino. Cette ESP32 aura plusieurs sensors ou actuatrors conencté. 
 
-- Un Script Python qui créer des valeurs de façon random.
-- Un autre Script Python qui filtre les données pour qu'elles soit réaliste.
-- Un MQTT qui permet de faire office de parsserelle pour publish les données dans le conteneur API.
+Ensuite, nous avons un conteneur **Filter** :
 
-Deux conteneur API qui permettent de faire la transition des données dans les différentes base de données. [Voir Schéma](#schéma)
+- Qui contient un Script Python qui filtre les données de l'ESP32 pour qu'il n'y est pas d'écart énorme qui serais incompatible (ex: on passe de 20°C à 50°C).
 
-Un conteneur Distant qui comporte 2 partie:
+Un conteneur **MQTT** (Mosquitto) qui va permettre de créer un canal de Pub/Sub entre les données filtrer par le **Filter** et l'**API**.
 
-- Une partie qui est la base de données MySQL sur le Cloud.
-- Une autre partie qui est une base de données Prometheus pour les données Times Series.
+Un conteneur **Redis** qui va permettre de stocker le données local. Redis est un système de gestion de bases de données en mémoire clé-valeur, il est utilisé pour stocker et récupérer rapidement des données à partir d'une mémoire vive. Redis offre les mappages et les publications/abonnements, ce qui en fait un outil flexible pour divers types d'applications.
 
-Une données Times Series se présentent sous la forme d'une suite de valeurs numériques correspondant à l'évolution d'une variable dans le temps. Dans notre cas, elle va être utile pour notre machine learning pour pouvoir faire de futur scénario.
+Deux conteneur **API** qui permettent de faire la transition des données dans les différentes base de données. Ces deux APIs communiquent grâce à des **Websocket**. [Voir Schéma](#schéma) 
+
+Un conteneur **Distant** (Mysql) qui contiendra une base de données Mysql. MySQL est un système de gestion de bases de données relationnelles.
+
+On aura aussi un conteneur **Grafana** qui va permettre de mettre les données de la base de données Mysql sous forme Graphique.
 
 Enfin, un dernier conteneur qui s'occupera de valider si les données dans les deux bases de données sont identique.
 
+## Lien
+
+Pour voir la documentation de [Grafana](Grafana/README.md)
