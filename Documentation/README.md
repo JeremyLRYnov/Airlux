@@ -152,9 +152,7 @@ Dans le docker desktop, il y a trois catégories à voir, les **Containers**, le
 
 Nous avons un **ESP32** qui est un microcontrôleurs comme une Arduino. Cette ESP32 aura plusieurs sensors ou actuatrors conencté. 
 
-Ensuite, nous avons un conteneur **Filter** :
-
-- Qui contient un Script Python qui filtre les données de l'ESP32 pour qu'il n'y est pas d'écart énorme qui serais incompatible (ex: on passe de 20°C à 50°C).
+Ensuite, nous avons un conteneur **Filter** qui contient un Script Python qui filtre les données de l'ESP32 pour qu'il n'y est pas d'écart énorme qui serais incompatible (ex: on passe de 20°C à 50°C).
 
 Un conteneur **MQTT** (Mosquitto) qui va permettre de créer un canal de Pub/Sub entre les données filtrer par le **Filter** et l'**API**.
 
