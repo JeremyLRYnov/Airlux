@@ -15,5 +15,10 @@ import io.flutter.embedding.engine.FlutterEngine;
 public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
+    try {
+      flutterEngine.getPlugins().add(new com.walle.modal_progress_hud_nsn.ModalProgressHudNsnPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin modal_progress_hud_nsn, com.walle.modal_progress_hud_nsn.ModalProgressHudNsnPlugin", e);
+    }
   }
 }
