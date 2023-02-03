@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import './add_sensors.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
-import './Login.dart';
-import '../models/rouded_button.dart';
+import './login.dart';
+import '../widgets/rouded_button.dart';
 import '../models/constants.dart';
 import '../screens/register.dart';
 

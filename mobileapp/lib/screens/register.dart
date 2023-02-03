@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/models/rouded_button.dart';
+import 'package:mobileapp/widgets/rouded_button.dart';
 
 class Register extends StatefulWidget {
 

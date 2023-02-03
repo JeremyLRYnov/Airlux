@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 
+import 'package:mobileapp/widgets/column_list_element.dart';
+import 'package:mobileapp/widgets/room_list_element.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const String id = 'HomePage';
@@ -65,72 +68,9 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonActive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: 160,
-                              height: 80,
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonActive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: 160,
-                              height: 80,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonInactive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: 160,
-                              height: 80,
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonInactive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: 160,
-                              height: 80,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonInactive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: 160,
-                              height: 80,
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(10),
-                              width: 160,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: kPrimaryButtonInactive,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                          ],
-                        ),
+                        ColumnListElement(),
+                        ColumnListElement(),
+                        ColumnListElement(),
                       ],
                     ),
                   ),
@@ -151,39 +91,10 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: kPrimaryButtonBlue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: kPrimaryButtonBlue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: kPrimaryButtonBlue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: kPrimaryButtonBlue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
+                        RoomListElement(),
+                        RoomListElement(),
+                        RoomListElement(),
+                        RoomListElement(),
                       ],
                     ),
                   ),
@@ -196,3 +107,4 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
+

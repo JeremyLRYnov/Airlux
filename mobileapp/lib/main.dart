@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 
-import 'screens/Login.dart';
+import 'screens/login.dart';
 import 'screens/Welcome_screen.dart';
 
 void main() {
