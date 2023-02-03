@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/widgets/footer_menu.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -136,13 +136,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-                const Text(
-                  'Pièces',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Text(
+                'Pièces',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
               Expanded(
                 child: Container(
                   margin: EdgeInsets.only(bottom: 30),
