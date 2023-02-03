@@ -73,9 +73,7 @@ services:
       - DB_PORT=$MYSQLDB_DOCKER_PORT
     stdin_open: true
     tty: true
-    expose:
-      - 8081
-
+  
   #Création du conteneur API locale
   appredis:
     depends_on:
