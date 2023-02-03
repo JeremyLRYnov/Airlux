@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
+import 'package:mobileapp/screens/Login.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 
 import 'package:mobileapp/screens/home_page.dart';
@@ -20,7 +21,7 @@ class _FooterMenuState extends State<FooterMenu> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
     HomePage(),
-    Sensors(),
+    Login(),
     WelcomeScreen(),
     Register(),
   ];
