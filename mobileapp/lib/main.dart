@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/sensors.dart';
+
+import 'package:mobileapp/screens/register.dart';
+import 'package:mobileapp/widgets/footer_menu.dart';
+
+import 'screens/Login.dart';
+import 'screens/Welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: FooterMenu(),
     );
   }
 }
-

@@ -1,29 +1,34 @@
 const express = require('express');
-const redis = require('redis');
+const redis = require('ioredis');
+
+const redisConfig = require('./app/config/db.config.js');
 
 const app = express();
-const client = redis.createClient({
-    url: 'redis://redis:6379',
-});
+const client = redis.createClient({ redisConfig});
 
 client.connect();
 client.on('connect', () => {
     console.log('Redis connected');
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
-
-app.get('/api', (req, res) => {
-    client.get('visits', (err, visits) => {
-        res.send(`Number of visits is ${visits}`);
-        client.set('visits', parseInt(visits) + 1);
+//get all keys in redis
+app.get('/keys', (req, res) => {
+    client.keys('*', (err, keys) => {
+        res.send(keys);
     });
 });
+
+//get value of a key
+app.get('/key/:key', (req, res) => {
+    client.get(req.params.key, (err, value) => {
+        res.send(value);
+    });
+});
+
+require('./app/routes/sensor.routes')(app);
 
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
-  console.log(`App successfully started on http://localhost:${PORT}`);
+    console.log(`App successfully started on http://localhost:${PORT}`);
 });

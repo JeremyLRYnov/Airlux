@@ -81,4 +81,7 @@ Suivez le guide pour l'installation de [Docker](https://docs.docker.com/engine/i
 
 ## Déploiement
 
+Pour la Documentation du Projet, vous trouverez un `README` juste [ici](/Documentation/README.md)
+
 Pour déployer le projet, vous trouverez un `README` juste [ici](/docker/README.md)
+

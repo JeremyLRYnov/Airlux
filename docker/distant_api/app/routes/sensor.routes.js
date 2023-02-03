@@ -3,25 +3,25 @@ module.exports = app => {
 
   var router = require("express").Router();
 
-  // Create a new Tutorial
+  // Create a new Sensor
   router.post("/", sensors.create);
 
-  // Retrieve all Tutorials
+  // Retrieve all Sensors
   router.get("/", sensors.findAll);
 
-  // Retrieve all published Tutorials
+  // Retrieve all published Sensors
   router.get("/published", sensors.findAllPublished);
 
-  // Retrieve a single Tutorial with id
+  // Retrieve a single Sensor with id
   router.get("/:id", sensors.findOne);
 
-  // Update a Tutorial with id
+  // Update a Sensor with id
   router.put("/:id", sensors.update);
 
-  // Delete a Tutorial with id
+  // Delete a Sensor with id
   router.delete("/:id", sensors.delete);
 
-  // Delete all Tutorials
+  // Delete all Sensors
   router.delete("/", sensors.deleteAll);
 
   app.use('/api/sensors', router);
