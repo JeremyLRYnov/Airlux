@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:mobileapp/models/constants.dart';
+
+
 class RoudedButton extends StatelessWidget {
   const RoudedButton({
     Key? key,
-    required this.Coulour,
     required this.title,
     required this.onPressed,
   }) : super(key: key);
-  final Color Coulour;
   final String title;
   final void Function() onPressed;
 
@@ -17,7 +18,7 @@ class RoudedButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: Material(
         elevation: 5.0,
-        color: Coulour,
+        color: kPrimaryBlue,
         borderRadius: BorderRadius.circular(30.0),
         child: MaterialButton(
           onPressed: onPressed,
@@ -32,3 +33,4 @@ class RoudedButton extends StatelessWidget {
     );
   }
 }
+

@@ -4,7 +4,7 @@ import 'package:mobileapp/widgets/footer_menu.dart';
 import './Login.dart';
 import '../models/rouded_button.dart';
 import '../models/constants.dart';
-
+import '../screens/register.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -37,17 +37,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 48.0,
             ),
             RoudedButton(
-              Coulour: kPrimaryButtonActive,
               title: 'Log In',
               onPressed: () {
                 Navigator.pushNamed(context, Login.id);
               },
             ),
             RoudedButton(
-              Coulour: kPrimaryButtonInactive,
               title: 'Register',
               onPressed: () {
-                //Navigator.pushNamed(context, Register.id);
+                Navigator.pushNamed(context, Register.id);
               },
             ),
           ],
