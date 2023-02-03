@@ -100,18 +100,18 @@ services:
       stdin_open: true
       tty: true
 
-      #Création du container Mosquitto       
-      mosquitto:
-        image: eclipse-mosquitto
-        restart: unless-stopped
-        container_name: mosquitto
-        volumes:
-          - ./mosquitto/config/:/mosquitto/config/:rw
-          - ./mosquitto/data:/mosquitto/data/
-          - ./mosquitto/log:/mosquitto/log/
-        ports:
-          - 1883:1883 # MQTT Port
-          - 9001:9001 # WS Port
+    #Création du container Mosquitto       
+    mosquitto:
+      image: eclipse-mosquitto
+      restart: unless-stopped
+      container_name: mosquitto
+      volumes:
+        - ./mosquitto/config/:/mosquitto/config/:rw
+        - ./mosquitto/data:/mosquitto/data/
+        - ./mosquitto/log:/mosquitto/log/
+      ports:
+        - 1883:1883 # MQTT Port
+        - 9001:9001 # WS Port
 
     #Création d'un container grafana
     grafana:
