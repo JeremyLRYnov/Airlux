@@ -246,6 +246,7 @@ Ensuite il ne reste plus qu'à **Save & Test**.
 
 Quand vous revenez en arrière, il faudra créer un bouveau **Dashboard**, pour cela il faut : 
 
+
 ![Grafana4](images/Grafana4.gif)
 
 Et ensuite cliquez sur **Add an empty panel**.

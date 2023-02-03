@@ -8,4 +8,8 @@ RUN npm install mysql2
 RUN npm install cors
 COPY . .
 
-CMD node server.js
+RUN apt-get update || : && apt-get install python3 -y
+
+# Exécuter le script lorsque le conteneur démarre
+CMD ["python3"]
+
