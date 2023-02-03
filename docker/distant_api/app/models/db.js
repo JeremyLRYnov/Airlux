@@ -12,6 +12,7 @@ var connection = mysql.createPool({
 // open the MySQL connection
 connection.getConnection(error => {
   if (error) throw error;
+<<<<<<< HEAD
 
   connection.query("CREATE TABLE IF NOT EXISTS Sensors (id INT, name CHAR(4), value INT);", function (err, result){
     if (err) throw err;
@@ -43,6 +44,8 @@ connection.getConnection(error => {
     console.log("Create table Rooms.");
   });
 
+=======
+>>>>>>> 151410d56288d4d35314788f2dca09f2a1a45241
   console.log("Successfully connected to the database.");
 });
 
