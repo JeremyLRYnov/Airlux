@@ -4,10 +4,10 @@ import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/sensors.dart';
 
 import 'package:mobileapp/screens/register.dart';
+import 'package:mobileapp/widgets/footer_menu.dart';
 
 import 'screens/Login.dart';
 import 'screens/Welcome_screen.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -24,16 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Sensors(),
-      //initialRoute: WelcomeScreen.id,
-      routes: {
-        WelcomeScreen.id: (context) => WelcomeScreen(),
-        Login.id: (context) => Login(),
-        HomePage.id: (context) => HomePage(),
-        Sensors.id: (context) => Sensors(),
-        Register.id: (context) => Register(),
-      }
-
+      home: FooterMenu(),
     );
   }
 }

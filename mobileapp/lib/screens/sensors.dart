@@ -44,7 +44,6 @@ class Sensors extends StatelessWidget {
                   ),
                 ),
               ),
-              FooterMenu(),
           ],
       ),
     );
