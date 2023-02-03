@@ -2,40 +2,49 @@
 #include <WiFiManager.h>
 #include "WifiConnexion.h"
 
+WiFiServer server(80);
+WiFiClient client;
 const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
-const char* password = SECRET_PASS_POINT_ACCESS; //a changer selon wifi
-
-const int mqttPort = 1883;
-
-//IPAddress ip (192, 168, 1, 72); // Ip du pc a changer a chaque fois
-
-WiFiManager wifiManager;
+const char* password = SECRET_PASS_POINT_ACCESS; 
 
 void setup() {
   Serial.begin(115200);
+  // listen for incoming clients
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(ssid, password);
+  Serial.println();
+  Serial.print("IP address: ");
+  Serial.println(WiFi.softAPIP());
 
-  connexion_wifi();
-  
+  server.begin();
+
 }
 
 void loop() {
-  // Faire quelque chose après la connexion WiFi...
-}
+  // Écoute les connexions entrantes
+  client = server.available();
+  if (client) {
+    // Lorsqu'une connexion est détectée, lire les données reçues
+    String ssid = client.readStringUntil('\n');
+    String password = client.readStringUntil('\n');
+    Serial.print("ssid: " + ssid);
+    Serial.print("password: " + password);
 
-void connexion_wifi(){
 
-  wifiManager.resetSettings(); //pour supprimer les informations de connexion wifi sauvegardés
-  Serial.println("Suppression des anciennes données");
-  Serial.println("Connexion au WiFi");
+    // Supprime les espaces en début et fin de chaîne
+    ssid.trim();
+    password.trim();
 
-  wifiManager.startConfigPortal(ssid,password); // ouvre un point d'acces sur l'esp32
-                                            // se connecter a ce point d'acces avec tel/pc
-                                            // configurer la connexion au wifi avec l'ip sur l'onglet du serial monitor
+    // Essaye de se connecter au Wi-Fi
+    WiFi.begin(ssid.c_str(), password.c_str());
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(1000);
+    }
 
-  Serial.println("Connecte au WiFi");
-  Serial.println(WiFi.localIP());   // afficher l'adresse IP obtenue
-}
-
-void send_data_mqtt(){
-
+    // Connecté au Wi-Fi, affiche l'adresse IP
+    Serial.print("Connecté au Wi-Fi ");
+    Serial.println(ssid);
+    Serial.print("Adresse IP : ");
+    Serial.println(WiFi.localIP());
+  }
 }
