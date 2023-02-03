@@ -56,77 +56,77 @@ services:
       ports:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
 
-  #Création du container Debian Pulseur
-  pulseur:
-    container_name: pulseur
-    restart: unless-stopped
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./pulse_bdd:/data
-    build: pulse_bdd
-    ports:
-      - 7080:83
-
-  #Création du conteneur API distante
-  appmysql:
-      container_name: appmysql
-    depends_on:
-      - mysql
-    build: ./distant_api
-    restart: unless-stopped
-    env_file: ./.env
-    ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-    environment:
-      - DB_HOST=mysql
-      - DB_USER=$MYSQLDB_USER
-      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - DB_NAME=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_DOCKER_PORT
-    stdin_open: true
-    tty: true
-  
-  #Création du conteneur API locale
-  appredis:
-      container_name: appredis
-    depends_on:
-      - redis
-    build: ./local_api
-    restart: unless-stopped
-    env_file: ./.env
-    ports:
-      - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
-    stdin_open: true
-    tty: true
-
-    #Création du container Mosquitto       
-    mosquitto:
-      image: eclipse-mosquitto
+    #Création du container Debian Pulseur
+    pulseur:
+      container_name: pulseur
       restart: unless-stopped
-      container_name: mosquitto
+      stdin_open: true
+      tty: true
       volumes:
-        - ./mosquitto/config/:/mosquitto/config/:rw
-        - ./mosquitto/data:/mosquitto/data/
-        - ./mosquitto/log:/mosquitto/log/
+        - ./pulse_bdd:/data
+      build: pulse_bdd
       ports:
-        - 1883:1883 # MQTT Port
-        - 9001:9001 # WS Port
+        - 7080:83
 
-  #Création d'un container grafana
-  grafana:
-    image: grafana/grafana:7.5.4
-    restart: unless-stopped
-    env_file: ./.env
-    ports:
-      - 3000:3000
-    depends_on:
-      - mysql
-    environment:
-      GF_SECURITY_ADMIN_USER: $GF_USER
-      GF_SECURITY_ADMIN_PASSWORD: $GF_PASSWORD
-      GF_DATABASE_TYPE: $GF_DATABASE_TYPE
-      GF_DATABASE_HOST: $GF_DATABASE_HOST
-      GF_DATABASE_NAME: $MYSQLDB_DATABASE
-      GF_DATABASE_USER: $MYSQLDB_USER
-      GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+    #Création du conteneur API distante
+    appmysql:
+      container_name: appmysql
+      depends_on:
+        - mysql
+      build: ./distant_api
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      environment:
+        - DB_HOST=mysql
+        - DB_USER=$MYSQLDB_USER
+        - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+        - DB_NAME=$MYSQLDB_DATABASE
+        - DB_PORT=$MYSQLDB_DOCKER_PORT
+      stdin_open: true
+      tty: true
+    
+    #Création du conteneur API locale
+    appredis:
+      container_name: appredis
+      depends_on:
+        - redis
+      build: ./local_api
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
+      stdin_open: true
+      tty: true
+
+      #Création du container Mosquitto       
+      mosquitto:
+        image: eclipse-mosquitto
+        restart: unless-stopped
+        container_name: mosquitto
+        volumes:
+          - ./mosquitto/config/:/mosquitto/config/:rw
+          - ./mosquitto/data:/mosquitto/data/
+          - ./mosquitto/log:/mosquitto/log/
+        ports:
+          - 1883:1883 # MQTT Port
+          - 9001:9001 # WS Port
+
+    #Création d'un container grafana
+    grafana:
+      image: grafana/grafana:7.5.4
+      restart: unless-stopped
+      env_file: ./.env
+      ports:
+        - 3000:3000
+      depends_on:
+        - mysql
+      environment:
+        GF_SECURITY_ADMIN_USER: $GF_USER
+        GF_SECURITY_ADMIN_PASSWORD: $GF_PASSWORD
+        GF_DATABASE_TYPE: $GF_DATABASE_TYPE
+        GF_DATABASE_HOST: $GF_DATABASE_HOST
+        GF_DATABASE_NAME: $MYSQLDB_DATABASE
+        GF_DATABASE_USER: $MYSQLDB_USER
+        GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
