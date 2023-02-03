@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/sensors.dart';
+import 'package:mobileapp/screens/test_wifi_send.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: SendDataScreen(),
     );
   }
 }
