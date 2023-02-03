@@ -29,14 +29,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.only(left: 20.0),
-          child: const Text(
-            'Bienvenue',
-            style: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
+          Container(
+            margin: const EdgeInsets.only(left: 20.0),
+            child: const Text(
+              'Bienvenue',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
           ),
         ),
         Expanded(
