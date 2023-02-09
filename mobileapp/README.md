@@ -35,8 +35,22 @@ Il peut y avoir plusieurs choses qui peuvent poser des problèmes dans l'applica
 
 Tout d'abord, on ne peut pas lancer des conteneurs Docker et lancer l'émulateur de l'application car tout les deux utilisent l'Hyper-V (la virtualisation du PC) et que ça ne peux pas être utiliser en même temps.
 
-**Aussi vérifier que toute les personnes utilisant cette application sont sur la même version de flutter et de Android Studio.**
+Il est possible que vous n'arrivez pas à lancer l'application ou que vous rencontriez cette erreur :
 
+![Erreur lors du build](./images/error_build.gif)
+
+Si c'est le cas :
+- Vérifiez dans Settings que le chermin vers les sdk de dart et flutter est bien spécifié
+- Dans \mobileapp\images\build.gradle, la version du sdk doit être à 32 
+  
+   ![build.gradle](./images/build_gradle.gif)
+- Pensez à mettre à jour les dépendances dans pubspec.yaml
+- Si ca ne marche toujours pas :
+   - Mettez le projet dans le dossier AndroidStudioProject si ce n'est pas déjà le cas
+   - Faites les commandes flutter clean, flutter pub get, flutter build apk --release
+   - Passez à une version inférieure de gradle
+   
+**Aussi vérifier que toute les personnes utilisant cette application sont sur la même version de flutter et de Android Studio.**
 
 
 ## Lien
