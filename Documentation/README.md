@@ -167,3 +167,11 @@ Une données Times Series se présentent sous la forme d'une suite de valeurs nu
 
 Enfin, un dernier conteneur qui s'occupera de valider si les données dans les deux bases de données sont identique.
 
+## Lien
+
+Pour le fonctionnement de Grafana, vous trouverez un `README` juste [ici](/Documentation/Grafana/README.md)
+
+Pour le fonctionnement de l'Application Mobile, vous trouverez un `README` juste [ici](/mobileapp/README.md)
+
+Pour le fonctionnement de l'ESP32, vous trouverez un `README` juste [ici](/Documentation/ESP32//README.md)
+
