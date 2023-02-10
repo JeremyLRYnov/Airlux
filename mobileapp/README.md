@@ -47,7 +47,16 @@ Si c'est le cas :
 - Pensez à mettre à jour les dépendances dans pubspec.yaml
 - Si ca ne marche toujours pas :
    - Mettez le projet dans le dossier AndroidStudioProject si ce n'est pas déjà le cas
-   - Faites les commandes flutter clean, flutter pub get, flutter build apk --release
+   - Faites les commandes:
+   
+    ```dart flutter clean```
+    
+    ```dart flutter pub get```
+    
+    ```dart flutter build apk --release```
+   
+
+   - Vous pouvez faire le **Pub Upgrade** et ensuite le **Pub Get**
    - Passez à une version inférieure de gradle
    
 **Aussi vérifier que toute les personnes utilisant cette application sont sur la même version de flutter et de Android Studio.**
