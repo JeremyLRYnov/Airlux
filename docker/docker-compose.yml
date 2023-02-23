@@ -2,98 +2,117 @@ version: '3.8'
 
 #Création des Container
 services:
-    #Création du container Redis
-    redis:
-        container_name: redis
-        restart: unless-stopped
-        environment:
-          - REDIS_HOST=redis
-          - REDIS_PORT=6379
-          - ALLOW_EMPTY_PASSWORD=yes
-        volumes:
-          - ./local_server:/data
-        build: local_server
-        ports:
-          - 6379
-        depends_on: 
-          - mosquitto
 
-     #Création de l'insertion Redis
-    local_insertion:
-        container_name: redis_insertion
-        restart: unless-stopped
-        environment:
-          - ALLOW_EMPTY_PASSWORD=yes
-        volumes:
-          - ./local_insertion:/data
-        build: local_insertion
-        ports:
-          - 6380
-        depends_on: 
-          - redis
-          
-    #Création du container MySQL      
-    mysql:
-      image: mysql
-      restart: unless-stopped
-      env_file: ./.env
-      environment:
-        - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-        - MYSQL_DATABASE=$MYSQLDB_DATABASE
-      ports:
-        - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+  #Création du container Redis
+  redis:
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./local_server:/data
+    build: local_server
+    ports:
+      - 6379
+    depends_on:
+      - mosquitto
 
-    #Création du container Debian Pulseur
-    pulseur:
-        container_name: pulseur
-        restart: unless-stopped
-        stdin_open: true
-        tty: true
-        volumes:
-          - ./pulse_bdd:/data
-        build: pulse_bdd
-        ports:
-          - 7080:83
-          
-    #Création du conteneur API distante
-    appmysql:
-      depends_on:
-        - mysql
-      build: ./distant_api
-      restart: unless-stopped
-      env_file: ./.env
-      ports:
-        - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-      environment:
-        - DB_HOST=mysql
-        - DB_USER=$MYSQLDB_USER
-        - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-        - DB_NAME=$MYSQLDB_DATABASE
-        - DB_PORT=$MYSQLDB_DOCKER_PORT
-      stdin_open: true
-      tty: true
-      
-    #Création du conteneur API locale
-    appredis:
-      depends_on:
-        - redis
-      build: ./local_api
-      restart: unless-stopped
-      env_file: ./.env
-      ports:
-        - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
-      stdin_open: true
-      tty: true
+  #Création de l'insertion Redis
+  local_insertion:
+    container_name: redis_insertion
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./local_insertion:/data
+    build: local_insertion
+    ports:
+      - 6380
+    depends_on:
+      - redis
 
-    #Création du container Mosquitto       
-    mosquitto:
-        image: eclipse-mosquitto
-        restart: unless-stopped
-        container_name: mosquitto
-        volumes:
-          - ./mosquitto/config/:/mosquitto/config/:rw
-          - ./mosquitto/data:/mosquitto/data/
-          - ./mosquitto/log:/mosquitto/log/
-        ports:
-          - 1883:1883 # MQTT Port
-          - 9001:9001 # WS Port
+  #Création du container MySQL      
+  mysql:
+    build: cloud_server
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    expose:
+      - 8080
+
+  #Création du container Debian Pulseur
+  pulseur:
+    container_name: pulseur
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./pulse_bdd:/data
+    build: pulse_bdd
+    ports:
+      - 7080:83
+
+  #Création du conteneur API distante
+  appmysql:
+    depends_on:
+      - mysql
+    build: ./distant_api
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+  
+  #Création du conteneur API locale
+  appredis:
+    depends_on:
+      - redis
+    build: ./local_api
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+  #Création du container Mosquitto       
+  mosquitto:
+    image: eclipse-mosquitto
+    restart: unless-stopped
+    container_name: mosquitto
+    volumes:
+      - ./mosquitto/config/:/mosquitto/config/:rw
+      - ./mosquitto/data:/mosquitto/data/
+      - ./mosquitto/log:/mosquitto/log/
+    ports:
+      - 1883:1883 # MQTT Port
+      - 9001:9001 # WS Port
+
+  #Création d'un container grafana
+  grafana:
+    image: grafana/grafana:7.5.4
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - 3000:3000
+    depends_on:
+      - mysql
+    environment:
+      GF_SECURITY_ADMIN_USER: $GF_USER
+      GF_SECURITY_ADMIN_PASSWORD: $GF_PASSWORD
+      GF_DATABASE_TYPE: $GF_DATABASE_TYPE
+      GF_DATABASE_HOST: $GF_DATABASE_HOST
+      GF_DATABASE_NAME: $MYSQLDB_DATABASE
+      GF_DATABASE_USER: $MYSQLDB_USER
+      GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
