@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import './add_sensors.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';

@@ -46,5 +46,7 @@ void loop() {
     Serial.println(ssid);
     Serial.print("Adresse IP : ");
     Serial.println(WiFi.localIP());
+    WiFi.softAPdisconnect(true);
+    Serial.print("Point d'acces arrete : ");
   }
 }
