@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
+import '../models/sensor_model.dart';
 
 class AddSensors extends StatelessWidget {
-  String sensor_name='';
+  AddSensors({Key? key, required this.addSensorCallBack}) : super(key: key);
+  final void Function(String) addSensorCallBack;
+
+  String name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,7 @@ class AddSensors extends StatelessWidget {
                 ),
               ),
               onChanged: (value) {
-                sensor_name = value;
+               name = value;
               },
             ),
             SizedBox(
@@ -67,7 +71,11 @@ class AddSensors extends StatelessWidget {
                      ),
                    ),
                    color: Colors.blueGrey[50],
-                   onPressed: () => Navigator.pop(context),
+                   onPressed: () {
+                     if (name != '') {
+                       addSensorCallBack(name);
+                     }
+                   }
                  ),
           ],
         ),
