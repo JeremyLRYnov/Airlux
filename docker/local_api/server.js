@@ -1,34 +1,44 @@
-const express = require('express');
-const redis = require('ioredis');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+dotenv.config();
+import { errorHandler, notFound } from './app/middleware/error.js';
 
-const redisConfig = require('./app/config/db.config.js');
+/* import routers */
+import { router as userRouter } from './app/routes/user.routes.js';
 
-const app = express();
-const client = redis.createClient({ redisConfig});
+const app = new express();
 
-client.connect();
-client.on('connect', () => {
-    console.log('Redis connected');
+//Body Parser
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.json({ message: "Hello to local API" });
 });
 
-//get all keys in redis
-app.get('/keys', (req, res) => {
-    client.keys('*', (err, keys) => {
-        res.send(keys);
-    });
-});
-
-//get value of a key
-app.get('/key/:key', (req, res) => {
-    client.get(req.params.key, (err, value) => {
-        res.send(value);
-    });
-});
-
-require('./app/routes/sensor.routes')(app);
+/* bring in some routers */
+app.use('/user', userRouter);
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-    console.log(`App successfully started on http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`App successfully started on http://localhost:${PORT}`);
 });
+
+process.on("uncaughtException", (error) => {
+  console.log(`uncaught exception: ${error.message}`);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Error ${err.message}`);
+  server.close(() => process.exit(1));
+});
+
+app.use(notFound);
+
+app.use(errorHandler);
