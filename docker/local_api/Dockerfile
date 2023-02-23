@@ -1,8 +1,8 @@
-FROM node:14
+FROM node:latest
 
-WORKDIR /distant_api
+WORKDIR /local_api
 COPY package.json .
-RUN npm install express body-parser ioredis nodemon cors bluebird
+RUN npm install dotenv express express-validator body-parser redis-om nodemon cors bcryptjs jsonwebtoken
 COPY . .
 
-CMD node server.js
+CMD node --trace-warnings server.js

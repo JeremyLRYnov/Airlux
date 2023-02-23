@@ -1,19 +1,15 @@
-module.exports = app => {
-    const users = require("../controllers/user.controller.js");
+import express from 'express';
 
-    var router = require("express").Router();
+export const router = express.Router();
 
-    // Create a new User
-    router.post("/", users.create);
+import validator from '../middleware/validator.js';
+import { signin, signup, updateUser, deleteUser, getUser, getUsers } from "../controller/user.controller.js";
+import schema from "../validation/user.validation.js";
+const { userSchema } = schema;
 
-    // Retrieve a single User with id
-    router.get("/:id", users.findOne);
-
-    // Update a User with id
-    router.put("/:id", users.update);
-
-    // Delete a User with id
-    router.delete("/:id", users.delete);
-    
-    app.use('/api/users', router);
-};
+router.route("/signin").post(signin);
+router.route("/signup").post(validator(userSchema), signup);
+router.patch("/:id", updateUser);
+router.delete("/:id", deleteUser);
+router.get("/:id", getUser);
+router.get("/", getUsers);
