@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/widgets/device_item.dart';
+import 'package:mobileapp/widgets/room_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -64,19 +65,19 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Column(
                                 children: [
-                                  DeviceItem(icon: Icons.fireplace_rounded,text: "température",),
-                                  DeviceItem(icon: Icons.light_rounded,text: "lumière",),
+                                  DeviceItem(icon: Icons.ac_unit_rounded,text: "température",color: kPrimaryButtonActive,),
+                                  DeviceItem(icon: Icons.light_rounded,text: "lumière", color: kPrimaryButtonInactive,),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  DeviceItem(icon: Icons.water_rounded,text: "humidité",),
-                                  DeviceItem(icon: Icons.bolt_rounded,text: "prise",),
+                                  DeviceItem(icon: Icons.water_rounded,text: "humidité",color: kPrimaryButtonInactive,),
+                                  DeviceItem(icon: Icons.bolt_rounded,text: "prise",color: kPrimaryButtonActive,),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  DeviceItem(icon: Icons.telegram_rounded,text: "télevision",),
+                                  DeviceItem(icon: Icons.tv_rounded,text: "télevision",color: kPrimaryButtonInactive,),
                                 ],
                               ),
                             ],
@@ -96,43 +97,10 @@ class _HomePageState extends State<HomePage> {
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      right: 10.0, top: 10.0, bottom: 40.0),
-                                  width: 150,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryButtonBlue,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      right: 10.0, top: 10.0, bottom: 40.0),
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryButtonBlue,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      right: 10.0, top: 10.0, bottom: 40.0),
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryButtonBlue,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      right: 10.0, top: 10.0, bottom: 40.0),
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryButtonBlue,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
+                                RoomItem(text: "Salle de bain", piece: "bathroom.jpg", color: kPrimaryButtonBlue),
+                                RoomItem(text: "Salon", piece: "livingroom.png",color: kPrimaryButtonInactive),
+                                RoomItem(text: "Cuisine", piece: "kitchen.jpg",color: kPrimaryButtonBlue,),
+                                RoomItem(text: "Chambre", piece: "bedroom.jpg", color: kPrimaryButtonBlue,),
                               ],
                             ),
                           ),
@@ -143,4 +111,3 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
-

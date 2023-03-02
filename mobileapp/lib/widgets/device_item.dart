@@ -4,10 +4,13 @@ import 'package:mobileapp/models/constants.dart';
 class DeviceItem extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Color color;
+
   const DeviceItem({
     super.key,
     required this.text,
     required this.icon,
+    required this.color,
   });
 
   @override
@@ -15,7 +18,7 @@ class DeviceItem extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: 10.0, bottom: 10.0, top: 5.0),
       decoration: BoxDecoration(
-        color: kPrimaryButtonActive,
+        color: color,
         borderRadius: BorderRadius.circular(20),
       ),
       width: 160,

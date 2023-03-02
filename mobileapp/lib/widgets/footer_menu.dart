@@ -63,11 +63,11 @@ class _FooterMenuState extends State<FooterMenu> {
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
             icon: Icon(Icons.business),
-            label: 'Capteurs',
+            label: 'Pièces',
           ),
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.edit_document),
             label: 'Scenarios',
           ),
           BottomNavigationBarItem(
