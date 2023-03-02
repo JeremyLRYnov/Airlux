@@ -64,20 +64,19 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Column(
                                 children: [
-                                  DeviceItem(),
-                                  DeviceItem(),
+                                  DeviceItem(icon: Icons.fireplace_rounded,text: "température",),
+                                  DeviceItem(icon: Icons.light_rounded,text: "lumière",),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  DeviceItem(),
-                                  DeviceItem(),
+                                  DeviceItem(icon: Icons.water_rounded,text: "humidité",),
+                                  DeviceItem(icon: Icons.bolt_rounded,text: "prise",),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  DeviceItem(),
-                                  DeviceItem(),
+                                  DeviceItem(icon: Icons.telegram_rounded,text: "télevision",),
                                 ],
                               ),
                             ],
