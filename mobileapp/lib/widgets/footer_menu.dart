@@ -3,8 +3,8 @@ import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 
 import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/settings_page.dart';
 
-import '../screens/register.dart';
 import '../screens/sensors.dart';
 
 class FooterMenu extends StatefulWidget {
@@ -22,7 +22,7 @@ class _FooterMenuState extends State<FooterMenu> {
     HomePage(),
     Sensors(),
     WelcomeScreen(),
-    Register(),
+    SettingsPage(),
   ];
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
