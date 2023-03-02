@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/widgets/footer_menu.dart';
+import 'package:mobileapp/widgets/device_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -64,74 +64,20 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Column(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonActive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    width: 160,
-                                    height: 80,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonActive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    width: 160,
-                                    height: 80,
-                                  ),
+                                  DeviceItem(),
+                                  DeviceItem(),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonInactive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    width: 160,
-                                    height: 80,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonInactive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    width: 160,
-                                    height: 80,
-                                  ),
+                                  DeviceItem(),
+                                  DeviceItem(),
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonInactive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    width: 160,
-                                    height: 80,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        right: 10.0, bottom: 10.0, top: 5.0),
-                                    width: 160,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryButtonInactive,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
+                                  DeviceItem(),
+                                  DeviceItem(),
                                 ],
                               ),
                             ],
@@ -198,3 +144,4 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
+

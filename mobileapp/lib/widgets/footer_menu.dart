@@ -51,10 +51,8 @@ class _FooterMenuState extends State<FooterMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body:
-      screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -75,7 +73,7 @@ class _FooterMenuState extends State<FooterMenu> {
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
             icon: Icon(Icons.settings),
-            label: 'Analytics',
+            label: 'Paramètres',
           ),
         ],
         currentIndex: _selectedIndex,
