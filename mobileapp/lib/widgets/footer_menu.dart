@@ -3,9 +3,11 @@ import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 
 import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/room_page.dart';
+import 'package:mobileapp/screens/script_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
 
-import '../screens/sensors.dart';
+import '../screens/sensors_page.dart';
 
 class FooterMenu extends StatefulWidget {
   const FooterMenu({Key? key}) : super(key: key);
@@ -20,8 +22,8 @@ class _FooterMenuState extends State<FooterMenu> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
     HomePage(),
-    Sensors(),
-    WelcomeScreen(),
+    RoomPage(),
+    ScriptPage(),
     SettingsPage(),
   ];
   static const List<Widget> _widgetOptions = <Widget>[

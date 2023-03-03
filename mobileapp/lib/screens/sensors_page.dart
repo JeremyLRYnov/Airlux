@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobileapp/widgets/sensors_tile.dart';
 import './add_sensors.dart';
-import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:mobileapp/models/constants.dart';
 import '../widgets/sensors_list.dart';
 import '../models/sensor_model.dart';
