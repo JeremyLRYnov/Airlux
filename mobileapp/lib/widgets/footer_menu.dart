@@ -4,9 +4,11 @@ import 'package:mobileapp/screens/login.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 
 import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/room_page.dart';
+import 'package:mobileapp/screens/script_page.dart';
+import 'package:mobileapp/screens/settings_page.dart';
 
-import '../screens/register.dart';
-import '../screens/sensors.dart';
+import '../screens/sensors_page.dart';
 
 class FooterMenu extends StatefulWidget {
   const FooterMenu({Key? key}) : super(key: key);
@@ -21,9 +23,9 @@ class _FooterMenuState extends State<FooterMenu> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
     HomePage(),
-    Login(),
-    WelcomeScreen(),
-    Register(),
+    RoomPage(),
+    ScriptPage(),
+    SettingsPage(),
   ];
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
@@ -52,10 +54,8 @@ class _FooterMenuState extends State<FooterMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body:
-      screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -66,17 +66,17 @@ class _FooterMenuState extends State<FooterMenu> {
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
             icon: Icon(Icons.business),
-            label: 'Capteurs',
+            label: 'Pièces',
           ),
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.school),
+            icon: Icon(Icons.edit_document),
             label: 'Scenarios',
           ),
           BottomNavigationBarItem(
             backgroundColor: kPrimaryBlue,
             icon: Icon(Icons.settings),
-            label: 'Analytics',
+            label: 'Paramètres',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -3,8 +3,13 @@ import 'package:mobileapp/widgets/footer_menu.dart';
 import 'screens/login.dart';
 import 'screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/home_page.dart';
-import 'package:mobileapp/screens/sensors.dart';
-import 'package:mobileapp/screens/test_wifi/wifi_send_message.dart';
+import 'package:mobileapp/screens/sensors_page.dart';
+
+import 'package:mobileapp/screens/register.dart';
+import 'package:mobileapp/widgets/footer_menu.dart';
+
+import 'screens/Login.dart';
+import 'screens/Welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());

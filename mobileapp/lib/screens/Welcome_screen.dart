@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import './add_sensors.dart';
-import 'package:mobileapp/widgets/footer_menu.dart';
-import './login.dart';
-import '../widgets/rouded_button.dart';
-import '../models/constants.dart';
+import './Login.dart';
+import '../models/rouded_button.dart';
 import '../screens/register.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -42,13 +39,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             RoudedButton(
               title: 'Log In',
               onPressed: () {
-                Navigator.pushNamed(context, Login.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
               },
             ),
             RoudedButton(
               title: 'Register',
               onPressed: () {
-                Navigator.pushNamed(context, Register.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                );
               },
             ),
           ],
