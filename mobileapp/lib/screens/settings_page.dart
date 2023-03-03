@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/screens/Welcome_screen.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
@@ -8,7 +9,10 @@ class SettingsPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Ajoutez ici le code pour se déconnecter
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+            );
           },
           child: Text('Se déconnecter', style: TextStyle(fontSize: 20)),
           style: ElevatedButton.styleFrom(
@@ -16,7 +20,8 @@ class SettingsPage extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0), // Bordure arrondie
             ),
-            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Espacement intérieur
+            padding: EdgeInsets.symmetric(
+                horizontal: 50, vertical: 15), // Espacement intérieur
           ),
         ),
       ),
