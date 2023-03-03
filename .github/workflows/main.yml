@@ -12,16 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-        name: set up Flutter directory
-        run: cd /mobileapp/
-      
       - name: Set up Flutter
+        working-directory: ./mobileapp
         uses: subosito/flutter-action@v1
 
       - name: Get dependencies
+        working-directory: ./mobileapp
         run: flutter pub get
 
       - name: Run tests on emulator
+        working-directory: ./mobileapp
         run: |
           flutter emulators --launch emulator
           flutter test
