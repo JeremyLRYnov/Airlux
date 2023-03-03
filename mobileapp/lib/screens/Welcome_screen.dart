@@ -18,14 +18,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
+
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
+          children: [
             Row(
-              children: <Widget>[
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
                 Container(
                   child: Image.asset('assets/images/logo.png'),
-                  height: 145.0,
+                  height: 200.0,
 
                 ),
               ],

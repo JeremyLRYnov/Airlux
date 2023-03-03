@@ -1,0 +1,26 @@
+name: Flutter-CI-TEST
+run-name: Flutter-CI
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+
+      - name: Get dependencies
+        working-directory: ./mobileapp
+        run: flutter pub get
+
+      - name: Run tests on emulator
+        working-directory: ./mobileapp
+        run: |
+          flutter emulators --launch emulator
+          flutter test
