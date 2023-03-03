@@ -1,21 +1,23 @@
-name: GitHub Actions push
-run-name: GitHub Actions push
+name: Flutter-CI
+run-name: Flutter-CI
 on:
   push:
     branches:
       - 'lacazej/workflows'
 jobs:
-    Github-Actions-Push:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
-        
-        - name: Installer les dépendances
-          run: npm install
-        
-        - name: Build
-          run: npm run build
-        
-        - name: Exécuter les tests
-          run: npm test
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run tests on emulator
+        run: |
+          flutter emulators --launch emulator
+          flutter test
