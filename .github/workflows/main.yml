@@ -13,7 +13,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Flutter
-        working-directory: ./mobileapp
         uses: subosito/flutter-action@v1
 
       - name: Get dependencies
