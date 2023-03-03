@@ -1,4 +1,4 @@
-qname: Flutter-CI
+name: Flutter-CI
 run-name: Flutter-CI
 on:
   push:
