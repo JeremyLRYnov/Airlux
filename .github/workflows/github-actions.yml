@@ -1,0 +1,21 @@
+name: GitHub Actions push
+run-name: GitHub Actions push
+on:
+  push:
+    branches:
+      - 'lacazej/workflows'
+jobs:
+    Github-Actions-Push:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        
+        - name: Installer les dépendances
+          run: npm install
+        
+        - name: Build
+          run: npm run build
+        
+        - name: Exécuter les tests
+          run: npm test
