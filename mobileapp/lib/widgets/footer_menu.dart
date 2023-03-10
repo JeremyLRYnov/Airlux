@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-<<<<<<< HEAD
-=======
-import 'package:mobileapp/screens/login.dart';
-import 'package:mobileapp/screens/Welcome_screen.dart';
->>>>>>> ff390bd0226e306c60e8cded0bfc4fe0d9d8d5ad
 
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/room_page.dart';
