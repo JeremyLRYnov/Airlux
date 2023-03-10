@@ -13,6 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return WillPopScope(
       onWillPop: () async {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -37,6 +38,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Container(
                     child: Image.asset('assets/images/logo.png'),
                     height: 145.0,
+=======
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Container(
+                  child: Image.asset('assets/images/logo.png'),
+                  height: 200.0,
+>>>>>>> ff390bd0226e306c60e8cded0bfc4fe0d9d8d5ad
 
                   ),
                 ],

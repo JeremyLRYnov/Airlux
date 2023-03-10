@@ -10,11 +10,10 @@ const Sensor = function(sensor) {
 Sensor.create = (newSensor, result) => {
   sql.query("INSERT INTO sensors SET ?", newSensor, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      console.log("grosse erreur: ", err);
       result(err, null);
       return;
     }
-
     console.log("created sensor: ", { id: res.insertId, ...newSensor });
     result(null, { id: res.insertId, ...newSensor });
   });
