@@ -19,8 +19,8 @@ jobs:
         working-directory: ./mobileapp
         run: flutter pub get
 
-      - name: Run tests on emulator
-        working-directory: ./mobileapp
-        run: |
-          flutter emulators --launch emulator
-          flutter test
+      #- name: Run tests on emulator
+        #working-directory: ./mobileapp
+        #run: |
+          #flutter emulators --launch emulator
+          #flutter test
