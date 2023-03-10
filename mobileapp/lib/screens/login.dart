@@ -59,7 +59,7 @@ class _Login extends State<Login> {
                         //Do something with the user input.
                       },
                       decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Entrer your email'),
+                      kTextFieldDecoration.copyWith(hintText: 'Entrer votre email'),
                     ),
                     SizedBox(
                       height: 8.0,
@@ -70,7 +70,7 @@ class _Login extends State<Login> {
                       decoration: kTextFieldDecoration.copyWith(
                         prefixIcon: const Icon(Icons.lock),
 
-                        hintText: 'Entrer your password',
+                        hintText: 'Entrer votre mot de passe',
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -87,7 +87,7 @@ class _Login extends State<Login> {
                     ),
 
                     RoundedButton(
-                      title: 'Log In',
+                      title: 'SE CONNECTER',
                       onPressed: () async {
                         setState(() {
                           _saving = true;
@@ -98,7 +98,7 @@ class _Login extends State<Login> {
                         });
                         Navigator.pushNamed(context, HomePage.id);
 
-                      }, color: Colors.blue,
+                      }, color: kPrimaryBlue,
                     ),
                   ],
                 ),

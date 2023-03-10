@@ -54,7 +54,6 @@ class _RegistrationScreenState extends State<Register> {
                 ),
                 TextField(
                   onChanged: (value) {
-                    //Do something with the user input.
                   },
                   obscureText: _isObscure,
                   decoration: kTextFieldDecoration.copyWith(
@@ -73,7 +72,7 @@ class _RegistrationScreenState extends State<Register> {
                   height: 24.0,
                 ),
                 RoundedButton(
-                  title: 'S\'inscrire',
+                  title: 'S\'INSCRIRE',
                   onPressed: () async {
                     setState(() {
                       _saving = true;
@@ -82,7 +81,7 @@ class _RegistrationScreenState extends State<Register> {
                     setState(() {
                       _saving = false;
                     });
-                  }, color: Colors.blue,
+                  }, color: kPrimaryBlue,
                 ),
               ],
             ),

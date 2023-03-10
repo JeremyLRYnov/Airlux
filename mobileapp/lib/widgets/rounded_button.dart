@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class RoundedButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
@@ -16,19 +14,16 @@ class RoundedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        onPressed;
-      },
+      onPressed: onPressed,
       child: Text(title, style: TextStyle(fontSize: 20)),
       style: ElevatedButton.styleFrom(
         primary: color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        padding: EdgeInsets.symmetric(
-            horizontal: 50, vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal:60, vertical: 15),
+        minimumSize: Size(280, 0),
       ),
     );
   }
 }
-
