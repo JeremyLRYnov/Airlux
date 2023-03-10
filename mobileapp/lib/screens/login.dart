@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/home_page.dart';
-import '../main.dart';
-import '../widgets/rouded_button.dart';
+import '../widgets/rounded_button.dart';
 import '../models/constants.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:flutter/widgets.dart';
@@ -87,7 +86,7 @@ class _Login extends State<Login> {
                       height: 24.0,
                     ),
 
-                    RoudedButton(
+                    RoundedButton(
                       title: 'Log In',
                       onPressed: () async {
                         setState(() {
@@ -99,13 +98,11 @@ class _Login extends State<Login> {
                         });
                         Navigator.pushNamed(context, HomePage.id);
 
-                      },
+                      }, color: Colors.blue,
                     ),
                   ],
                 ),
               ),
-
-
           ),
         ),
     );

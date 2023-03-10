@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/widgets/rouded_button.dart';
+import 'package:mobileapp/widgets/rounded_button.dart';
 
 class Register extends StatefulWidget {
 
@@ -72,7 +72,7 @@ class _RegistrationScreenState extends State<Register> {
                 SizedBox(
                   height: 24.0,
                 ),
-                RoudedButton(
+                RoundedButton(
                   title: 'S\'inscrire',
                   onPressed: () async {
                     setState(() {
@@ -82,7 +82,7 @@ class _RegistrationScreenState extends State<Register> {
                     setState(() {
                       _saving = false;
                     });
-                  },
+                  }, color: Colors.blue,
                 ),
               ],
             ),
