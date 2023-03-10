@@ -1,11 +1,9 @@
-const request = require('supertest');
-const app = require("../../app");
+const axios = require('axios').default;
 
-describe('Controller User',() => {
-    it('GET/', async()=>{
-        const response = await request(app).get("/user");
-        //expect(response.body).toEqual([]);
-        expect(response.body).toEqual([""]);
-        expect(true).toBe(true);
-    })
-})
+describe('Controller User', () => {
+  it('GET /', async () => {
+    const response = await axios.get('http://localhost:6869/user');
+    expect(response.status).toEqual(200);
+    expect(response.data).toEqual({"result": []});
+  });
+});
