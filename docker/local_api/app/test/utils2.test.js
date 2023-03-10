@@ -59,6 +59,8 @@ describe('Controller User', () => {
   
   });
 
+
+  //Delete
   it('Delete/', async () => {
     // création de l'utilisateur
     const signupResponse = await axios.post('http://localhost:6869/user/signup', {
@@ -84,4 +86,65 @@ describe('Controller User', () => {
     const user = users.find(u => u.id === userId);
     expect(user).toBeUndefined();
   });
+
+
+  //Update
+  it('Update/', async () => {
+    const signupResponse = await axios.post('http://localhost:6869/user/signup', {
+      name: 'pierre',
+      email: 'pierre@example.com',
+      password: 'poire',
+      admin: true
+    });
+  
+    // récupération de l'ID de l'utilisateur créé
+    const signupId = signupResponse.data.result.id;
+  
+    // Modification de l'utilisateur
+    const updateResponse = await axios.patch(`http://localhost:6869/user/${signupId}`, {
+      name: 'jack',
+      email: 'jack@example.com',
+      password: 'pass',
+      admin: false
+    });
+  
+    // récupération de l'ID de l'utilisateur créé
+    const userId = signupResponse.data.result.id;
+    
+    //Vérification que l'utilisateur a été modifié
+    expect(updateResponse.status).toEqual(200);
+    expect (updateResponse.data).toEqual({
+        "result": {
+            "entityId": userId,
+            "name": "jack",
+            "email": "jack@example.com",
+            "password": "pass",
+            "admin": false
+        }
+    })
+    
+  });
+
+  //Get Id
+  it('Get Id /', async () => {
+    //Créer un utilisateur
+    const signupResponse = await axios.post('http://localhost:6869/user/signup', {
+        name: 'enzo',
+        email: 'enzo@example.com',
+        password: 'password',
+        admin: false
+      });
+    
+    // récupération de l'ID de l'utilisateur créé
+    const userId = signupResponse.data.result.id;
+    
+    const getResponse = await axios.get(`http://localhost:6869/user/${userId}`);
+    expect(getResponse.status).toEqual(200);
+    const responseData = getResponse.data.result;
+    expect(responseData.name).toEqual('enzo');
+    expect(responseData.email).toEqual('enzo@example.com');
+    expect(responseData.admin).toEqual(false);
+    const passwordsMatch = await bcrypt.compare("password", responseData.password);
+    expect(passwordsMatch).toBe(true);
+ });
 });
