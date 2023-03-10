@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './Login.dart';
-import 'package:mobileapp/widgets/rouded_button.dart';
+import 'package:mobileapp/widgets/rounded_button.dart';
 import '../screens/register.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -43,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(
                 height: 48.0,
               ),
-              RoudedButton(
+              RoundedButton(
                 title: 'Log In',
                 onPressed: () {
                   Navigator.push(
@@ -51,8 +51,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     MaterialPageRoute(builder: (context) => Login()),
                   );
                 },
+                color: Colors.blue,
               ),
-              RoudedButton(
+              RoundedButton(
                 title: 'Register',
                 onPressed: () {
                   Navigator.push(
@@ -60,6 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     MaterialPageRoute(builder: (context) => Register()),
                   );
                 },
+                color: Colors.blue,
               ),
             ],
           ),
