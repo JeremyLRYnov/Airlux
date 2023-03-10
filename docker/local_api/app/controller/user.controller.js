@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     });
     const { entityId, password, ...rest } = user.toJSON();
     const data = { id: user.entityId, ...rest };
-    res.status(200).json({ result: data, token });
+    res.status(200).json({ message: "Inscription réussi" ,result: data, token });
 };
 
 export const signin = async (req, res) => {
@@ -44,7 +44,7 @@ export const signin = async (req, res) => {
     });
     const { entityId, password, ...rest } = existingUser.toJSON();
     const data = { id: existingUser.entityId, ...rest };
-    res.status(200).json({ result: data, token });
+    res.status(200).json({ message: "Connexion réussi" ,result: data, token });
 };
 
 export const updateUser = async (req, res) => {
