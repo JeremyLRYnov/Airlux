@@ -3,12 +3,12 @@ run-name: Flutter-CI
 on:
   push:
     branches:
-      - 'lacazej/workflows'
-      - 'main'
+      - lacazej/workflows
+      - main
   pull_request:
     branches:
-      - 'lacazej/workflows'
-      - 'main'
+      - lacazej/workflows
+      - main
 jobs:
   Flutter-run:
     runs-on: ubuntu-latest
