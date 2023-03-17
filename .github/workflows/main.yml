@@ -3,11 +3,11 @@ run-name: Flutter-CI
 on:
   push:
     branches:
-      - lacazej/workflows
+      - lacazej/workflow
       - main
   pull_request:
     branches:
-      - lacazej/workflows
+      - lacazej/workflow
       - main
 jobs:
   Flutter-run:
@@ -50,7 +50,3 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint:fix
-      
-      - name: Run ESLint if JavaScript files changed
-        if: ${{ github.event_name == 'push' && github.event.head_commit.modified == 'javascript' }}
-        run: npm run lint
