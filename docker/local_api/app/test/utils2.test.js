@@ -4,12 +4,16 @@ const jwt = require('jsonwebtoken');
 
 //Controller 
 describe('Controller User', () => {
+
+  //GET 
   it('GET /', async () => {
     const response = await axios.get('http://localhost:6869/user');
     expect(response.status).toEqual(200);
     expect(response.data).toEqual({"result": []});
   });
 
+
+  //POST SIGNUP
   it('Signup POST /', async () => {
     const response = await axios.post('http://localhost:6869/user/signup', {
         name: 'nicolas',
@@ -30,6 +34,7 @@ describe('Controller User', () => {
 
   });
 
+  //GET USER
   it('GET /', async () => {
     const response = await axios.get('http://localhost:6869/user');
     expect(response.status).toEqual(200);
@@ -41,6 +46,8 @@ describe('Controller User', () => {
     expect(passwordsMatch).toBe(true);
   });
 
+
+  //POST AUTHENTICATE
   it('Signin POST /', async () => {
     const response = await axios.post('http://localhost:6869/user/signin', {
       email: 'nicolas@example.com',
