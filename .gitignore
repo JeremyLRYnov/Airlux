@@ -1,6 +1,5 @@
 dump.rdb
-temp-9.rdb
-temp-26.rdb
+temp-*.rdb
 docker/pulse_bdd/__pycache__
 filter_script.cpython-39.pyc
 
