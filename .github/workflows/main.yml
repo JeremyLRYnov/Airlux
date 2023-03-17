@@ -46,7 +46,7 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint:fix
       
       - name: Run ESLint if JavaScript files changed
         if: ${{ github.event_name == 'push' && github.event.head_commit.modified == 'javascript' }}
