@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - 'lacazej/workflows'
+      - 'main'
+  pull_request:
+    branches:
+      - 'lacazej/workflows'
+      - 'main'
 jobs:
   flutter-run:
     runs-on: ubuntu-latest
