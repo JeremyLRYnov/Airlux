@@ -10,7 +10,7 @@ on:
       - 'lacazej/workflows'
       - 'main'
 jobs:
-  flutter-run:
+  Flutter-run:
     runs-on: ubuntu-latest
 
     steps:
