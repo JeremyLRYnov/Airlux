@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run ESLint if JavaScript files modified
+        if: ${{ github.event_name == 'push' && needs.changed_files.outputs.files_changed_contains_js == 'true' }}
+        run: npm run lint

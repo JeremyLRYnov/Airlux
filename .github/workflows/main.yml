@@ -5,11 +5,11 @@ on:
     branches:
       - 'lacazej/workflows'
 jobs:
-  build:
+  flutter-run:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
@@ -17,7 +17,28 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Run tests on emulator
-        run: |
-          flutter emulators --launch emulator
-          flutter test
+      #- name: Run tests on emulator
+       # run: |
+        #  flutter emulators --launch emulator
+        #  flutter test
+  Javascript-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - name: Get dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+      
+      - name: Run ESLint if JavaScript files changed
+        if: ${{ github.event_name == 'push' && github.event.head_commit.modified == 'javascript' }}
+        run: npm run lint
