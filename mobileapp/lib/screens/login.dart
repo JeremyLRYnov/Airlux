@@ -6,26 +6,11 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:flutter/widgets.dart';
 import '../services/login_service.dart';
 
-void main() {
-  runApp(MyApp());
-}
 class Login extends StatefulWidget {
+
   static const String id ='login_screen';
   @override
   _Login createState() => _Login();
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mon application',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Login(),
-    );
-  }
 }
 
 class _Login extends State<Login> {
