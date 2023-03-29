@@ -19,3 +19,5 @@ export const switchRepository = client.fetchRepository(switchSchema)
 
 /* create the index for Switch for search */
 await switchRepository.createIndex('switchIndex')
+
+// Path: docker/local_api/app/models/switch.models.js

@@ -13,3 +13,5 @@ router.patch('/:id', updateUser)
 router.delete('/:id', deleteUser)
 router.get('/:id', getUser)
 router.get('/', getUsers)
+
+// Path: docker/local_api/app/routes/user.routes.js

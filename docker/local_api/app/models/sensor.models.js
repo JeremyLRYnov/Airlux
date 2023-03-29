@@ -20,3 +20,5 @@ export const sensorRepository = client.fetchRepository(sensorSchema)
 
 /* create the index for Sensor for search */
 await sensorRepository.createIndex('sensorIndex')
+
+// Path: docker/local_api/app/models/sensor.models.js

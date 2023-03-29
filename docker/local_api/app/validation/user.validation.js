@@ -7,3 +7,5 @@ export default {
     check('name').not().isEmpty().withMessage('name field is required.')
   ]
 }
+
+// Path: docker/local_api/app/validation/user.validation.js

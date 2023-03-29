@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { userRepository } from '../models/user.models.js'
+import { userRepository } from './models/user.models.js'
 
 export const signup = async (req, res) => {
   console.log(req.body)
@@ -76,3 +76,5 @@ export const getUsers = async (req, res) => {
   const users = await userRepository.search().return.all()
   res.status(200).json({ result: users })
 }
+
+// Path: docker/local_api/app/controller/user.controller.js

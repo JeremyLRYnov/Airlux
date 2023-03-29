@@ -18,3 +18,5 @@ export const roomRepository = client.fetchRepository(roomSchema)
 
 /* create the index for Room for search */
 await roomRepository.createIndex('roomIndex')
+
+// Path: docker/local_api/app/models/room.models.js

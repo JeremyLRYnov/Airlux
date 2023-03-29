@@ -19,3 +19,5 @@ export const buildingRepository = client.fetchRepository(buildingSchema)
 
 /* create the index for Building for search */
 await buildingRepository.createIndex('buildingIndex')
+
+// Path: docker/local_api/app/models/user.models.js
