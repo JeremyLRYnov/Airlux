@@ -4,7 +4,7 @@ import '../widgets/rounded_button.dart';
 import '../models/constants.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:flutter/widgets.dart';
-
+import '../services/login_service.dart';
 
 class Login extends StatefulWidget {
 
@@ -16,6 +16,9 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   bool _saving = false;
   bool _obscureText = true;
+
+  String _email ="";
+  String _password="";
 
   @override
   Widget build(BuildContext context) {
@@ -36,76 +39,91 @@ class _Login extends State<Login> {
       ),
 
       body: ModalProgressHUD(
-          inAsyncCall: _saving,
+        inAsyncCall: _saving,
 
-          child: Padding(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child : SingleChildScrollView(
+          child : SingleChildScrollView(
 
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
 
-                    Container(
-                      height: 200.0,
-                      child: Image.asset('assets/images/logo.png'),
-                    ),
-                    SizedBox(
-                      height: 48.0,
-                    ),
-                    TextField(
-                      onChanged: (value) {
-                        //Do something with the user input.
-                      },
-                      decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Entrer votre email'),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-
-                    TextField(
-                      obscureText: _obscureText,
-                      decoration: kTextFieldDecoration.copyWith(
-                        prefixIcon: const Icon(Icons.lock),
-
-                        hintText: 'Entrer votre mot de passe',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                          child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 24.0,
-                    ),
-
-                    RoundedButton(
-                      title: 'SE CONNECTER',
-                      onPressed: () async {
-                        setState(() {
-                          _saving = true;
-                        });
-                        await Future.delayed(Duration(seconds: 2));
-                        setState(() {
-                          _saving = false;
-                        });
-                        Navigator.pushNamed(context, HomePage.id);
-
-                      }, color: kPrimaryBlue,
-                    ),
-                  ],
+                Container(
+                  height: 200.0,
+                  child: Image.asset('assets/images/logo.png'),
                 ),
-              ),
+                SizedBox(
+                  height: 48.0,
+                ),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _email = value;
+                    });
+                  },
+                  decoration:
+                  kTextFieldDecoration.copyWith(hintText: 'Entrer votre email'),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+
+                TextField(
+                  obscureText: _obscureText,
+                  decoration: kTextFieldDecoration.copyWith(
+                    prefixIcon: const Icon(Icons.lock),
+
+                    hintText: 'Entrer votre mot de passe',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+
+                      child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _password = value;
+                    });
+                  },
+                ),
+
+                SizedBox(
+                  height: 24.0,
+                ),
+
+                RoundedButton(
+                  title: 'Log In',
+                  onPressed: () async {
+                    /*
+                    setState(() {
+                      _saving = true;
+                    });*/
+                    try {
+                      print("mail : " + _email + " pwd : " + _password);
+                      String token = await LoginService.login(_email,_password);
+                      print("token : " + token);
+                    } catch (e) {
+                      print("erreur : " + e.toString());
+                    }
+                    /*
+                    setState(() {
+                      _saving = false;
+                    });
+                    Navigator.pushNamed(context, HomePage.id);*/
+                  },
+                  color: Colors.blue,
+                ),
+              ],
+            ),
           ),
         ),
+      ),
     );
   }
 }
-
