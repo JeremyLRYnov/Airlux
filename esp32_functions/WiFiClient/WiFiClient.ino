@@ -1,20 +1,30 @@
 #include <WiFi.h>
 #include <WiFiManager.h>
 #include "WifiConnexion.h"
+#include <DHT.h>
+
+#define DHTPIN 14
+#define DHTTYPE DHT11
 
 WiFiServer server(80);
 WiFiClient client;
+
 const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
 const char* password = SECRET_PASS_POINT_ACCESS; 
 
+DHT dht(DHTPIN, DHTTYPE);
+
 void setup() {
   Serial.begin(115200);
+  dht.begin();
   // listen for incoming clients
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
   Serial.println();
   Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
+
+  
 
   server.begin();
 
@@ -29,7 +39,6 @@ void loop() {
     String password = client.readStringUntil('\n');
     Serial.print("ssid: " + ssid);
     Serial.print("password: " + password);
-
 
     // Supprime les espaces en début et fin de chaîne
     ssid.trim();
@@ -48,5 +57,28 @@ void loop() {
     Serial.println(WiFi.localIP());
     WiFi.softAPdisconnect(true);
     Serial.print("Point d'acces arrete : ");
+  }
+
+  // Si le WiFi est connecté, afficher les données du capteur
+  if (WiFi.status() == WL_CONNECTED) {
+    // Le DHT11 renvoie au maximum une mesure toute les 1s
+    float h = dht.readHumidity();
+    //Lis le taux d'humidite en %
+    float t = dht.readTemperature();
+    //Lis la température en degré celsius
+
+    if (isnan(h) || isnan(t)) {
+      Serial.println("Echec reception");
+      return;
+      //Renvoie une erreur si l'ESP32 ne reçoit aucune mesure
+    }
+
+    Serial.print("Humidite: ");
+    Serial.print(h);
+    Serial.print("%  Temperature: ");
+    Serial.print(t);
+    Serial.print("°C, ");
+    // Transmet les mesures reçues dans le moniteur série
+    delay(30000);
   }
 }
