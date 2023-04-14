@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { userRepository } from "../models/user.models.js";
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { userRepository } from '../models/user.models.js'
 
 export const signup = async (req, res) => {
     console.log(req.body);
@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     });
     const { entityId, password, ...rest } = user.toJSON();
     const data = { id: user.entityId, ...rest };
-    res.status(200).json({ message: "Inscription réussi" ,result: data, token });
+    res.status(200).json({ result: data, token });
 };
 
 export const signin = async (req, res) => {
@@ -44,35 +44,35 @@ export const signin = async (req, res) => {
     });
     const { entityId, password, ...rest } = existingUser.toJSON();
     const data = { id: existingUser.entityId, ...rest };
-    res.status(200).json({ message: "Connexion réussi" ,result: data, token });
+    res.status(200).json({ result: data, token });
 };
 
 export const updateUser = async (req, res) => {
-    const { id } = req.params;
-    const user = await userRepository.fetch(id);
+  const { id } = req.params
+  const user = await userRepository.fetch(id)
 
-    user.name = req.body.name ?? null;
-    user.email = req.body.email ?? null;
-    user.password = req.body.password ?? null;
-    user.admin = req.body.admin ?? null;
+  user.name = req.body.name ?? null
+  user.email = req.body.email ?? null
+  user.password = req.body.password ?? null
+  user.admin = req.body.admin ?? null
 
-    await userRepository.save(user);
+  await userRepository.save(user)
 
-    res.status(200).json({ result: user });
-};
+  res.status(200).json({ result: user })
+}
 
 export const deleteUser = async (req, res) => {
-    const { id } = req.params;
-    await userRepository.remove(id);
-    res.status(200).json({ result: "User "+ id +" deleted successfully." });
-};
+  const { id } = req.params
+  await userRepository.remove(id)
+  res.status(200).json({ result: 'User ' + id + ' deleted successfully.' })
+}
 
 export const getUser = async (req, res) => {
-    const user = await userRepository.fetch(req.params.id);
-    res.status(200).json({ result: user });
-};
+  const user = await userRepository.fetch(req.params.id)
+  res.status(200).json({ result: user })
+}
 
 export const getUsers = async (req, res) => {
-    const users = await userRepository.search().return.all();
-    res.status(200).json({ result: users });
-};
+  const users = await userRepository.search().return.all()
+  res.status(200).json({ result: users })
+}
