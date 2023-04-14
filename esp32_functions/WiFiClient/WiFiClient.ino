@@ -2,15 +2,22 @@
 #include <WiFiManager.h>
 #include "WifiConnexion.h"
 #include <DHT.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+
 
 #define DHTPIN 14
 #define DHTTYPE DHT11
 
 WiFiServer server(80);
 WiFiClient client;
+PubSubClient mqttClient(client);
 
 const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
 const char* password = SECRET_PASS_POINT_ACCESS; 
+
+const char ipbroker[] = "mosquitto";
+int portbroker = 1883;
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -20,13 +27,16 @@ void setup() {
   dht.begin();
   pointAccesWifi();
   server.begin();
+  mqttClient.setServer(ipbroker, portbroker);
 
 }
 
 void loop() {
+
   
   connectionWifi();
   gestionSensors();
+  mqttClient.loop();
   
 }
 
@@ -76,25 +86,59 @@ void gestionSensors(){
 
   // Si le WiFi est connecté, afficher les données du capteur
   if (WiFi.status() == WL_CONNECTED) {
-    // Le DHT11 renvoie au maximum une mesure toute les 1s
-    float h = dht.readHumidity();
-    //Lis le taux d'humidite en %
-    float t = dht.readTemperature();
-    //Lis la température en degré celsius
-
-    if (isnan(h) || isnan(t)) {
-      Serial.println("Echec reception");
-      return;
-      //Renvoie une erreur si l'ESP32 ne reçoit aucune mesure
-    }
-
-    Serial.print("Humidite: ");
-    Serial.print(h);
-    Serial.print("%  Temperature: ");
-    Serial.print(t);
-    Serial.print("°C, ");
-    // Transmet les mesures reçues dans le moniteur série
+    gestionTemperature();
+    gestionHumidite();
     delay(30000);
   }
 
+}
+
+void gestionTemperature(){
+
+    float t = dht.readTemperature();
+    //Lis la température en degré celsius
+
+    if (!isnan(t)) {
+      Serial.print("Temperature: ");
+      Serial.print(t);
+      Serial.println("°C");
+      // Transmet la température dans le moniteur série
+
+      StaticJsonDocument<200> doc;
+      doc["id"] = "1";
+      doc["value"] = t;
+
+      String json;
+      serializeJson(doc, json);
+
+      mqttClient.connect("ESP32"); // Connexion au broker MQTT
+      mqttClient.publish("temperature", json.c_str()); // Envoie des données MQTT
+      Serial.println("Envoi temperature sur MQTT");
+      mqttClient.disconnect(); // Déconnexion du broker MQTT
+    }
+}
+
+void gestionHumidite(){
+
+    float h = dht.readHumidity();
+    //Lis le taux d'humidite en %
+
+    if (!isnan(h)) {
+      Serial.print("Humidité: ");
+      Serial.print(h);
+      Serial.println("%");
+      // Transmet le taux d'humidité dans le moniteur série
+
+      StaticJsonDocument<200> doc;
+      doc["id"] = "2";
+      doc["value"] = h;
+
+      String json;
+      serializeJson(doc, json);
+
+      mqttClient.connect("ESP32"); // Connexion au broker MQTT
+      mqttClient.publish("humidite", json.c_str()); // Envoie des données MQTT
+      Serial.println("Envoi humidite sur MQTT");
+      mqttClient.disconnect(); // Déconnexion du broker MQTT
+    }
 }
