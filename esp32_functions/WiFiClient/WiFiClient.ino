@@ -15,22 +15,33 @@ const char* password = SECRET_PASS_POINT_ACCESS;
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
+
   Serial.begin(115200);
   dht.begin();
-  // listen for incoming clients
+  pointAccesWifi();
+  server.begin();
+
+}
+
+void loop() {
+  
+  connectionWifi();
+  gestionSensors();
+  
+}
+
+void pointAccesWifi(){
+
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
   Serial.println();
   Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
 
-  
-
-  server.begin();
-
 }
 
-void loop() {
+void connectionWifi(){
+
   // Écoute les connexions entrantes
   client = server.available();
   if (client) {
@@ -59,6 +70,10 @@ void loop() {
     Serial.print("Point d'acces arrete : ");
   }
 
+}
+
+void gestionSensors(){
+
   // Si le WiFi est connecté, afficher les données du capteur
   if (WiFi.status() == WL_CONNECTED) {
     // Le DHT11 renvoie au maximum une mesure toute les 1s
@@ -81,4 +96,5 @@ void loop() {
     // Transmet les mesures reçues dans le moniteur série
     delay(30000);
   }
+
 }
