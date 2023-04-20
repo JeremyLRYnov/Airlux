@@ -16,10 +16,13 @@ PubSubClient mqttClient(client);
 const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
 const char* password = SECRET_PASS_POINT_ACCESS; 
 
-const char ipbroker[] = "mosquitto";
+//mettre l'adresse ip (ipconfig) de l'ordinateur avec le docker mosquitto lancé
+const char* ipbroker = "ip ordinateur docker";
 int portbroker = 1883;
 
 DHT dht(DHTPIN, DHTTYPE);
+
+bool AccessPointOn = true;
 
 void setup() {
 
@@ -27,7 +30,6 @@ void setup() {
   dht.begin();
   pointAccesWifi();
   server.begin();
-  mqttClient.setServer(ipbroker, portbroker);
 
 }
 
@@ -35,8 +37,14 @@ void loop() {
 
   
   connectionWifi();
-  gestionSensors();
-  mqttClient.loop();
+  if (!AccessPointOn) {
+      //si le point d'accès est éteint se connecter au mqtt
+      mqttClient.setServer(ipbroker, portbroker);
+      mqttClient.connect("ESP32");
+      Serial.println("Connecté au broker MQTT!");
+      gestionSensors();
+      mqttClient.loop();
+    }
   
 }
 
@@ -78,6 +86,7 @@ void connectionWifi(){
     Serial.println(WiFi.localIP());
     WiFi.softAPdisconnect(true);
     Serial.print("Point d'acces arrete : ");
+    AccessPointOn = false;
   }
 
 }
