@@ -12,20 +12,6 @@ on:
       - develop
       - main
 jobs:
-  # Flutter-run:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ./mobileapp/
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-      
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v1
-
-  #     - name: Get dependencies
-  #       run: flutter pub get
 
   API-Locale:
     runs-on: ubuntu-latest
@@ -61,4 +47,4 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Set up SSH connection
-        run: SSH_CONNECTION_STRING
+        run: echo "Coucou"
