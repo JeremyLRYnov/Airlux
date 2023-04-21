@@ -25,10 +25,6 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      #- name: Run tests on emulator
-       # run: |
-        #  flutter emulators --launch emulator
-        #  flutter test
   API-Locale-run:
     runs-on: ubuntu-latest
     defaults:
