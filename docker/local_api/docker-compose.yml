@@ -8,6 +8,9 @@ services:
       hostname: redis
       volumes:
         - ./redis-stack:/data
+      ports:
+        - 6379:6379
+        - 8001:8001
     # Création du conteneur API locale
     api_local:
       container_name: api_local
@@ -16,6 +19,7 @@ services:
       image: nanodeus/docker_api_local
       restart: unless-stopped
       ports:
-        - 80:8080
+        # - 80:8080
+        - 6869:8080
       stdin_open: true
       tty: true
