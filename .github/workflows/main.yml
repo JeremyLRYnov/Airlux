@@ -4,28 +4,30 @@ on:
   push:
     branches:
       - lacazej/workflow
+      - develop
       - main
   pull_request:
     branches:
       - lacazej/workflow
+      - develop
       - main
 jobs:
-  Flutter-run:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./mobileapp/
+  # Flutter-run:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./mobileapp/
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
       
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v1
+  #     - name: Set up Flutter
+  #       uses: subosito/flutter-action@v1
 
-      - name: Get dependencies
-        run: flutter pub get
+  #     - name: Get dependencies
+  #       run: flutter pub get
 
-  API-Locale-run:
+  API-Locale:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -46,3 +48,17 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint:fix
+  
+
+
+  deployment:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docker/local_api/
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up SSH connection
+        run: SSH_CONNECTION_STRING
