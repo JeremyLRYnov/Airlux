@@ -76,5 +76,3 @@ export const getUsers = async (req, res) => {
     const users = await userRepository.search().return.all();
     res.status(200).json({ result: users });
 };
-
-module.exports = app;
