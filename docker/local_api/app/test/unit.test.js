@@ -7,7 +7,7 @@ describe('Controller User', () => {
 
   //GET 
   it('GET /', async () => {
-    const response = await axios.get('http://localhost:6869/user');
+    const response = await axios.get('http://localhost:8080/user');
     expect(response.status).toEqual(200);
     expect(response.data).toEqual({"result": []});
   });
@@ -15,7 +15,7 @@ describe('Controller User', () => {
 
   //POST SIGNUP
   it('Signup POST /', async () => {
-    const response = await axios.post('http://localhost:6869/user/signup', {
+    const response = await axios.post('http://localhost:8080/user/signup', {
         name: 'nicolas',
         email: 'nicolas@example.com',
         password: 'autttt..',
@@ -36,7 +36,7 @@ describe('Controller User', () => {
 
   //GET USER
   it('GET /', async () => {
-    const response = await axios.get('http://localhost:6869/user');
+    const response = await axios.get('http://localhost:8080/user');
     expect(response.status).toEqual(200);
     const user = response.data.result[0];
     expect(user.name).toEqual('nicolas');
@@ -49,7 +49,7 @@ describe('Controller User', () => {
 
   //POST AUTHENTICATE
   it('Signin POST /', async () => {
-    const response = await axios.post('http://localhost:6869/user/signin', {
+    const response = await axios.post('http://localhost:8080/user/signin', {
       email: 'nicolas@example.com',
       password: 'autttt..'
     });
@@ -70,7 +70,7 @@ describe('Controller User', () => {
   //Delete
   it('Delete/', async () => {
     // création de l'utilisateur
-    const signupResponse = await axios.post('http://localhost:6869/user/signup', {
+    const signupResponse = await axios.post('http://localhost:8080/user/signup', {
       name: 'john',
       email: 'john@example.com',
       password: 'password',
@@ -81,14 +81,14 @@ describe('Controller User', () => {
     const userId = signupResponse.data.result.id;
   
     // suppression de l'utilisateur
-    const response = await axios.delete(`http://localhost:6869/user/${userId}`);
+    const response = await axios.delete(`http://localhost:8080/user/${userId}`);
     expect (response.data).toEqual({
         "result": "User "+userId+" deleted successfully."
     })
     expect(response.status).toEqual(200);
   
     // vérification que l'utilisateur a bien été supprimé
-    const getResponse = await axios.get('http://localhost:6869/user');
+    const getResponse = await axios.get('http://localhost:8080/user');
     const users = getResponse.data.result;
     const user = users.find(u => u.id === userId);
     expect(user).toBeUndefined();
@@ -97,7 +97,7 @@ describe('Controller User', () => {
 
   //Update
   it('Update/', async () => {
-    const signupResponse = await axios.post('http://localhost:6869/user/signup', {
+    const signupResponse = await axios.post('http://localhost:8080/user/signup', {
       name: 'pierre',
       email: 'pierre@example.com',
       password: 'poire',
@@ -108,7 +108,7 @@ describe('Controller User', () => {
     const signupId = signupResponse.data.result.id;
   
     // Modification de l'utilisateur
-    const updateResponse = await axios.patch(`http://localhost:6869/user/${signupId}`, {
+    const updateResponse = await axios.patch(`http://localhost:8080/user/${signupId}`, {
       name: 'jack',
       email: 'jack@example.com',
       password: 'pass',
@@ -135,7 +135,7 @@ describe('Controller User', () => {
   //Get Id
   it('Get Id /', async () => {
     //Créer un utilisateur
-    const signupResponse = await axios.post('http://localhost:6869/user/signup', {
+    const signupResponse = await axios.post('http://localhost:8080/user/signup', {
         name: 'enzo',
         email: 'enzo@example.com',
         password: 'password',
@@ -145,7 +145,7 @@ describe('Controller User', () => {
     // récupération de l'ID de l'utilisateur créé
     const userId = signupResponse.data.result.id;
     
-    const getResponse = await axios.get(`http://localhost:6869/user/${userId}`);
+    const getResponse = await axios.get(`http://localhost:8080/user/${userId}`);
     expect(getResponse.status).toEqual(200);
     const responseData = getResponse.data.result;
     expect(responseData.name).toEqual('enzo');
