@@ -48,13 +48,16 @@ jobs:
     steps:
       - name : Checkout the repo
         uses: actions/checkout@v3
+        
+      - name: Create SSH key file
+        run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
 
       - name: Deploiement SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          key: ${{ secrets.KEY }}
+          key: ./ssh_key
           script: |
             scp docker-compose.yml ubuntu@${{ secrets.HOST }}:~/
-            ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
+            ssh -i ./ssh_key ubuntu@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
 
