@@ -4,7 +4,7 @@ import { userRepository } from '../models/user.models.js'
 
 export const signup = async (req, res) => {
     console.log(req.body);
-    const { name, email, confirmPassword, admin } = req.body;
+    const { name, email, admin } = req.body;
     const existingUser = await userRepository.search().where("email").is.equalTo(email).return.first();
     //check if user already registered with the email
     if (existingUser) {
