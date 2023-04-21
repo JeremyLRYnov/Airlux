@@ -1,7 +1,6 @@
 import { Entity, Schema } from 'redis-om'
 import client from '../config/client.js'
 
-
 /* our entity */
 class User extends Entity {};
 
@@ -10,14 +9,14 @@ const userSchema = new Schema(User, {
   name: { type: 'string' },
   email: { type: 'string' },
   password: { type: 'string' },
-  admin: { type: 'boolean' },
+  admin: { type: 'boolean' }
 },
 {
-  dataStructure: 'JSON',
-});
+  dataStructure: 'JSON'
+})
 
 /* use the client to create a Repository just for Persons */
-export const userRepository = client.fetchRepository(userSchema);
+export const userRepository = client.fetchRepository(userSchema)
 
 /* create the index for Person for search */
-await userRepository.createIndex("userIndex");
+await userRepository.createIndex('userIndex')
