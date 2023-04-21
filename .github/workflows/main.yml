@@ -56,5 +56,5 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             scp docker-compose.yml ubuntu@${{ secrets.HOST }}:~/
-            ssh ubuntu@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
+            ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
 
