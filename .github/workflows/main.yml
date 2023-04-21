@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - lacazej/workflow
+      - develop
       - main
   pull_request:
     branches:
       - lacazej/workflow
+      - develop
       - main
 jobs:
   Flutter-run:
