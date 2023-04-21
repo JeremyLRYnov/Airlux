@@ -6,11 +6,13 @@ on:
       - lacazej/workflow
       - develop
       - main
+      - zetsuy/git-workflow
   pull_request:
     branches:
       - lacazej/workflow
       - develop
       - main
+      - zetsuy/git-workflow
 jobs:
   Flutter-run:
     runs-on: ubuntu-latest
@@ -52,3 +54,23 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint:fix
+  
+  deployement:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docker/local_api/
+
+    steps:
+      - name : Checkout the repo
+        uses: actions/checkout@v3
+
+      - name: Deploiement SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.KEY }}
+          script: |
+            scp docker-compose.yml ${{ secrets.HOST }}:~/
+            ssh ${{ secrets.HOST }} 'cd ~/ && docker-compose up -d'
+
