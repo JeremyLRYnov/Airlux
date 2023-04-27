@@ -25,6 +25,21 @@ services:
             - 5601:5601
         networks:
             - docker_airlux_network
+    
+    logstash:
+        image: docker.elastic.co/logstash/logstash:8.7.0
+        container_name: logstash
+        volumes:
+            - ./logstash/config:/usr/share/logstash/pipeline/
+        environment:
+            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+            - ELASTICSEARCH_USERNAME=elastic
+            - ELASTICSEARCH_PASSWORD=changeme
+        ports:
+            - 5044:5044
+            - 9600:9600
+        networks:
+            - docker_airlux_network
 
     filebeat:
         image: docker.elastic.co/beats/filebeat:8.7.0
