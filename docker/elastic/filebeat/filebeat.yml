@@ -1,0 +1,37 @@
+# filebeat.inputs:
+# - type: docker
+#   containers:
+#     ids:
+#       - "4c073db1f127"
+#       - "44fd7a9db429"
+#       - "1015eea71801"
+filebeat.inputs:
+- type: container
+  paths: 
+    - '/var/log/containers/*.log'
+
+# enrich the docker logs with useful information, such as the name of the image or the name of the container
+processors:
+- add_docker_metadata: ~
+
+# allows to parse logs encoded in JSON
+- decode_json_fields:
+    fields: ["message"]
+    target: "json"
+    overwrite_keys: true
+
+# filebeat.modules:
+# - module: docker
+#   metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]
+#   period: 10s
+#   hosts: ["unix:///var/run/docker.sock"]
+
+# configure the ElasticSearch address
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  indices:
+    - index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+
+# make the logs more readable in Kibana
+logging.json: true
+logging.metrics.enabled: false
