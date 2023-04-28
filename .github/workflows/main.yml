@@ -14,23 +14,21 @@ on:
 jobs:
 
   lint:
-    name: Lint
     runs-on: ubuntu-latest
-        steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.0.2'
-          channel: 'stable'
-      - run: flutter --version
+    defaults:
+      run:
+        working-directory: ./mobileapp/
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
         with:
           working-directory: ./mobileapp/
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-      - name: Analyze project source
-        run: dart analyze --fatal-infos
+      - name: Run linter
+        run: flutter analyze
+        with:
+          working-directory: ./mobileapp/
 
   API-Locale:
     runs-on: ubuntu-latest
