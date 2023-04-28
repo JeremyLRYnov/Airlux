@@ -10,14 +10,14 @@ class RoomItem extends StatelessWidget {
   final bool isselected;
   final VoidCallback onpressed;
   const RoomItem({
-    Key? key,
+    super.key,
     required this.width,
     required this.height,
     required this.text,
     required this.piece,
     required this.isselected,
     required this.onpressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class RoomItem extends StatelessWidget {
       onTap: onpressed,
       child: Container(
         margin: const EdgeInsets.only(
-            right: 10.0, top: 10.0, bottom: 40.0),
+            right: 10.0, top: 10.0, bottom: 40.0,),
         width: width,
         height: height,
         decoration: BoxDecoration(

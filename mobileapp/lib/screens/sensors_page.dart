@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './add_sensors.dart';
 import 'package:mobileapp/models/constants.dart';
-import '../widgets/sensors_list.dart';
-import '../models/sensor_model.dart';
+import 'package:mobileapp/models/sensor_model.dart';
+import 'package:mobileapp/screens/add_sensors.dart';
+import 'package:mobileapp/widgets/sensors_list.dart';
 
 class Sensors extends StatefulWidget {
   const Sensors({super.key});
@@ -68,13 +68,13 @@ class _SensorsState extends State<Sensors> {
                         builder: (context) => SingleChildScrollView(
                           child: Container(
                             padding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom),
+                                bottom: MediaQuery.of(context).viewInsets.bottom,),
                             child: AddSensors(addSensorCallBack: (SensorTitle) {
                               setState(() {
                                 sensors.add(SensorModel(name: SensorTitle));
                               });
                               Navigator.pop(context);
-                            })
+                            },),
                           ),
                         ),
                       );

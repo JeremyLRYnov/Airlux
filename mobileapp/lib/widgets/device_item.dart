@@ -28,7 +28,7 @@ class DeviceItem extends StatelessWidget {
             margin: const EdgeInsets.all(4),
           ),
           Icon(icon,
-          color: Colors.white),
+          color: Colors.white,),
           Container(
             margin: const EdgeInsets.all(4),
           ),

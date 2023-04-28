@@ -64,18 +64,18 @@ class _RegistrationScreenState extends State<Register> {
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                           icon: Icon(
-                              !_isObscure ? Icons.visibility : Icons.visibility_off),
+                              !_isObscure ? Icons.visibility : Icons.visibility_off,),
                           onPressed: () {
                             setState(() {
                               _isObscure = !_isObscure;
                             });
-                          })),
+                          },),),
                 ),
                 const SizedBox(
                   height: 24.0,
                 ),
                 RoudedButton(
-                  title: 'S\'inscrire',
+                  title: "S'inscrire",
                   onPressed: () async {
                     setState(() {
                       _saving = true;

@@ -4,7 +4,7 @@ import 'package:mobileapp/widgets/device_item.dart';
 import 'package:mobileapp/widgets/room_item.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
   static const String id = 'HomePage';
 
   @override
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                 child: SizedBox(
                   child: Center(
                     child: Image.asset('assets/images/logo.png',
-                        width: double.infinity),
+                        width: double.infinity,),
                   ),
                 ),
               ),
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                ]),
+                ],),
               ),
             ),
           ],

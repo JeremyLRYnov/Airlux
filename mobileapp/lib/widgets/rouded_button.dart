@@ -5,10 +5,10 @@ import 'package:mobileapp/models/constants.dart';
 
 class RoudedButton extends StatelessWidget {
   const RoudedButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.onPressed,
-  }) : super(key: key);
+  });
   final String title;
   final void Function() onPressed;
 
