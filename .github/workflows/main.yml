@@ -34,6 +34,7 @@ jobs:
 
       - name: Start Docker Compose for unit tests & RUN
         run: |
+          ls -l
           docker-compose up -d
           sleep 5
           docker ps
