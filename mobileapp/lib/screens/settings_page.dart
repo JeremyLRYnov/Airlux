@@ -22,7 +22,7 @@ class SettingsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.0), // Bordure arrondie
             ),
             padding: const EdgeInsets.symmetric(
-                horizontal: 50, vertical: 15), // Espacement intérieur
+                horizontal: 50, vertical: 15,), // Espacement intérieur
           ),
           child: const Text('Se déconnecter', style: TextStyle(fontSize: 20)),
         ),

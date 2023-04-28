@@ -8,7 +8,7 @@ import 'package:mobileapp/screens/settings_page.dart';
 
 
 class FooterMenu extends StatefulWidget {
-  const FooterMenu({Key? key}) : super(key: key);
+  const FooterMenu({super.key});
 
   @override
   _FooterMenuState createState() => _FooterMenuState();

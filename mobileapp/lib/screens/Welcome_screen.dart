@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/screens/Login.dart';
+import 'package:mobileapp/screens/register.dart';
 import 'package:mobileapp/widgets/rouded_button.dart';
-import './Login.dart';
-import '../screens/register.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -43,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) => const Login()),
                 );
               },
             ),

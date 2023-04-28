@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/home_page.dart';
-import '../widgets/rouded_button.dart';
-import '../models/constants.dart';
+import 'package:mobileapp/widgets/rouded_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 

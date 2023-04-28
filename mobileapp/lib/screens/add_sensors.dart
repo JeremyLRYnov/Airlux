@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 
 class AddSensors extends StatelessWidget {
-  AddSensors({Key? key, required this.addSensorCallBack}) : super(key: key);
+  AddSensors({super.key, required this.addSensorCallBack});
   final void Function(String) addSensorCallBack;
 
   String name = '';
@@ -74,7 +74,7 @@ class AddSensors extends StatelessWidget {
                        fontSize: 15,
                        color: Colors.black,
                      ),
-                   )
+                   ),
                  ),
           ],
         ),

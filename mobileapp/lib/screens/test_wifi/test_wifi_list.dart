@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use, package_api_docs, public_member_api_docs
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wifi_iot/wifi_iot.dart';
-import 'dart:io' show Platform;
 
 const String STA_DEFAULT_SSID = "reseau-jeremy";
 const String STA_DEFAULT_PASSWORD = "123456789";
@@ -126,12 +127,12 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
   }
 
   Future<List<APClient>> getClientList(
-      bool onlyReachables, int reachableTimeout) async {
+      bool onlyReachables, int reachableTimeout,) async {
     List<APClient> htResultClient;
 
     try {
       htResultClient = await WiFiForIoTPlugin.getClientList(
-          onlyReachables, reachableTimeout);
+          onlyReachables, reachableTimeout,);
     } on PlatformException {
       htResultClient = <APClient>[];
     }
@@ -179,7 +180,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
     if (_htResultNetwork != null && _htResultNetwork!.isNotEmpty) {
       final List<ListTile> htNetworks = <ListTile>[];
 
-      for (var oNetwork in _htResultNetwork!) {
+      for (final oNetwork in _htResultNetwork!) {
         final PopupCommand oCmdConnect =
         PopupCommand("Connect", oNetwork!.ssid!);
         final PopupCommand oCmdRemove = PopupCommand("Remove", oNetwork.ssid!);
@@ -281,7 +282,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
       htPrimaryWidgets.add(const Divider(
         height: 32.0,
-      ));
+      ),);
 
       if (_isConnected) {
         htPrimaryWidgets.addAll(<Widget>[
@@ -291,31 +292,31 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
               initialData: "Loading..",
               builder: (BuildContext context, AsyncSnapshot<String?> ssid) {
                 return Text("SSID: ${ssid.data}");
-              }),
+              },),
           FutureBuilder(
               future: WiFiForIoTPlugin.getBSSID(),
               initialData: "Loading..",
               builder: (BuildContext context, AsyncSnapshot<String?> bssid) {
                 return Text("BSSID: ${bssid.data}");
-              }),
+              },),
           FutureBuilder(
               future: WiFiForIoTPlugin.getCurrentSignalStrength(),
               initialData: 0,
               builder: (BuildContext context, AsyncSnapshot<int?> signal) {
                 return Text("Signal: ${signal.data}");
-              }),
+              },),
           FutureBuilder(
               future: WiFiForIoTPlugin.getFrequency(),
               initialData: 0,
               builder: (BuildContext context, AsyncSnapshot<int?> freq) {
                 return Text("Frequency : ${freq.data}");
-              }),
+              },),
           FutureBuilder(
               future: WiFiForIoTPlugin.getIP(),
               initialData: "Loading..",
               builder: (BuildContext context, AsyncSnapshot<String?> ip) {
                 return Text("IP : ${ip.data}");
-              }),
+              },),
         ]);
       } else {
         htPrimaryWidgets.addAll(<Widget>[
@@ -341,7 +342,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
             setState(() {
               _isWifiEnableOpenSettings = true;
               WiFiForIoTPlugin.setEnabled(true,
-                  shouldOpenSettings: _isWifiEnableOpenSettings);
+                  shouldOpenSettings: _isWifiEnableOpenSettings,);
             });
           },
         ),
@@ -350,7 +351,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
     htPrimaryWidgets.add(const Divider(
       height: 32.0,
-    ));
+    ),);
 
     return htPrimaryWidgets;
   }
@@ -360,7 +361,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
     WiFiForIoTPlugin.isEnabled().then((val) => setState(() {
       _isEnabled = val;
-    }));
+    }),);
 
     return htPrimaryWidgets;
   }
@@ -390,7 +391,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
                     break;
                   case "remove":
                     WiFiForIoTPlugin.getSSID().then((val) =>
-                        WiFiForIoTPlugin.removeWifiNetwork(val!));
+                        WiFiForIoTPlugin.removeWifiNetwork(val!),);
                     break;
                   default:
                     break;
@@ -508,8 +509,7 @@ class FirstRoute extends StatelessWidget {
               color: Colors.blueGrey[50],
               onPressed: () => WiFiForIoTPlugin.connect(STA_DEFAULT_SSID,
                   password: STA_DEFAULT_PASSWORD,
-                  joinOnce: true,
-                  security: STA_DEFAULT_SECURITY),
+                  security: STA_DEFAULT_SECURITY,),
               child: const Text(
                 'Se conecter',
                 style: TextStyle(
