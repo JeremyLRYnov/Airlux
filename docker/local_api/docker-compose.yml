@@ -1,3 +1,4 @@
+version: '3.8'
 # Création des Container
 services:
     # Création du container Redis-Stack
@@ -16,10 +17,11 @@ services:
       container_name: api_local
       depends_on:
         - redis-stack
+      #build: .
       image: nanodeus/docker_api_local
       restart: unless-stopped
+      env_file: ./.env
       ports:
-        # - 80:8080
-        - 6869:8080
+        - $NODE_DISTANT_PORT:$NODE_DOCKER_PORT
       stdin_open: true
       tty: true
