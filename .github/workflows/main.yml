@@ -17,6 +17,8 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+      - name: go to the project directory
+        run: cd ./mobileapp
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
