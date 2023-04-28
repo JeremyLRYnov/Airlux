@@ -60,22 +60,17 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Create SSH key file
-        env:
-          PRIVATE_KEY: ${{ secrets.KEY }}
-        run: |
-        mkdir -p ~/.ssh/
-        echo "$PRIVATE_KEY" > ~/.ssh/ssh_key
-        chmod 400 ~/.ssh/ssh_key 
+        run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
 
       - name: Display SSH key content
-        run: cat ~/.ssh/ssh_key
+        run: cat ssh_key
 
       - name: copy docker-compose
-        run: scp -i ~/.ssh/ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+        run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
 
       - name: Deploiement SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          key: ~/.ssh/ssh_key
+          key: ./ssh_key
           script: docker-compose up -d 
