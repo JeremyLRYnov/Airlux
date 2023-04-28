@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SensorTile extends StatelessWidget {
   const SensorTile(
-      {required this.SensorTitle,
+      {super.key, required this.SensorTitle,
       });
   final String SensorTitle;
 

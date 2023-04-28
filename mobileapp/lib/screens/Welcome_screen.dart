@@ -6,6 +6,8 @@ import 'package:mobileapp/widgets/rouded_button.dart';
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
 
+  const WelcomeScreen({super.key});
+
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -41,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) => const Login()),
                 );
               },
             ),
@@ -50,7 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Register()),
+                  MaterialPageRoute(builder: (context) => const Register()),
                 );
               },
             ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/widgets/room_item.dart';
 
 class RoomPage extends StatelessWidget {
+  const RoomPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

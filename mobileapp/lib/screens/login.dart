@@ -8,6 +8,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 class Login extends StatefulWidget {
 
   static const String id ='login_screen';
+
+  const Login({super.key});
   @override
   _Login createState() => _Login();
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +13,7 @@ class SettingsPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
             );
           },
           style: ElevatedButton.styleFrom(

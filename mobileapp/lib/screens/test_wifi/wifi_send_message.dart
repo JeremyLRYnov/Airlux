@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class SendDataScreen extends StatefulWidget {
+  const SendDataScreen({super.key});
+
   @override
   _SendDataScreenState createState() => _SendDataScreenState();
 }

@@ -12,9 +12,11 @@ const NetworkSecurity STA_DEFAULT_SECURITY = NetworkSecurity.WPA;
 const String AP_DEFAULT_SSID = "AP_SSID";
 const String AP_DEFAULT_PASSWORD = "AP_PASSWORD";
 
-void main() => runApp(FlutterWifiIoT());
+void main() => runApp(const FlutterWifiIoT());
 
 class FlutterWifiIoT extends StatefulWidget {
+  const FlutterWifiIoT({super.key});
+
   @override
   _FlutterWifiIoTState createState() => _FlutterWifiIoTState();
 }
@@ -209,7 +211,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
               title: Text("${oNetwork.ssid!}${(_htIsNetworkRegistered.containsKey(oNetwork.ssid) &&
                       _htIsNetworkRegistered[oNetwork.ssid]!)
                       ? " *"
-                      : ""}",),
+                      : ""}"),
               trailing: PopupMenuButton<PopupCommand>(
                 padding: EdgeInsets.zero,
                 onSelected: (PopupCommand poCommand) {

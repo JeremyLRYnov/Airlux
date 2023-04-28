@@ -4,6 +4,8 @@ class ConnectWifiSensor extends StatelessWidget {
   String STA_DEFAULT_SSID = '';
   String STA_DEFAULT_PASSWORD = '';
 
+  ConnectWifiSensor({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
