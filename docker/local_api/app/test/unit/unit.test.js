@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 //Controller 
 describe('Controller User', () => {
 
@@ -32,6 +33,15 @@ describe('Controller User', () => {
     expect(responseData.email).toEqual('nicolas@example.com');
     expect(responseData.admin).toEqual(false);
 
+    const userId = response.data.result.id;
+  
+    // suppression de l'utilisateur
+    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
+    expect (signupResponse.data).toEqual({
+        "result": "User "+userId+" deleted successfully."
+    })
+    expect(signupResponse.status).toEqual(200);
+
   });
 
   //GET USER
@@ -44,6 +54,14 @@ describe('Controller User', () => {
     expect(user.admin).toEqual(false);
     const passwordsMatch = await bcrypt.compare("autttt..", user.password);
     expect(passwordsMatch).toBe(true);
+    const userId = response.data.result.id;
+  
+    // suppression de l'utilisateur
+    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
+    expect (signupResponse.data).toEqual({
+        "result": "User "+userId+" deleted successfully."
+    })
+    expect(signupResponse.status).toEqual(200);
   });
 
 
@@ -63,7 +81,14 @@ describe('Controller User', () => {
     expect(responseData.name).toEqual('nicolas');
     expect(responseData.email).toEqual('nicolas@example.com');
     expect(responseData.admin).toEqual(false);
+    const userId = response.data.result.id;
   
+    // suppression de l'utilisateur
+    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
+    expect (signupResponse.data).toEqual({
+        "result": "User "+userId+" deleted successfully."
+    })
+    expect(signupResponse.status).toEqual(200);
   });
 
 
@@ -129,6 +154,13 @@ describe('Controller User', () => {
             "admin": false
         }
     })
+  
+    // suppression de l'utilisateur
+    const Response = await axios.delete(`http://localhost:6869/user/${userId}`);
+    expect (Response.data).toEqual({
+        "result": "User "+userId+" deleted successfully."
+    })
+    expect(Response.status).toEqual(200);
     
   });
 
@@ -153,5 +185,12 @@ describe('Controller User', () => {
     expect(responseData.admin).toEqual(false);
     const passwordsMatch = await bcrypt.compare("password", responseData.password);
     expect(passwordsMatch).toBe(true);
+
+    // suppression de l'utilisateur
+    const Response = await axios.delete(`http://localhost:6869/user/${userId}`);
+    expect (Response.data).toEqual({
+        "result": "User "+userId+" deleted successfully."
+    })
+    expect(Response.status).toEqual(200);
  });
 });
