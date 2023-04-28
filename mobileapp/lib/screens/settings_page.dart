@@ -14,15 +14,15 @@ class SettingsPage extends StatelessWidget {
               MaterialPageRoute(builder: (context) => WelcomeScreen()),
             );
           },
-          child: Text('Se déconnecter', style: TextStyle(fontSize: 20)),
           style: ElevatedButton.styleFrom(
-            primary: Colors.red, // Couleur du bouton
+            backgroundColor: Colors.red, // Couleur du bouton
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0), // Bordure arrondie
             ),
-            padding: EdgeInsets.symmetric(
-                horizontal: 50, vertical: 15), // Espacement intérieur
+            padding: const EdgeInsets.symmetric(
+                horizontal: 50, vertical: 15,), // Espacement intérieur
           ),
+          child: const Text('Se déconnecter', style: TextStyle(fontSize: 20)),
         ),
       ),
     );
