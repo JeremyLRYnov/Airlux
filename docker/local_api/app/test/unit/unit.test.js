@@ -33,15 +33,6 @@ describe('Controller User', () => {
     expect(responseData.email).toEqual('nicolas@example.com');
     expect(responseData.admin).toEqual(false);
 
-    const userId = response.data.result.id;
-  
-    // suppression de l'utilisateur
-    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
-    expect (signupResponse.data).toEqual({
-        "result": "User "+userId+" deleted successfully."
-    })
-    expect(signupResponse.status).toEqual(200);
-
   });
 
   //GET USER
@@ -57,7 +48,7 @@ describe('Controller User', () => {
     const userId = response.data.result.id;
   
     // suppression de l'utilisateur
-    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
+    const signupResponse = await axios.delete(`http://localhost:80/user/${userId}`);
     expect (signupResponse.data).toEqual({
         "result": "User "+userId+" deleted successfully."
     })
@@ -68,6 +59,7 @@ describe('Controller User', () => {
   //POST AUTHENTICATE
   it('Signin POST /', async () => {
     const response = await axios.post('http://localhost:80/user/signin', {
+      name: 'nicolas',
       email: 'nicolas@example.com',
       password: 'autttt..'
     });
@@ -84,7 +76,7 @@ describe('Controller User', () => {
     const userId = response.data.result.id;
   
     // suppression de l'utilisateur
-    const signupResponse = await axios.delete(`http://localhost:6869/user/${userId}`);
+    const signupResponse = await axios.delete(`http://localhost:80/user/${userId}`);
     expect (signupResponse.data).toEqual({
         "result": "User "+userId+" deleted successfully."
     })
@@ -156,7 +148,7 @@ describe('Controller User', () => {
     })
   
     // suppression de l'utilisateur
-    const Response = await axios.delete(`http://localhost:6869/user/${userId}`);
+    const Response = await axios.delete(`http://localhost:80/user/${userId}`);
     expect (Response.data).toEqual({
         "result": "User "+userId+" deleted successfully."
     })
@@ -187,7 +179,7 @@ describe('Controller User', () => {
     expect(passwordsMatch).toBe(true);
 
     // suppression de l'utilisateur
-    const Response = await axios.delete(`http://localhost:6869/user/${userId}`);
+    const Response = await axios.delete(`http://localhost:80/user/${userId}`);
     expect (Response.data).toEqual({
         "result": "User "+userId+" deleted successfully."
     })
