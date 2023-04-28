@@ -13,6 +13,17 @@ on:
       - main
 jobs:
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run linter
+        run: flutter analyze
+
   API-Locale:
     runs-on: ubuntu-latest
     defaults:
