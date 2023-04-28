@@ -17,14 +17,14 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: go to the project directory
-        run: cd ./mobileapp
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
         run: flutter pub get
       - name: Run linter
         run: flutter analyze
+    with:
+      cache: 'flutter:pub-get'
 
   API-Locale:
     runs-on: ubuntu-latest
