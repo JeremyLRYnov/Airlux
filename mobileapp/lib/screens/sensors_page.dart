@@ -26,7 +26,7 @@ class _SensorsState extends State<Sensors> {
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              Padding(padding: EdgeInsets.only(left: 51, top: 93),
+              const Padding(padding: EdgeInsets.only(left: 51, top: 93),
                 child:
                 Text(
                   'Capteurs',
@@ -39,9 +39,9 @@ class _SensorsState extends State<Sensors> {
               ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
 
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
@@ -54,12 +54,12 @@ class _SensorsState extends State<Sensors> {
               ),
             ),
               Container(
-                margin: new EdgeInsets.all(9.0),
+                margin: const EdgeInsets.all(9.0),
                 child : Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(
                     backgroundColor: kPrimaryBlue,
-                    child: Icon(
+                    child: const Icon(
                       Icons.add,
                     ),
                     onPressed: () {

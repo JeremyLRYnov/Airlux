@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, package_api_docs, public_member_api_docs
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobileapp/screens/test_wifi/connect_wifi_sensor.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:io' show Platform;
 
@@ -12,9 +11,11 @@ const NetworkSecurity STA_DEFAULT_SECURITY = NetworkSecurity.WPA;
 const String AP_DEFAULT_SSID = "AP_SSID";
 const String AP_DEFAULT_PASSWORD = "AP_PASSWORD";
 
-void main() => runApp(FlutterWifiIoT());
+void main() => runApp(const FlutterWifiIoT());
 
 class FlutterWifiIoT extends StatefulWidget {
+  const FlutterWifiIoT({super.key});
+
   @override
   _FlutterWifiIoTState createState() => _FlutterWifiIoTState();
 }
@@ -24,13 +25,13 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
   String? _sPreviousPreSharedKey = "";
 
   List<WifiNetwork?>? _htResultNetwork;
-  Map<String, bool>? _htIsNetworkRegistered = Map();
+  final Map<String, bool> _htIsNetworkRegistered = {};
 
   bool _isEnabled = false;
   bool _isConnected = false;
   bool _isWifiEnableOpenSettings = false;
 
-  final TextStyle textStyle = TextStyle(color: Colors.white);
+  final TextStyle textStyle = const TextStyle(color: Colors.white);
 
   @override
   initState() {
@@ -159,7 +160,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
     }
 
     setState(() {
-      _htIsNetworkRegistered![ssid] = bIsRegistered;
+      _htIsNetworkRegistered[ssid] = bIsRegistered;
     });
   }
 
@@ -175,10 +176,10 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       _htResultNetwork = null;
     }
 
-    if (_htResultNetwork != null && _htResultNetwork!.length > 0) {
+    if (_htResultNetwork != null && _htResultNetwork!.isNotEmpty) {
       final List<ListTile> htNetworks = <ListTile>[];
 
-      _htResultNetwork!.forEach((oNetwork) {
+      for (var oNetwork in _htResultNetwork!) {
         final PopupCommand oCmdConnect =
         PopupCommand("Connect", oNetwork!.ssid!);
         final PopupCommand oCmdRemove = PopupCommand("Remove", oNetwork.ssid!);
@@ -194,8 +195,8 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
         setState(() {
           isRegisteredWifiNetwork(oNetwork.ssid!);
-          if (_htIsNetworkRegistered!.containsKey(oNetwork.ssid) &&
-              _htIsNetworkRegistered![oNetwork.ssid]!) {
+          if (_htIsNetworkRegistered.containsKey(oNetwork.ssid) &&
+              _htIsNetworkRegistered[oNetwork.ssid]!) {
             htPopupMenuItems.add(
               PopupMenuItem<PopupCommand>(
                 value: oCmdRemove,
@@ -206,12 +207,10 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
           htNetworks.add(
             ListTile(
-              title: Text("" +
-                  oNetwork.ssid! +
-                  ((_htIsNetworkRegistered!.containsKey(oNetwork.ssid) &&
-                      _htIsNetworkRegistered![oNetwork.ssid]!)
+              title: Text("${oNetwork.ssid!}${(_htIsNetworkRegistered.containsKey(oNetwork.ssid) &&
+                      _htIsNetworkRegistered[oNetwork.ssid]!)
                       ? " *"
-                      : "")),
+                      : ""}"),
               trailing: PopupMenuButton<PopupCommand>(
                 padding: EdgeInsets.zero,
                 onSelected: (PopupCommand poCommand) {
@@ -240,7 +239,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
             ),
           );
         });
-      });
+      }
 
       return ListView(
         padding: kMaterialListPadding,
@@ -270,8 +269,8 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
     if (_isEnabled) {
       htPrimaryWidgets.addAll([
-        SizedBox(height: 10),
-        Text("Wifi Allumé"),
+        const SizedBox(height: 10),
+        const Text("Wifi Allumé"),
       ]);
 
       WiFiForIoTPlugin.isConnected().then((val) {
@@ -280,13 +279,13 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
         });
       });
 
-      htPrimaryWidgets.add(Divider(
+      htPrimaryWidgets.add(const Divider(
         height: 32.0,
       ));
 
       if (_isConnected) {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Connecté au WiFi : "),
+          const Text("Connecté au WiFi : "),
           FutureBuilder(
               future: WiFiForIoTPlugin.getSSID(),
               initialData: "Loading..",
@@ -320,7 +319,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
         ]);
       } else {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Scan des réseaux Wifi"),
+          const Text("Scan des réseaux Wifi"),
           MaterialButton(
             color: Colors.blue,
             child: Text("Scanner les environs", style: textStyle),
@@ -333,8 +332,8 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       }
     } else {
       htPrimaryWidgets.addAll(<Widget>[
-        SizedBox(height: 10),
-        Text("Wifi Eteint"),
+        const SizedBox(height: 10),
+        const Text("Wifi Eteint"),
         MaterialButton(
           color: Colors.blue,
           child: Text("Lancer le Wifi", style: textStyle),
@@ -349,7 +348,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       ]);
     }
 
-    htPrimaryWidgets.add(Divider(
+    htPrimaryWidgets.add(const Divider(
       height: 32.0,
     ));
 
@@ -375,12 +374,12 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
           title: Platform.isIOS
-              ? Text('WifiFlutter Example iOS')
-              : Text('WifiFlutter Example Android'),
+              ? const Text('WifiFlutter Example iOS')
+              : const Text('WifiFlutter Example Android'),
           actions: _isConnected
               ? <Widget>[
             PopupMenuButton<String>(
@@ -399,13 +398,13 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
               },
               itemBuilder: (BuildContext context) =>
               <PopupMenuItem<String>>[
-                PopupMenuItem<String>(
+                const PopupMenuItem<String>(
                   value: "disconnect",
-                  child: const Text('Disconnect'),
+                  child: Text('Disconnect'),
                 ),
-                PopupMenuItem<String>(
+                const PopupMenuItem<String>(
                   value: "remove",
-                  child: const Text('Remove'),
+                  child: Text('Remove'),
                 ),
               ],
             ),
@@ -435,10 +434,10 @@ class FirstRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Container(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: Colors.blue.shade900,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topRight: Radius.circular(10.0),
             topLeft: Radius.circular(10.0),
           ),
@@ -446,10 +445,10 @@ class FirstRoute extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
-            Text(
+            const Text(
               'Ajout du capteur',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -458,18 +457,18 @@ class FirstRoute extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
             TextField(
               textAlign: TextAlign.center,
               cursorColor: Colors.black,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 labelText: 'Nom du capteur',
-                labelStyle: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
-                hintStyle: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+                labelStyle: const TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+                hintStyle: const TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
                 filled: true,
                 fillColor: Colors.blueGrey[50],
                 border: OutlineInputBorder(
@@ -480,19 +479,19 @@ class FirstRoute extends StatelessWidget {
                 STA_DEFAULT_SSID = value;
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 30.0,
             ),
 
             TextField(
               textAlign: TextAlign.center,
               cursorColor: Colors.black,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 labelText: 'Mot de passe du capteur',
-                labelStyle: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
-                hintStyle: TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+                labelStyle: const TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
+                hintStyle: const TextStyle(color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold),
                 filled: true,
                 fillColor: Colors.blueGrey[50],
                 border: OutlineInputBorder(
@@ -506,17 +505,17 @@ class FirstRoute extends StatelessWidget {
             //Faire une row, faire un container vide sur 50% de la row
             // 50% restant pour le boutton
             MaterialButton(
-              child: Text(
-                'Se conecter',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
               color: Colors.blueGrey[50],
               onPressed: () => WiFiForIoTPlugin.connect(STA_DEFAULT_SSID,
                   password: STA_DEFAULT_PASSWORD,
                   joinOnce: true,
                   security: STA_DEFAULT_SECURITY),
+              child: const Text(
+                'Se conecter',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
             ),
           ],
         ),

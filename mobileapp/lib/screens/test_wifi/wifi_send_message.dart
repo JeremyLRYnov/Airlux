@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'dart:convert';
 
 class SendDataScreen extends StatefulWidget {
+  const SendDataScreen({super.key});
+
   @override
   _SendDataScreenState createState() => _SendDataScreenState();
 }
@@ -21,10 +22,10 @@ class _SendDataScreenState extends State<SendDataScreen> {
         // Créer une connexion TCP avec l'ESP32
         Socket socket = await Socket.connect('192.168.4.1', 80);
         // Envoyer les données SSID et mot de passe WiFi à l'ESP32
-        socket.write(_ssid+"\n");
-        print("SSID: " + _ssid +"\n");
-        socket.write(_password+"\n");
-        print("PWD: " + _password+"\n");
+        socket.write("$_ssid\n");
+        print("SSID: $_ssid\n");
+        socket.write("$_password\n");
+        print("PWD: $_password\n");
         // Attendre la réponse de l'ESP32
         String response = await utf8.decoder.bind(socket).join();
         print(response);
@@ -40,7 +41,7 @@ class _SendDataScreenState extends State<SendDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Envoyer des données'),
+        title: const Text('Envoyer des données'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -49,7 +50,7 @@ class _SendDataScreenState extends State<SendDataScreen> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'SSID'),
+                decoration: const InputDecoration(labelText: 'SSID'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Entrez un SSID';
@@ -59,7 +60,7 @@ class _SendDataScreenState extends State<SendDataScreen> {
                 onSaved: (value) => _ssid = value!,
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Mot de passe'),
+                decoration: const InputDecoration(labelText: 'Mot de passe'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Entrez un mot de passe';
@@ -69,8 +70,8 @@ class _SendDataScreenState extends State<SendDataScreen> {
                 onSaved: (value) => _password = value!,
               ),
               ElevatedButton(
-                child: Text('Envoyer'),
                 onPressed: _submit,
+                child: const Text('Envoyer'),
               ),
             ],
           ),

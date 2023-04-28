@@ -5,7 +5,7 @@ import '../models/sensor_model.dart';
 class SensorsList extends StatefulWidget {
   final List<SensorModel> sensors;
 
-  SensorsList({super.key, required this.sensors});
+  const SensorsList({super.key, required this.sensors});
 
   @override
   State<SensorsList> createState() => _SensorsListState();

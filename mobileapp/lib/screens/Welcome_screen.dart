@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/widgets/rouded_button.dart';
 import './Login.dart';
-import '../models/rouded_button.dart';
 import '../screens/register.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
+
+  const WelcomeScreen({super.key});
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -16,7 +18,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
 
           mainAxisAlignment: MainAxisAlignment.center,
@@ -26,14 +28,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
 
-                Container(
-                  child: Image.asset('assets/images/logo.png'),
+                SizedBox(
                   height: 200.0,
+                  child: Image.asset('assets/images/logo.png'),
 
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 48.0,
             ),
             RoudedButton(
@@ -50,7 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Register()),
+                  MaterialPageRoute(builder: (context) => const Register()),
                 );
               },
             ),

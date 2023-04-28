@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobileapp/models/constants.dart';
 
 class DeviceItem extends StatelessWidget {
   final String text;
@@ -16,7 +15,7 @@ class DeviceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10.0, bottom: 10.0, top: 5.0),
+      margin: const EdgeInsets.only(right: 10.0, bottom: 10.0, top: 5.0),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20),
@@ -26,17 +25,17 @@ class DeviceItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.all(4),
+            margin: const EdgeInsets.all(4),
           ),
           Icon(icon,
           color: Colors.white),
           Container(
-            margin: EdgeInsets.all(4),
+            margin: const EdgeInsets.all(4),
           ),
           Text(
             text,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,

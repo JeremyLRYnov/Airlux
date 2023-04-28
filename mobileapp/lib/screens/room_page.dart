@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/widgets/room_item.dart';
 
 class RoomPage extends StatelessWidget {
+  const RoomPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          margin: EdgeInsets.only(top: 80, left: 20),
+          margin: const EdgeInsets.only(top: 80, left: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Pièces',
                 style: TextStyle(
                   fontSize: 40,
@@ -19,10 +21,10 @@ class RoomPage extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top:20),
+                margin: const EdgeInsets.only(top:20),
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
+                margin: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
                     RoomItem(
@@ -46,7 +48,7 @@ class RoomPage extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
+                margin: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
                     RoomItem(

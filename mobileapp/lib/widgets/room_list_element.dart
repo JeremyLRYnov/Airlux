@@ -9,7 +9,7 @@ class RoomListElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       width: 150,
       height: 150,
       decoration: BoxDecoration(
