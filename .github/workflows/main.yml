@@ -6,11 +6,13 @@ on:
       - lacazej/workflow
       - develop
       - main
+      - zetsuy/git-workflow
   pull_request:
     branches:
       - lacazej/workflow
       - develop
       - main
+      - zetsuy/git-workflow
 jobs:
 
   API-Locale:
@@ -51,9 +53,20 @@ jobs:
     defaults:
       run:
         working-directory: ./docker/local_api/
-    
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up SSH connection
-        run: echo "Coucou"
+      - name : Checkout the repo
+        uses: actions/checkout@v3
+        
+      - name: Create SSH key file
+        run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
+
+      - name: Deploiement SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          key: ./ssh_key
+          script: |
+            scp docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+            ssh -i ./ssh_key ${{ secrets.USER }}@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
+
