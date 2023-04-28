@@ -21,10 +21,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Install dependencies
         run: flutter pub get
+        with:
+          working-directory: ./mobileapp
       - name: Run linter
         run: flutter analyze
-    with:
-      cache: 'flutter:pub-get'
 
   API-Locale:
     runs-on: ubuntu-latest
