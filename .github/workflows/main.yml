@@ -17,22 +17,17 @@ jobs:
 
   API-Locale:
     runs-on: ubuntu-latest
+    container: 
+      image: node:19
     defaults:
       run:
         working-directory: ./docker/local_api/
 
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '19'
-          cache: 'npm'
-          cache-dependency-path: './docker/local_api/package-lock.json'
 
       - name: Get dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run ESLint
         run: npm run lint:fix
@@ -61,12 +56,13 @@ jobs:
       - name: Create SSH key file
         run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
 
+      - name: copy docker-compose
+        run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+
       - name: Deploiement SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           key: ./ssh_key
-          script: |
-            scp docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
-            ssh -i ./ssh_key ${{ secrets.USER }}@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
+          script: docker-compose up -d 
 
