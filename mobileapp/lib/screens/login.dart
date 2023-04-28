@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/home_page.dart';
-import '../main.dart';
-import '../widgets/rouded_button.dart';
-import '../models/constants.dart';
+import 'package:mobileapp/widgets/rouded_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:flutter/widgets.dart';
 
 
 class Login extends StatefulWidget {
@@ -28,7 +26,7 @@ class _Login extends State<Login> {
         backgroundColor: kPrimaryBlue,
         leading: IconButton(
 
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             // Action à effectuer lorsque le bouton est pressé
             Navigator.pop(context);
@@ -40,7 +38,7 @@ class _Login extends State<Login> {
           inAsyncCall: _saving,
 
           child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child : SingleChildScrollView(
 
                 child: Column(
@@ -48,11 +46,11 @@ class _Login extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
 
-                    Container(
+                    SizedBox(
                       height: 200.0,
                       child: Image.asset('assets/images/logo.png'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 48.0,
                     ),
                     TextField(
@@ -62,7 +60,7 @@ class _Login extends State<Login> {
                       decoration:
                       kTextFieldDecoration.copyWith(hintText: 'Entrer your email'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8.0,
                     ),
 
@@ -83,7 +81,7 @@ class _Login extends State<Login> {
                       ),
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 24.0,
                     ),
 
@@ -93,7 +91,7 @@ class _Login extends State<Login> {
                         setState(() {
                           _saving = true;
                         });
-                        await Future.delayed(Duration(seconds: 2));
+                        await Future.delayed(const Duration(seconds: 2));
                         setState(() {
                           _saving = false;
                         });

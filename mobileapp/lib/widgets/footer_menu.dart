@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/screens/login.dart';
-import 'package:mobileapp/screens/Welcome_screen.dart';
-
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/room_page.dart';
 import 'package:mobileapp/screens/script_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
 
-import '../screens/sensors_page.dart';
-
 class FooterMenu extends StatefulWidget {
-  const FooterMenu({Key? key}) : super(key: key);
+  const FooterMenu({super.key});
 
   @override
   _FooterMenuState createState() => _FooterMenuState();
@@ -22,7 +17,7 @@ class _FooterMenuState extends State<FooterMenu> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
-    HomePage(),
+    const HomePage(),
     RoomPage(),
     ScriptPage(),
     SettingsPage(),

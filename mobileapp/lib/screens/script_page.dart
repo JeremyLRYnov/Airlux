@@ -8,7 +8,7 @@ class ScriptPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text(
               'En développement',
               style: TextStyle(
