@@ -18,17 +18,14 @@ jobs:
     defaults:
       run:
         working-directory: ./mobileapp/
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install dependencies
         run: flutter pub get
-        with:
-          working-directory: ./mobileapp/
       - name: Run linter
         run: flutter analyze
-        with:
-          working-directory: ./mobileapp/
 
   API-Locale:
     runs-on: ubuntu-latest
