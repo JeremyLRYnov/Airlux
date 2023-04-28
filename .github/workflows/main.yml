@@ -17,14 +17,19 @@ jobs:
 
   API-Locale:
     runs-on: ubuntu-latest
-    container: 
-      image: node:19
     defaults:
       run:
         working-directory: ./docker/local_api/
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '19'
+          cache: 'npm'
+          cache-dependency-path: './docker/local_api/package-lock.json'
 
       - name: Get dependencies
         run: npm install
