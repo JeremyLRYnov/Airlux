@@ -66,7 +66,7 @@ jobs:
         run: cat ssh_key
 
       - name: copy docker-compose
-        run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+        run: scp -o StrictHostKeyChecking=no -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
 
       - name: Deploiement SSH
         uses: appleboy/ssh-action@master
