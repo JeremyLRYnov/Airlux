@@ -14,6 +14,24 @@ on:
       - main
       - zetsuy/git-workflow
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mobileapp/
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: Add Flutter to PATH
+        run: echo "$HOME/flutter/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run linter
+        run: flutter analyze
 
   API-Locale:
     runs-on: ubuntu-latest

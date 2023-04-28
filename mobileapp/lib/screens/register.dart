@@ -5,6 +5,8 @@ import 'package:mobileapp/widgets/rouded_button.dart';
 class Register extends StatefulWidget {
 
   static const String id = 'register_screen';
+
+  const Register({super.key});
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 
