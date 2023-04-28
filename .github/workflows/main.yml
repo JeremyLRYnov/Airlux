@@ -62,6 +62,9 @@ jobs:
       - name: Create SSH key file
         run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
 
+      - name: Display SSH key content
+        run: cat ssh_key
+
       - name: copy docker-compose
         run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
 
