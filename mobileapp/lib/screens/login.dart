@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/settings_page.dart';
 import 'package:mobileapp/widgets/rouded_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -30,7 +31,7 @@ class _Login extends State<Login> {
 
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Action à effectuer lorsque le bouton est pressé
+            // When button pressed
             Navigator.pop(context);
           },
         ),
@@ -60,10 +61,10 @@ class _Login extends State<Login> {
                         //Do something with the user input.
                       },
                       decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Entrer your email'),
+                      kTextFieldDecoration.copyWith(hintText: 'Entrer votre adresse mail'),
                     ),
                     const SizedBox(
-                      height: 8.0,
+                      height: 24.0,
                     ),
 
                     TextField(
@@ -71,7 +72,7 @@ class _Login extends State<Login> {
                       decoration: kTextFieldDecoration.copyWith(
                         prefixIcon: const Icon(Icons.lock),
 
-                        hintText: 'Entrer your password',
+                        hintText: 'Entrer votre mot de passe',
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -87,8 +88,8 @@ class _Login extends State<Login> {
                       height: 24.0,
                     ),
 
-                    RoudedButton(
-                      title: 'Log In',
+                    RectangleButton(
+                      title: 'SE CONNECTER',
                       onPressed: () async {
                         setState(() {
                           _saving = true;
@@ -99,13 +100,11 @@ class _Login extends State<Login> {
                         });
                         Navigator.pushNamed(context, HomePage.id);
 
-                      },
+                      }, color: kPrimaryBlue,
                     ),
                   ],
                 ),
               ),
-
-
           ),
         ),
     );

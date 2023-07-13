@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
+import 'package:mobileapp/screens/settings_page.dart';
 import 'package:mobileapp/widgets/rouded_button.dart';
 
 class Register extends StatefulWidget {
@@ -48,15 +49,26 @@ class _RegistrationScreenState extends State<Register> {
                     //Do something with the user input.
                   },
                   decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Entrez votre email',
+                    hintText: 'Entrez votre prénom',
                   ),
                 ),
                 const SizedBox(
-                  height: 8.0,
+                  height: 24.0,
                 ),
                 TextField(
                   onChanged: (value) {
                     //Do something with the user input.
+                  },
+                  decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Entrez votre email',
+                  ),
+                ),
+                const SizedBox(
+                  height: 24.0,
+                ),
+                TextField(
+                  onChanged: (value) {
+                    //TODO
                   },
                   obscureText: _isObscure,
                   decoration: kTextFieldDecoration.copyWith(
@@ -69,13 +81,15 @@ class _RegistrationScreenState extends State<Register> {
                             setState(() {
                               _isObscure = !_isObscure;
                             });
-                          },),),
+                          },
+                      ),
+                  ),
                 ),
                 const SizedBox(
                   height: 24.0,
                 ),
-                RoudedButton(
-                  title: "S'inscrire",
+                RectangleButton(
+                  title: "S'INSCRIRE",
                   onPressed: () async {
                     setState(() {
                       _saving = true;
@@ -84,7 +98,7 @@ class _RegistrationScreenState extends State<Register> {
                     setState(() {
                       _saving = false;
                     });
-                  },
+                  }, color: kPrimaryBlue,
                 ),
               ],
             ),
