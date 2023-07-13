@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/widgets/device_item.dart';
 import 'package:mobileapp/widgets/room_item.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
   static const String id = 'HomePage';
 
   @override
@@ -29,11 +28,11 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 4,
               child: Container(
-                margin: new EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
+                margin: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
                 child: SizedBox(
                   child: Center(
                     child: Image.asset('assets/images/logo.png',
-                        width: double.infinity),
+                        width: double.infinity,),
                   ),
                 ),
               ),
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                 child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
+                    margin: const EdgeInsets.only(bottom: 10.0),
                     child: const Text(
                       'Appareils',
                       style: TextStyle(
@@ -71,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         Column(
-                          children: [
+                          children: const [
                             DeviceItem(
                               icon: Icons.ac_unit_rounded,
                               text: "température",
@@ -85,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         Column(
-                          children: [
+                          children: const [
                             DeviceItem(
                               icon: Icons.water_rounded,
                               text: "humidité",
@@ -99,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         Column(
-                          children: [
+                          children: const [
                             DeviceItem(
                               icon: Icons.tv_rounded,
                               text: "télevision",
@@ -111,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
+                    margin: const EdgeInsets.only(bottom: 10.0),
                     child: const Text(
                       'Pièces',
                       style: TextStyle(
@@ -167,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                ]),
+                ],),
               ),
             ),
           ],

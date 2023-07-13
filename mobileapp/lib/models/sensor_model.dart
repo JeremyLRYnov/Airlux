@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class SensorModel {
   SensorModel ({required this.name, this.isDone = false});
