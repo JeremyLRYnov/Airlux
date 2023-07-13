@@ -42,3 +42,5 @@ process.on('unhandledRejection', (err, promise) => {
 app.use(notFound)
 
 app.use(errorHandler)
+
+// Path: docker/local_api/app/routes/user.routes.js
