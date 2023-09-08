@@ -1,105 +1,134 @@
-#include <WiFi.h>
 #include <WiFiManager.h>
-#include "WifiConnexion.h"
 #include <DHT.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include "WifiConnexion.h"
 
 
 #define DHTPIN 14
 #define DHTTYPE DHT11
-
-WiFiServer server(80);
-WiFiClient client;
-PubSubClient mqttClient(client);
-
-const char* ssid = SECRET_SSID_POINT_ACCESS; //a changer selon wifi
-const char* password = SECRET_PASS_POINT_ACCESS; 
-
-//mettre l'adresse ip (ipconfig) de l'ordinateur avec le docker mosquitto lancé
-const char* ipbroker = "ip ordinateur docker";
-int portbroker = 1883;
+#define LEDPIN 27
 
 DHT dht(DHTPIN, DHTTYPE);
 
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
+
+//mettre l'adresse ip (ipconfig) de la carte wifi connecté au point d'acces de l'ordinateur avec le docker mosquitto lancé
+const char* ipbroker = "ip";
+int portbroker = 1883;
+
+bool lightState = false;
+
 bool AccessPointOn = true;
+
+unsigned long lastUpdate = 0;
+const unsigned long updateInterval = 30000;
+
 
 void setup() {
 
   Serial.begin(115200);
+  pinMode (LEDPIN, OUTPUT);
   dht.begin();
+
   pointAccesWifi();
-  server.begin();
+  connecterMQTT();
 
 }
 
-void loop() {
 
-  
+void loop() {
   connectionWifi();
   if (!AccessPointOn) {
-      //si le point d'accès est éteint se connecter au mqtt
-      mqttClient.setServer(ipbroker, portbroker);
-      mqttClient.connect("ESP32");
-      Serial.println("Connecté au broker MQTT!");
-      gestionSensors();
+    if (mqttClient.connected()) {
+      gestionConnectedObjects();
       mqttClient.loop();
+    } else {
+      reconnecterMQTT();
     }
-  
+  }
 }
 
 void pointAccesWifi(){
-
-  WiFi.mode(WIFI_AP);
-  WiFi.softAP(ssid, password);
-  Serial.println();
-  Serial.print("IP address: ");
-  Serial.println(WiFi.softAPIP());
-
+  WiFiManager wifiManager;
+  wifiManager.resetSettings();
+  wifiManager.autoConnect(SECRET_SSID_POINT_ACCESS);
+  Serial.println("ESP connecté au réseau de la maison");
+  Serial.print("Adresse IP : ");
+  Serial.println(WiFi.localIP());
+  AccessPointOn = false;
 }
 
-void connectionWifi(){
-
-  // Écoute les connexions entrantes
-  client = server.available();
-  if (client) {
-    // Lorsqu'une connexion est détectée, lire les données reçues
-    String ssid = client.readStringUntil('\n');
-    String password = client.readStringUntil('\n');
-    Serial.print("ssid: " + ssid);
-    Serial.print("password: " + password);
-
-    // Supprime les espaces en début et fin de chaîne
-    ssid.trim();
-    password.trim();
-
-    // Essaye de se connecter au Wi-Fi
-    WiFi.begin(ssid.c_str(), password.c_str());
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(1000);
-    }
-
-    // Connecté au Wi-Fi, affiche l'adresse IP
-    Serial.print("Connecté au Wi-Fi ");
-    Serial.println(ssid);
-    Serial.print("Adresse IP : ");
-    Serial.println(WiFi.localIP());
-    WiFi.softAPdisconnect(true);
-    Serial.print("Point d'acces arrete : ");
-    AccessPointOn = false;
+void connecterMQTT(){
+  mqttClient.setServer(ipbroker, portbroker);
+  if (mqttClient.connect("ESP32")) {
+    Serial.println("Connecté au broker MQTT!");
   }
-
 }
 
+void reconnecterMQTT() {
+  while (!mqttClient.connected()) {
+    Serial.println("Tentative de reconnexion au broker MQTT...");
+    if (mqttClient.connect("ESP32")) {
+      Serial.println("Connecté au broker MQTT!");
+    }
+    delay(5000);
+  }
+}
+
+void connectionWifi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    AccessPointOn = true;
+    Serial.println("Déconnecté du Wi-Fi. Redémarrage du point d'accès.");
+    WiFi.disconnect(true);
+    ESP.restart();
+  }
+}
+
+void gestionConnectedObjects(){
+      gestionSensors();
+      gestionSwitchs();
+      delay(10000);
+}
 void gestionSensors(){
 
-  // Si le WiFi est connecté, afficher les données du capteur
-  if (WiFi.status() == WL_CONNECTED) {
     gestionTemperature();
     gestionHumidite();
-    delay(30000);
-  }
 
+}
+
+void gestionSwitchs(){
+
+    gestionAllumageLumiere();
+    gestionEtatLumiere();
+}
+
+void gestionAllumageLumiere(){
+  if (lightState) {
+    digitalWrite(LEDPIN, HIGH);  // Allume la lumière si lightState est vrai (true)
+  } else {
+    digitalWrite(LEDPIN, LOW);   // Éteint la lumière si lightState est faux (false)
+  }
+  lightState = !lightState;
+}
+
+void gestionEtatLumiere(){
+      Serial.print("Lumiere: ");
+      Serial.println(lightState);
+      // Transmet la température dans le moniteur série
+
+      StaticJsonDocument<200> doc;
+      doc["id"] = "3";
+      doc["value"] = lightState;
+
+      String json;
+      serializeJson(doc, json);
+
+      mqttClient.connect("ESP32"); // Connexion au broker MQTT
+      mqttClient.publish("lumiere", json.c_str()); // Envoie des données MQTT
+      Serial.println("Envoi etat lumiere sur MQTT");
+      mqttClient.disconnect(); // Déconnexion du broker MQTT
 }
 
 void gestionTemperature(){
