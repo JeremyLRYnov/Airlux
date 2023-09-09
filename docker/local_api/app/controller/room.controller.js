@@ -1,4 +1,4 @@
-import { roomRepository } from '../model/room.model.js'
+import { roomRepository } from '../models/room.models.js'
 
 export const createRoom = async (req, res) => {
   const { name, buildingId } = req.body
