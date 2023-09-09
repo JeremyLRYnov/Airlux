@@ -1,4 +1,4 @@
-import { sensorRepository } from '../model/sensor.model'
+import { sensorRepository } from '../models/sensor.models.js'
 
 export const createSensor = async (req, res) => {
   const { name, roomId } = req.body
