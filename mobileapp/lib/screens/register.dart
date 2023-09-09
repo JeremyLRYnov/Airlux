@@ -20,9 +20,8 @@ class _RegistrationScreenState extends State<Register> {
   TextEditingController motDePasseController = TextEditingController();
   bool _isObscure = true;
   bool _saving = false;
-  String test1 = '';
-  String errorMessage = '';
-  String message = '';
+  Color _color = Colors.red;
+  String _message = '';
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +122,7 @@ class _RegistrationScreenState extends State<Register> {
                     setState(() {
                       _saving = true;
                     });
-                    await Future.delayed(const Duration(seconds: 2));
+                    await Future.delayed(const Duration(seconds: 1));
                     setState(() {
                       _saving = false;
                     });
@@ -142,15 +141,15 @@ class _RegistrationScreenState extends State<Register> {
                       setState(() {
                         if (response.statusCode == 200) {
                           final jsonResponse = json.decode(response.body);
-                          message = jsonResponse['message'].toString();
-                          errorMessage = '';
+                          _message = jsonResponse['message'].toString();
+                          _color = Colors.green;
                           print('Connexion à Redis réussie !');
                         } else {
                           final jsonResponse = json.decode(response.body);
-                          errorMessage = jsonResponse['message'].toString();
-                          message = '';
+                          _message = jsonResponse['message'].toString();
+                          _color = Colors.red;
                           print(
-                              'Erreur de connexion au serveur : ${response.statusCode} => $errorMessage');
+                              'Erreur de connexion au serveur : ${response.statusCode} => $_message');
                         }
                       });
                     }
@@ -162,20 +161,14 @@ class _RegistrationScreenState extends State<Register> {
                   color: kPrimaryBlue,
                 ),
                 const SizedBox(
-                  height: 8.0,
+                  height: 16.0,
                 ),
                 Center(
                   child: MessageText(
-                    message: errorMessage,
-                    color: Colors.red,
+                    message: _message,
+                    color: _color,
                   ),
                 ),
-                Center(
-                  child: MessageText(
-                    message: message,
-                    color: Colors.green,
-                  ),
-                )
               ],
             ),
           ),

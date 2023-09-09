@@ -22,7 +22,7 @@ class _Login extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController motDePasseController = TextEditingController();
   bool _saving = false;
-  String errorMessage = '';
+  String _message = '';
   bool _obscureText = true;
 
   @override
@@ -118,6 +118,13 @@ class _Login extends State<Login> {
                           );
                           return;
                         }
+                        setState(() {
+                          _saving = true;
+                        });
+                        await Future.delayed(const Duration(seconds: 1));
+                        setState(() {
+                          _saving = false;
+                        });
 
                         try
                         {
@@ -129,38 +136,43 @@ class _Login extends State<Login> {
                               'password': motDePasseController.text,
                             },
                           );
-
                           if (response.statusCode == 200) {
-                            errorMessage = '';
                             print('Connexion à Redis réussie !');
 
                             final jsonResponse = json.decode(response.body);
                             final String token = jsonResponse['token'].toString();
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('token', token);
-
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => const FooterMenu()),
                             );
                           } else {
-                            errorMessage = "Un utilisateur avec cette adresse mail existe déjà";
-                            print('Erreur de connexion au serveur : ${response.statusCode} => $errorMessage');
+                            final jsonResponse = json.decode(response.body);
+                            setState(() {
+                              _message = jsonResponse['message'].toString();
+                            });
+                            print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
                           }
                         }
                         catch (error)
                         {
                           print('Erreur de connexion à Redis : $error');
                         }
-                        setState(() {
-                          _saving = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          _saving = false;
-                        });
 
                       }, color: kPrimaryBlue,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Center(
+                      child: Text(
+                        _message,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16.0,
+                        ),
+                      ),
                     ),
                   ],
                 ),
