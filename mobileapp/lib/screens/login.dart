@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
+import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 
 class Login extends StatefulWidget {
@@ -15,7 +19,10 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController motDePasseController = TextEditingController();
   bool _saving = false;
+  String errorMessage = '';
   bool _obscureText = true;
 
   @override
@@ -56,11 +63,10 @@ class _Login extends State<Login> {
                       height: 48.0,
                     ),
                     TextField(
-                      onChanged: (value) {
-                        //Do something with the user input.
-                      },
-                      decoration:
-                      kTextFieldDecoration.copyWith(hintText: 'Entrer votre adresse mail'),
+                      controller: emailController,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Entrez votre email',
+                      ),
                     ),
                     const SizedBox(
                       height: 24.0,
@@ -68,6 +74,7 @@ class _Login extends State<Login> {
 
                     TextField(
                       obscureText: _obscureText,
+                      controller: motDePasseController,
                       decoration: kTextFieldDecoration.copyWith(
                         prefixIcon: const Icon(Icons.lock),
 
@@ -90,6 +97,61 @@ class _Login extends State<Login> {
                     RectangleButton(
                       title: 'SE CONNECTER',
                       onPressed: () async {
+                        if (emailController.text.isEmpty ||
+                            motDePasseController.text.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Champs obligatoires"),
+                                content: Text("Veuillez remplir tous les champs."),
+                                actions: [
+                                  TextButton(
+                                    child: Text("OK"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        try
+                        {
+                          final response = await http.post(
+                            // TODO put IP inside a conf file
+                            Uri.parse('http://10.0.2.2:6869/user/signin'),
+                            body: {
+                              'email': emailController.text,
+                              'password': motDePasseController.text,
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            errorMessage = '';
+                            print('Connexion à Redis réussie !');
+
+                            final jsonResponse = json.decode(response.body);
+                            final String token = jsonResponse['token'].toString();
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('token', token);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const FooterMenu()),
+                            );
+                          } else {
+                            errorMessage = "Un utilisateur avec cette adresse mail existe déjà";
+                            print('Erreur de connexion au serveur : ${response.statusCode} => $errorMessage');
+                          }
+                        }
+                        catch (error)
+                        {
+                          print('Erreur de connexion à Redis : $error');
+                        }
                         setState(() {
                           _saving = true;
                         });
@@ -97,7 +159,6 @@ class _Login extends State<Login> {
                         setState(() {
                           _saving = false;
                         });
-                        Navigator.pushNamed(context, HomePage.id);
 
                       }, color: kPrimaryBlue,
                     ),
