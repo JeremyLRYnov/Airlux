@@ -1,5 +1,5 @@
 import { Entity, Schema } from 'redis-om'
-import client from '../config/client.js'
+import client from '../../config/client.js'
 
 /* our entity */
 class User extends Entity {};
@@ -20,3 +20,5 @@ export const userRepository = client.fetchRepository(userSchema)
 
 /* create the index for Person for search */
 await userRepository.createIndex('userIndex')
+
+// Path: docker/local_api/app/models/building.models.js
