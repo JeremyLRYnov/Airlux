@@ -2,13 +2,14 @@ const sql = require("./db.js");
 
 // constructor
 const Sensor = function(sensor) {
-  this.title = sensor.title;
-  this.description = sensor.description;
-  this.published = sensor.published;
+  this.name = sensor.name;
+  this.roomId = sensor.roomId;
+  this.value = sensor.value;
+  this.unit = sensor.unit
 };
 
 Sensor.create = (newSensor, result) => {
-  sql.query("INSERT INTO sensors SET ?", newSensor, (err, res) => {
+  sql.query("INSERT INTO Sensors SET ?", newSensor, (err, res) => {
     if (err) {
       console.log("grosse erreur: ", err);
       result(err, null);
@@ -20,7 +21,7 @@ Sensor.create = (newSensor, result) => {
 };
 
 Sensor.findById = (id, result) => {
-  sql.query(`SELECT * FROM sensors WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM Sensors WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -38,11 +39,11 @@ Sensor.findById = (id, result) => {
   });
 };
 
-Sensor.getAll = (title, result) => {
-  let query = "SELECT * FROM sensors";
+Sensor.getAll = (name, result) => {
+  let query = "SELECT * FROM Sensors";
 
-  if (title) {
-    query += ` WHERE title LIKE '%${title}%'`;
+  if (name) {
+    query += ` WHERE name LIKE '%${name}%'`;
   }
 
   sql.query(query, (err, res) => {
@@ -57,23 +58,10 @@ Sensor.getAll = (title, result) => {
   });
 };
 
-Sensor.getAllPublished = result => {
-  sql.query("SELECT * FROM sensors WHERE published=true", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("sensors: ", res);
-    result(null, res);
-  });
-};
-
 Sensor.updateById = (id, sensor, result) => {
   sql.query(
-    "UPDATE sensors SET title = ?, description = ?, published = ? WHERE id = ?",
-    [sensor.title, sensor.description, sensor.published, id],
+    "UPDATE Sensors SET name = ?, roomId = ?, value = ?, unit = ? WHERE id = ?",
+    [sensor.name, sensor.roomId, sensor.value, sensor.unit, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -94,7 +82,7 @@ Sensor.updateById = (id, sensor, result) => {
 };
 
 Sensor.remove = (id, result) => {
-  sql.query("DELETE FROM sensors WHERE id = ?", id, (err, res) => {
+  sql.query("DELETE FROM Sensors WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -113,7 +101,7 @@ Sensor.remove = (id, result) => {
 };
 
 Sensor.removeAll = result => {
-  sql.query("DELETE FROM sensors", (err, res) => {
+  sql.query("DELETE FROM Sensors", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
