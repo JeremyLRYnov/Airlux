@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Login.dart';
 import 'package:mobileapp/screens/register.dart';
 import 'package:mobileapp/screens/settings_page.dart';
-import 'package:mobileapp/widgets/rouded_button.dart';
 
 import '../models/constants.dart';
 
