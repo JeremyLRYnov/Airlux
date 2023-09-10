@@ -3,155 +3,135 @@ const sql = require("./db.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const User = function(user) {
-  this.name = user.name;
-  this.email = user.email;
-  this.password = user.password;
-  this.admin = user.admin;
-};
+class User {
+  constructor(user) {
+    this.name = user.name;
+    this.email = user.email;
+    this.password = user.password;
+    this.admin = user.admin;
+  }
 
-User.create = async (newUser, result) => {
+  static async create(newUser) {
     try {
       newUser.password = await bcrypt.hash(newUser.password, 12);
-  
-      sql.query("INSERT INTO Users SET ?", newUser, (err, res) => {
-        if (err) {
-          console.log("erreur: ", err);
-          result(err, null);
-          return;
-        }
-        console.log("Utilisateur créé: ", { id: res.insertId, ...newUser });
-        result(null, { id: res.insertId, ...newUser });
-      });
+      const [res] = await sql.query("INSERT INTO Users SET ?", newUser);
+      console.log("Utilisateur créé: ", { id: res.insertId, ...newUser });
+      return { id: res.insertId, ...newUser };
     } catch (error) {
       console.log("erreur: ", error);
-      result(error, null);
+      throw error;
     }
-  };
+  }
 
-  User.authenticate = async (email, password, result) => {
+  static async authenticate(email, password) {
+    if (!email || !password) {
+      throw { kind: "invalid_input" };
+    }
+
     try {
-      sql.query(`SELECT * FROM Users WHERE email = ?`, [email], async (err, res) => {
-        if (err) {
-          console.log("erreur: ", err);
-          result(err, null);
-          return;
+      const [res] = await sql.query(`SELECT * FROM Users WHERE email = ?`, [email]);
+      if (res.length) {
+        const user = res[0];
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        
+        if (isPasswordCorrect) {
+          const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_TOKEN_SECRET, {
+            expiresIn: process.env.JWT_EXPIRE,
+          });
+          return { user, token };
+        } else {
+          throw { kind: "invalid_credentials", message: "Invalid password" };
         }
-  
-        if (res.length) {
-          const user = res[0];
-  
-          // Utilisation de bcrypt pour comparer les mots de passe
-          const isPasswordCorrect = await bcrypt.compare(password, user.password);
-          if (isPasswordCorrect) {
-  
-            // Génération d'un token JWT avec une clé secrète et une durée d'expiration
-            const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_TOKEN_SECRET, {
-              expiresIn: process.env.JWT_EXPIRE,
-            });
-            
-            result(null, { user, token });
-          } else {
-            result({ kind: "invalid_credentials" }, null);
-          }
-          return;
-        }
-  
-        // Gestion d'une erreur si l'utilisateur n'est pas trouvé
-        result({ kind: "not_found" }, null);
-      });
+      }
+      
+      throw { kind: "not_found", message: "No user found with this email" };
     } catch (error) {
       console.log("erreur: ", error);
-      result(error, null);
+      throw { kind: "unexpected_error", message: error.message };
     }
-  };
+  }
+};
 
-User.findById = (id, result) => {
-  sql.query(`SELECT * FROM Users WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
+User.findById = async (id) => {
+  try {
+    const [res] = await sql.query(`SELECT * FROM Users WHERE id = ?`, [id]);
 
     if (res.length) {
       console.log("found user: ", res[0]);
-      result(null, res[0]);
-      return;
+      return res[0];
+    } else {
+      throw { kind: "not_found" };
     }
-
-    // not found User with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-User.getAll = (params, result) => {
-  let query = "SELECT * FROM Users";
-
-  if (params.name) {
-    query += ` WHERE name LIKE '%${params.name}%'`;
+  } catch (err) {
+    console.log("erreur: ", err);
+    throw err;
   }
+};
 
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+User.getAll = async (params) => {
+  try {
+    let query = "SELECT * FROM Users";
+
+    if (params && params.name) {
+      query += " WHERE name LIKE ?";
     }
 
+    const [res] = await sql.query(query, params ? [`%${params.name}%`] : []);
     console.log("users: ", res);
-    result(null, res);
-  });
+    return res;
+  } catch (err) {
+    console.log("erreur: ", err);
+    throw err;
+  }
 };
 
-User.updateById = async (id, user, result) => {
-    try {
-      user.password = await bcrypt.hash(user.password, 12);
-  
-      sql.query(
-        "UPDATE Users SET name = ?, email = ?, password = ?, admin = ? WHERE id = ?",
-        [user.name, user.email, user.password, user.admin, id],
-        (err, res) => {
-          // ...
-        }
-      );
-    } catch (error) {
-      console.log("erreur: ", error);
-      result(error, null);
-    }
-};
-  
+User.updateById = async (id, user) => {
+  try {
+    user.password = await bcrypt.hash(user.password, 12);
 
-User.remove = (id, result) => {
-  sql.query("DELETE FROM Users WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+    const [res] = await sql.query(
+      "UPDATE Users SET name = ?, email = ?, password = ?, admin = ? WHERE id = ?",
+      [user.name, user.email, user.password, user.admin, id]
+    );
+    
+    if (res.affectedRows == 0) {
+      throw { kind: "not_found" };
     }
+
+    console.log("updated user: ", { id: id, ...user });
+    return { id: id, ...user };
+  } catch (error) {
+    console.log("erreur: ", error);
+    throw error;
+  }
+};
+
+User.remove = async (id) => {
+  try {
+    const [res] = await sql.query("DELETE FROM Users WHERE id = ?", [id]);
 
     if (res.affectedRows == 0) {
-      // not found User with the id
-      result({ kind: "not_found" }, null);
-      return;
+      throw { kind: "not_found" };
     }
 
     console.log("deleted user with id: ", id);
-    result(null, res);
-  });
+    return res;
+  } catch (err) {
+    console.log("erreur: ", err);
+    throw err;
+  }
 };
 
-User.removeAll = result => {
-  sql.query("DELETE FROM Users", (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
-    }
+User.removeAll = async () => {
+  try {
+    const [res] = await sql.query("DELETE FROM Users");
 
     console.log(`deleted ${res.affectedRows} users`);
-    result(null, res);
-  });
+    return res;
+  } catch (err) {
+    console.log("erreur: ", err);
+    throw err;
+  }
 };
 
 module.exports = User;
