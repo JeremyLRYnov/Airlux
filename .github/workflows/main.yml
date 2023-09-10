@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -57,6 +57,7 @@ jobs:
 
       - name: Start Docker Compose for unit tests & RUN
         run: |
+          ls -l
           docker-compose up -d
           sleep 5
           docker ps
@@ -77,14 +78,16 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Create SSH key file
-        run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
+        run: echo "la machine virtuelle n'est plus disponible"
+      #   run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
 
-      - name: Deploiement SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          key: ./ssh_key
-          script: |
-            scp docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
-            ssh -i ./ssh_key ${{ secrets.USER }}@${{ secrets.HOST }} 'cd ~/ && docker-compose up -d' 
+      # - name: copy docker-compose
+      #   run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+
+      # - name: Deploiement SSH
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     key: ./ssh_key
+      #     script: docker-compose up -d 
 

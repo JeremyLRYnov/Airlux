@@ -1,5 +1,5 @@
 import { Entity, Schema } from 'redis-om'
-import client from '../../config/client.js'
+import client from '../config/client.js'
 
 /* our entity */
 class User extends Entity {};
