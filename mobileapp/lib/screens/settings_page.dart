@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -9,7 +10,9 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: RectangleButton(title: 'SE DECONNECTER', onPressed: () {
+        child: RectangleButton(title: 'SE DECONNECTER', onPressed: () async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', '');
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const WelcomeScreen()),

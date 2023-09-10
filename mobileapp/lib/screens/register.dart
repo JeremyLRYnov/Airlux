@@ -129,7 +129,6 @@ class _RegistrationScreenState extends State<Register> {
 
                     try {
                       final response = await http.post(
-                        // TODO put IP inside a conf file
                         Uri.parse('http://10.0.2.2:6869/user/signup'),
                         body: {
                           'name': prenomController.text,
@@ -148,14 +147,17 @@ class _RegistrationScreenState extends State<Register> {
                           final jsonResponse = json.decode(response.body);
                           _message = jsonResponse['message'].toString();
                           _color = Colors.red;
-                          print(
-                              'Erreur de connexion au serveur : ${response.statusCode} => $_message');
+                          print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
                         }
                       });
                     }
                     catch (error)
                     {
                       print('Erreur de connexion à Redis : $error');
+                      setState((){
+                        _message = error.toString();
+                        _color = Colors.red;
+                      });
                     }
                   },
                   color: kPrimaryBlue,

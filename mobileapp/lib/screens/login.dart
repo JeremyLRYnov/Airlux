@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
-import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/buildings_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -141,11 +141,14 @@ class _Login extends State<Login> {
 
                             final jsonResponse = json.decode(response.body);
                             final String token = jsonResponse['token'].toString();
+                            final String userId = jsonResponse['result']['id'].toString();
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('token', token);
+                            await prefs.setString('userId', userId);
+                            print("id :" + userId);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const FooterMenu()),
+                              MaterialPageRoute(builder: (context) => BuildingListScreen()),
                             );
                           } else {
                             final jsonResponse = json.decode(response.body);
