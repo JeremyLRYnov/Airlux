@@ -18,7 +18,7 @@ PubSubClient mqttClient(wifiClient);
 const char* ipbroker = "ip";
 int portbroker = 1883;
 
-bool lightState; 
+bool lightState = false; 
 
 bool AccessPointOn = true;
 
@@ -27,20 +27,13 @@ const unsigned long updateInterval = 30000;
 
 
 void setup() {
-
-  lightState = false;
-
   Serial.begin(115200);
   pointAccesWifi();
   connecterMQTT();
   mqttClient.setCallback(callback);
-
   pinMode (LEDPIN, OUTPUT);
   dht.begin();
-  etatLumiere();
-  
-
-  
+  etatLumiere();  
 }
 
 
@@ -68,16 +61,11 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
   Serial.println();
 
-  // Feel free to add more if statements to control more GPIOs with MQTT
-
-  // If a message is received on the topic esp32/output, you check if the message is either "on" or "off". 
-  // Changes the output state according to the message
+  //si on recoit un message sur le topic switchLight alors changement de l'état de la lumière
   if (String(topic) == "switchLight") {
-
     Serial.print("Changement de l'état de la lumière");
     lightState = !lightState;
     gestionLumiere();
-
   }
 }
 
@@ -134,16 +122,11 @@ void gestionSensors(){
 }
 
 void gestionSwitchs(){
-
     gestionLumiere();
 }
 
 void etatLumiere(){
-    if (lightState) {
-    digitalWrite(LEDPIN, HIGH);  // Allume la lumière si lightState est vrai (true)
-  } else {
-    digitalWrite(LEDPIN, LOW);   // Éteint la lumière si lightState est faux (false)
-  }
+  digitalWrite(LEDPIN, lightState ? HIGH : LOW); // Allume la lumière si lightState est vrai (true) & Éteint la lumière si lightState est faux (false)
 }
 
 void gestionLumiere(){
@@ -175,9 +158,11 @@ void EtatLumiereLancement(){
   String json;
   serializeJson(doc, json);
 
-  mqttClient.connect("ESP32"); // Connexion au broker MQTT
-  mqttClient.publish("lumiere", json.c_str()); // Envoie des données MQTT
-  Serial.println("Envoi état initial de la lumière sur MQTT");
+
+  if (mqttClient.connected()) {
+      mqttClient.publish("lumiere", json.c_str());
+      Serial.println("Envoi état initial de la lumière sur MQTT"); // Envoie des données MQTT
+  }
 }
 
 void gestionTemperature(){
@@ -198,9 +183,10 @@ void gestionTemperature(){
       String json;
       serializeJson(doc, json);
 
-      mqttClient.connect("ESP32"); // Connexion au broker MQTT
-      mqttClient.publish("temperature", json.c_str()); // Envoie des données MQTT
-      Serial.println("Envoi temperature sur MQTT");
+      if (mqttClient.connected()) {
+      mqttClient.publish("temperature", json.c_str());
+      Serial.println("Envoi temperature sur MQTT"); // Envoie des données MQTT
+      }
     }
 }
 
@@ -222,8 +208,9 @@ void gestionHumidite(){
       String json;
       serializeJson(doc, json);
 
-      mqttClient.connect("ESP32"); // Connexion au broker MQTT
-      mqttClient.publish("humidite", json.c_str()); // Envoie des données MQTT
-      Serial.println("Envoi humidite sur MQTT");
+      if (mqttClient.connected()) {
+      mqttClient.publish("humidite", json.c_str());
+      Serial.println("Envoi humidite sur MQTT"); // Envoie des données MQTT
+      }
     }
 }
