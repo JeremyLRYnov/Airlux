@@ -9,9 +9,6 @@ module.exports = app => {
   // Retrieve all Sensors
   router.get("/", sensors.findAll);
 
-  // Retrieve all published Sensors
-  router.get("/published", sensors.findAllPublished);
-
   // Retrieve a single Sensor with id
   router.get("/:id", sensors.findOne);
 
