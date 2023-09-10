@@ -137,7 +137,8 @@ void gestionLumiere(){
 
   StaticJsonDocument<200> doc;
   doc["id"] = "3";
-  doc["value"] = lightState;
+  doc["name"] = "lumiere";
+  doc["status"] = lightState;
 
   String json;
   serializeJson(doc, json);
@@ -153,7 +154,8 @@ void EtatLumiereLancement(){
 
   StaticJsonDocument<200> doc;
   doc["id"] = "3";
-  doc["value"] = lightState;
+  doc["name"] = "lumiere";
+  doc["status"] = lightState;
 
   String json;
   serializeJson(doc, json);
@@ -178,7 +180,9 @@ void gestionTemperature(){
 
       StaticJsonDocument<200> doc;
       doc["id"] = "1";
+      doc["name"] = "temperature";
       doc["value"] = t;
+      doc["unit"] = "°C";
 
       String json;
       serializeJson(doc, json);
@@ -203,7 +207,9 @@ void gestionHumidite(){
 
       StaticJsonDocument<200> doc;
       doc["id"] = "2";
+      doc["name"] = "humidite";
       doc["value"] = h;
+      doc["unit"] = "%";
 
       String json;
       serializeJson(doc, json);
