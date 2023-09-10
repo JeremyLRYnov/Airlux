@@ -5,7 +5,7 @@ export default {
     check('name').not().isEmpty().withMessage('name field is required.'),
     check('roomId').not().isEmpty().withMessage('roomId field is required.'),
     check('value').not().isEmpty().withMessage('value field is required.'),
-    check('type').not().isEmpty().withMessage('type field is required.')
+    check('unit').not().isEmpty().withMessage('unit field is required.')
   ]
 }
 
