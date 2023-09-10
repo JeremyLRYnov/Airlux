@@ -17,6 +17,11 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/sensor.routes")(app);
+require("./app/routes/building.routes")(app);
+require("./app/routes/buildingUser.routes")(app);
+require("./app/routes/room.routes")(app);
+require("./app/routes/switch.routes")(app);
+require("./app/routes/user.routes")(app);
 
 const PORT = process.env.PORT || 8080;
 

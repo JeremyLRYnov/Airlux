@@ -8,7 +8,7 @@ import auth from '../middleware/auth.js'
 export const router = express.Router()
 const { buildingSchema } = schema
 
-router.route('create').post(auth, validator(buildingSchema), createBuilding)
+router.route('/create').post(auth, validator(buildingSchema), createBuilding)
 router.route('/:id').get(auth, deleteBuilding)
 router.route('/:id').get(auth, getBuilding)
 router.route('/').get(auth, getBuildings)

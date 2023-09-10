@@ -1,10 +1,12 @@
 dump.rdb
 temp-*.rdb
+*.rdb
 docker/pulse_bdd/__pycache__
 filter_script.cpython-39.pyc
 
 docker/mosquitto/data/mosquitto.db
 docker/mosquitto/log
+docker/redis-stack/*.rdb
 
 # Miscellaneous
 *.class
