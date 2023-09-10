@@ -2,11 +2,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileapp/models/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Building {
-  final String name;
 
-  Building({required this.name});
+  late final String userEmail;
+  final String name;
+  final String createdBy;
+
+  Building({required this.name, required this.createdBy});
+
+  Future<Map<String, dynamic>> toJson() async {
+    final prefs = await SharedPreferences.getInstance();
+    userEmail = prefs.getString('email')!;
+    final Map<String, dynamic> data = {
+      'name': name,
+      'createdBy': createdBy,
+      'users': [userEmail],
+    };
+    return data;
+  }
 }
 
 class BuildingListPage extends StatefulWidget {
@@ -19,20 +34,41 @@ class _BuildingListPageState extends State<BuildingListPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
+  late String token;
+  late String userId;
+
   Future<void> fetchBuildings() async {
-    final response = await http.get(Uri.parse('http://12.0.2.2/building'));
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
-      final List<Building> loadedBuildings = data.map((item) {
-        return Building(name: item['name'] as String,);
-      }).toList();
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:6869/building'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-      setState(() {
-        buildings = loadedBuildings;
-      });
-    } else {
-      throw Exception('Failed to load buildings');
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final List<dynamic> buildingList = jsonData['result'] as List<dynamic>;
+          final List<Building> loadedBuildings = buildingList.map((item) {
+            return Building(name: item['name'] as String, createdBy: item['createdBy'] as String);
+          }).toList();
+          setState(() {
+            buildings = loadedBuildings;
+          });
+        } else {
+          throw Exception(
+              'Failed to load buildings: "result" property not found in JSON.');
+        }
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -42,42 +78,38 @@ class _BuildingListPageState extends State<BuildingListPage> {
     fetchBuildings();
   }
 
-  void addBuilding() {
+  Future<void> addBuilding() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('userId')!;
     final String name = nameController.text;
-
     if (name.isNotEmpty) {
-      final newBuilding = Building(name: name);
-
-      final jsonData = jsonEncode(newBuilding);
-
-      http.post(
-        Uri.parse('http://12.0.2.2/building'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData,
-      ).then((response) {
-        if (response.statusCode == 201) {
-          setState(() {
-            buildings.add(newBuilding);
-            nameController.clear();
-            addressController.clear();
-          });
-          Navigator.of(context).pop();
+      final newBuilding = Building(name: name, createdBy: userId);
+      final jsonData = jsonEncode(await newBuilding.toJson());
+      try {
+        final response = await http.post(
+          Uri.parse('http://10.0.2.2:6869/building/create'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonData,
+        );
+        if (response.statusCode == 200) {
+          print('done !');
+          fetchBuildings();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Échec de l\'ajout du bâtiment.'),
-            ),
-          );
+          print(response.body);
         }
-      });
+      } catch (error) {
+        print(error);
+      }
     }
   }
 
   void removeBuilding(int index) {
     setState(() {
-      buildings.removeAt(index);
+      //buildings.removeAt(index);
     });
   }
 
@@ -92,8 +124,8 @@ class _BuildingListPageState extends State<BuildingListPage> {
         itemCount: buildings.length,
         itemBuilder: (context, index) {
           return Card(
-            elevation: 4, // élévation pour un effet de carte
-            margin: EdgeInsets.all(8), // marge autour de la carte
+            elevation: 4,
+            margin: EdgeInsets.all(8),
             child: ListTile(
               title: Text(buildings[index].name),
               trailing: IconButton(
@@ -131,7 +163,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryBlue
+                      backgroundColor: kPrimaryBlue,
                     ),
                   ),
                 ],

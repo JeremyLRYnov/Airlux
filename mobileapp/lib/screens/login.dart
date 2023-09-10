@@ -142,9 +142,11 @@ class _Login extends State<Login> {
                             final jsonResponse = json.decode(response.body);
                             final String token = jsonResponse['token'].toString();
                             final String userId = jsonResponse['result']['id'].toString();
+                            final String email = jsonResponse['result']['email'].toString();
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('token', token);
                             await prefs.setString('userId', userId);
+                            await prefs.setString('email', email);
                             print("id :" + userId);
                             Navigator.push(
                               context,
