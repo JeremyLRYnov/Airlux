@@ -6,7 +6,6 @@ import 'package:mobileapp/screens/room_page.dart';
 import 'package:mobileapp/screens/script_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
 
-
 class FooterMenu extends StatefulWidget {
   const FooterMenu({super.key});
 
@@ -17,31 +16,24 @@ class FooterMenu extends StatefulWidget {
 class _FooterMenuState extends State<FooterMenu> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
     const HomePage(),
     const RoomPage(),
     const ScriptPage(),
     const SettingsPage(),
   ];
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Capteurs',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Scenarios',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Analytics',
-      style: optionStyle,
-    ),
-  ];
+
+  Future<bool> _onBackPressed() {
+    if (_selectedIndex != 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -51,34 +43,40 @@ class _FooterMenuState extends State<FooterMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.business),
-            label: 'Pièces',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.edit_document),
-            label: 'Scenarios',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: kPrimaryBlue,
-            icon: Icon(Icons.settings),
-            label: 'Paramètres',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: screens,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              backgroundColor: kPrimaryBlue,
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: kPrimaryBlue,
+              icon: Icon(Icons.business),
+              label: 'Pièces',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: kPrimaryBlue,
+              icon: Icon(Icons.edit_document),
+              label: 'Scenarios',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: kPrimaryBlue,
+              icon: Icon(Icons.settings),
+              label: 'Paramètres',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

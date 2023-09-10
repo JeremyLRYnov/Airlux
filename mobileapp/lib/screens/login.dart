@@ -148,7 +148,7 @@ class _Login extends State<Login> {
                             print("id :" + userId);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => BuildingListScreen()),
+                              MaterialPageRoute(builder: (context) => FooterMenu()),
                             );
                           } else {
                             final jsonResponse = json.decode(response.body);

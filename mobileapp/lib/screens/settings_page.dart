@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
+import 'package:mobileapp/screens/buildings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/constants.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -10,14 +13,26 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: RectangleButton(title: 'SE DECONNECTER', onPressed: () async {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('token', '');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-          );
-        }, color: Colors.red,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RectangleButton(title: 'GERER VOS BATIMENTS', onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BuildingListPage()),
+              );
+            }, color: kPrimaryBlue),
+            SizedBox(height: 40.0,),
+            RectangleButton(title: 'SE DECONNECTER', onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('token', '');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+              );
+            }, color: Colors.red,
+            ),
+          ],
         ),
       ),
     );

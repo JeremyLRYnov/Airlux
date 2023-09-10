@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
-import 'package:mobileapp/screens/home_page.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +16,7 @@ void main() async {
         primarySwatch: Colors.blue,
       ),
       home: token != null && await isTokenValid(token)
-          ? const HomePage()
+          ? const FooterMenu()
           : const WelcomeScreen(),
     ),
   );
@@ -25,13 +24,22 @@ void main() async {
 
 Future<bool> isTokenValid(String token) async {
   try{
-    final response = await http.get('http://10.0.2.2:6869/building/create' as Uri,
-    headers: {'Authorization':'Bearer $token',}
+    final response = await http.get(Uri.parse('http://10.0.2.2:6869/building'),
+    headers: {'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',}
     );
-  return true;
+    if(response.statusCode == 200) {
+      return true;
+    }
+    else
+      {
+        return false;
+      }
   }
   catch (error)
   {
+    print(error);
     return false;
   }
 }
