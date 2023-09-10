@@ -1,21 +1,19 @@
 import WebSocket from 'ws';
-import { WebSocket } from './ServeurWebSocket';
+import { WebSocket } from './ServeurWebSocket/Se';
 
 
-const socket = new WebSocket('ws://localhost:8090'); // Remplacez l'URL par celle de votre serveur WebSocket.
+const socket = new WebSocket('ws://localhost:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
 
 // Événement déclenché lorsque la connexion WebSocket est ouverte.
-socket.addEventListener('open', (event) => {
+socket.addEventListener('open', (connection) => {
     console.log('Connexion WebSocket établie avec succès.');
-    
-    // Vous pouvez envoyer des messages après la connexion.
-    socket.send('Bonjour, message de API B !');
+
   });
   
   // Événement déclenché lorsque vous recevez un message du serveur WebSocket.
-  socket.addEventListener('message', (event) => {
-    const message = event.data;
-    console.log(`Message reçu du serveur WebSocket : ${message}`);
+  socket.addEventListener('message', (message) => {
+    const mes = message.data;
+    console.log(`Message reçu de API local : ${mes}`);
     
     // Traitez le message reçu ici si nécessaire.
   });

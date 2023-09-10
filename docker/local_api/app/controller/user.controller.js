@@ -1,6 +1,10 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { userRepository } from '../models/user.models.js'
+import { userRepository } from '../models/user.models.js';
+import WebSocket from 'ws';
+
+//import { sendWebSocketMessage } from '../WebSocket/EnvoiMessage.js';
+
 
 export const signup = async (req, res) => {
     console.log(req.body);
@@ -10,10 +14,7 @@ export const signup = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "A user already registered with the email." });
     }
-    // if (req.body.password !== confirmPassword) {
-    //   return res.status(400).json({ message: "Passwords don't match." });
-    // }
-  
+
     //hash password
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     const user = await userRepository.createAndSave({ name: `${name}`, email, password: hashedPassword, admin });
@@ -24,6 +25,17 @@ export const signup = async (req, res) => {
     const { entityId, password, ...rest } = user.toJSON();
     const data = { id: user.entityId, ...rest };
     res.status(200).json({message: "Inscription réussi", result: data, token });
+
+    const socket = new WebSocket('ws://localhost:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
+    console.log('Début websocket');
+    // Événement déclenché lorsque la connexion WebSocket est ouverte.
+    socket.addEventListener('open', (message) => {
+    console.log('Connexion WebSocket établie avec succès.');
+    
+    // Vous pouvez envoyer des messages après la connexion.
+    socket.send(message);
+      //sendWebSocketMessage(req.body);
+  });
 };
 
 export const signin = async (req, res) => {
@@ -77,3 +89,16 @@ export const getUsers = async (req, res) => {
     res.status(200).json({ result: users });
 };
 // Path: docker/local_api/app/controller/user.controller.js
+
+// const sendWebSocketMessage = (message) => {
+//   const socket = new WebSocket('ws://localhost:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
+
+//   // Événement déclenché lorsque la connexion WebSocket est ouverte.
+//   socket.addEventListener('open', (message) => {
+//   console.log('Connexion WebSocket établie avec succès.');
+  
+//   // Vous pouvez envoyer des messages après la connexion.
+//   socket.send(message);
+
+//   });
+// };
