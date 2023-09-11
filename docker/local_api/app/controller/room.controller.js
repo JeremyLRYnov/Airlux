@@ -5,7 +5,7 @@ export const createRoom = async (req, res) => {
   const existingRoom = await roomRepository.search().where('name').is.equalTo(name).return.first()
   // check if room already registered with the name
   if (existingRoom) {
-    return res.status(400).json({ message: 'A room already registered with the name.' })
+    return res.status(400).json({ message: 'Une room est déjà enregistrée sous ce nom.' })
   }
   const room = await roomRepository.createAndSave({ name: `${name}`, buildingId })
   const { entityId, ...rest } = room.toJSON()
@@ -39,7 +39,7 @@ export const updateRoom = async (req, res) => {
 export const deleteRoom = async (req, res) => {
   const { id } = req.params
   await roomRepository.remove(id)
-  res.status(200).json({ message: 'Room ' + id + ' deleted successfully.' })
+  res.status(200).json({ message: 'Room ' + id + ' Supprimée avec succès.' })
 }
 
 // Path: docker/local_api/app/controller/room.controller.js
