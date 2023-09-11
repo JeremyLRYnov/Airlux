@@ -5,7 +5,7 @@ export const createSwitch = async (req, res) => {
   const existingSwitch = await switchRepository.search().where('name').is.equalTo(name).return.first()
   // check if switch already registered with the name
   if (existingSwitch) {
-    return res.status(400).json({ message: 'A switch already registered with the name.' })
+    return res.status(400).json({ message: 'Un switch est déjà enregistré sous ce nom.' })
   }
   const switchSensor = await switchRepository.createAndSave({ name: `${name}`, roomId, status })
   const { entityId, ...rest } = switchSensor.toJSON()
@@ -40,7 +40,7 @@ export const updateSwitch = async (req, res) => {
 export const deleteSwitch = async (req, res) => {
   const { id } = req.params
   await switchRepository.remove(id)
-  res.status(200).json({ message: 'Switch ' + id + ' deleted successfully.' })
+  res.status(200).json({ message: 'Switch ' + id + ' Supprimé avec succès.' })
 }
 
 // Path: docker/local_api/app/controller/switch.controller.js

@@ -2,8 +2,8 @@ import { check } from 'express-validator'
 
 export default {
   roomSchema: [
-    check('name').not().isEmpty().withMessage('name field is required.'),
-    check('buildingId').not().isEmpty().withMessage('buildingId field is required.')
+    check('name').not().isEmpty().withMessage('Le champ "name" est requis.'),
+    check('buildingId').not().isEmpty().withMessage('Le champ "buildingId" est requis.')
   ]
 }
 

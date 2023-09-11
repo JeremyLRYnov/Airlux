@@ -5,7 +5,7 @@ export const createSensor = async (req, res) => {
   const existingSensor = await sensorRepository.search().where('name').is.equalTo(name).return.first()
   // check if sensor already registered with the name
   if (existingSensor) {
-    return res.status(400).json({ message: 'A sensor already registered with the name.' })
+    return res.status(400).json({ message: 'Un sensor est déjà enregistré sous ce nom.' })
   }
   const sensor = await sensorRepository.createAndSave({ name: `${name}`, roomId, value, unit })
   const { entityId, ...rest } = sensor.toJSON()
@@ -41,7 +41,7 @@ export const updateSensor = async (req, res) => {
 export const deleteSensor = async (req, res) => {
   const { id } = req.params
   await sensorRepository.remove(id)
-  res.status(200).json({ message: 'Sensor ' + id + ' deleted successfully.' })
+  res.status(200).json({ message: 'Sensor ' + id + ' Supprimé avec succès.' })
 }
 
 // Path: docker/local_api/app/controller/sensor.controller.js

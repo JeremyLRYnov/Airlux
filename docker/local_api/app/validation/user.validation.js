@@ -2,9 +2,9 @@ import { check } from 'express-validator'
 
 export default {
   userSchema: [
-    check('email').not().isEmpty().withMessage('email field is required.'),
-    check('password').not().isEmpty().withMessage('password field is required.'),
-    check('name').not().isEmpty().withMessage('name field is required.')
+    check('email').not().isEmpty().withMessage('Le champ "email" est requis.'),
+    check('password').not().isEmpty().withMessage('Le champ "password" est requis.'),
+    check('name').not().isEmpty().withMessage('Le champ "name" est requis.')
   ]
 }
 
