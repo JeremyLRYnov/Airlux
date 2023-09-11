@@ -14,7 +14,7 @@ on:
       - main
       - zetsuy/git-workflow
 jobs:
-  lint:
+  flutter_Lint:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,7 +38,7 @@ jobs:
             echo "##[warning] Attention : Des problèmes ont été détectés par 'flutter analyze'."
           fi
 
-  API-Locale:
+  API_Locale:
     runs-on: ubuntu-latest
     defaults:
       run:
