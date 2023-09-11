@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
     const data = { id: user.entityId, ...rest };
     res.status(200).json({message: "Inscription réussi", result: data, token });
 
-    const socket = new WebSocket('ws://127.0.0.0:6868'); // Remplacez l'URL par celle de votre serveur WebSocket.
+    const socket = new WebSocket('ws://appmysql:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
     console.log('Début websocket');
 
     // Événement déclenché lorsque la connexion WebSocket est ouverte.

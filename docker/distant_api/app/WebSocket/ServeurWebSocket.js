@@ -1,9 +1,12 @@
 import WebSocket from 'ws';
 
-const wss = new WebSocket.Server({ port: 6868 });
+const wss = new WebSocket.Server({ port: 8080 });
+
 
 wss.on('connection', (ws) => {
   console.log('Nouvelle connexion WebSocket établie.');
+
+  ws.on('error', console.error);
 
   // Traitez le message ici et envoyez une réponse si nécessaire.
   ws.on('mes', (message) => {
