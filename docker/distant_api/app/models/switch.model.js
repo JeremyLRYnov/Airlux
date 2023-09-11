@@ -1,4 +1,4 @@
-const db = require("./db.js");
+const { db } = require("./db.js");
 
 class Switch {
   constructor(switchEntity) {
@@ -48,6 +48,17 @@ class Switch {
     }
   }
 
+  static async findAllByRoomId(roomId) {
+    try {
+      const [results] = await db.query("SELECT * FROM Switches WHERE roomId = ?", [roomId]);
+      console.log("switches: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
   static async updateById(id, switchEntity) {
     try {
       const [results] = await db.query("UPDATE Switches SET name = ?, roomId = ?, status = ? WHERE id = ?", [switchEntity.name, switchEntity.roomId, switchEntity.status, id]);
@@ -81,6 +92,17 @@ class Switch {
   static async removeAll() {
     try {
       const [results] = await db.query("DELETE FROM Switches");
+      console.log(`deleted ${results.affectedRows} switches`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async removeAllByRoomId(roomId) {
+    try {
+      const [results] = await db.query("DELETE FROM Switches WHERE roomId = ?", [roomId]);
       console.log(`deleted ${results.affectedRows} switches`);
       return results;
     } catch (error) {

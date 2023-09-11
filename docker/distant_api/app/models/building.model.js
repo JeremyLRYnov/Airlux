@@ -1,6 +1,5 @@
-const db = require("./db.js");
+const { db } = require("./db.js");
 
-// constructor
 class Building {
   constructor(building) {
     this.name = building.name;

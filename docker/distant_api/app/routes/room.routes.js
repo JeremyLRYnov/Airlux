@@ -4,8 +4,11 @@ module.exports = app => {
   
     // Create a new Room
     router.post("/", rooms.create);
-  
-    // Retrieve all Rooms (avec condition optionnelle)
+
+    // Retrieve all Rooms from a specific building
+    router.get("/building/:buildingId", rooms.findAllByBuilding);
+
+    // Retrieve all Rooms 
     router.get("/", rooms.findAll);
   
     // Retrieve a single Room with id
@@ -19,6 +22,9 @@ module.exports = app => {
   
     // Delete all Rooms
     router.delete("/", rooms.deleteAll);
+
+    // Delete all Rooms from a specific building
+    router.delete("/building/:buildingId", rooms.deleteAllByBuilding);
   
     app.use('/api/rooms', router);
   };

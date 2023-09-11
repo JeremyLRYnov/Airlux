@@ -40,3 +40,35 @@ exports.findUsersByBuildingId = async (req, res) => {
     }
   }
 };
+
+// Find buildings by user ID
+exports.findBuildingsByUserId = async (req, res) => {
+  try {
+    const data = await BuildingUser.findBuildingsByUserId(req.params.userId);
+    res.send(data);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Buildings with userId ${req.params.userId}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving Buildings with userId " + req.params.userId
+      });
+    }
+  }
+};
+
+exports.removeBuildingsByUserId = async (req, res) => {
+  try {
+    const data = await BuildingUser.removeBuildingsByUserId(req.params.userId);
+    res.send({ message: `Buildings for user id ${req.params.userId} were deleted successfully!` });
+  } catch (err) {
+    res.status(500).send({
+      message: "Error removing Buildings for user id " + req.params.userId
+    });
+  }
+};
+
+
+

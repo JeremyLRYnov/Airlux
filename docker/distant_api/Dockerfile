@@ -2,7 +2,7 @@ FROM node:14
 
 WORKDIR /distant_api
 COPY package.json .
-RUN npm install cors bcryptjs jsonwebtoken mysql2 body-parser express
+RUN npm install
 COPY . .
 
 CMD node server.js

@@ -1,3 +1,5 @@
+const Switch = require("../models/switch.model.js");
+
 // Create and Save a new Switch
 exports.create = async (req, res) => {
   // Validate request
@@ -30,6 +32,19 @@ exports.findAll = async (req, res) => {
 
   try {
     const data = await Switch.getAll(name);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving switches."
+    });
+  }
+};
+
+exports.findAllByRoom = async (req, res) => {
+  const roomId = req.query.roomId;
+
+  try {
+    const data = await Switch.findAllByRoomId(roomId);
     res.send(data);
   } catch (err) {
     res.status(500).send({
@@ -104,6 +119,19 @@ exports.deleteAll = async (req, res) => {
   try {
     await Switch.removeAll();
     res.send({ message: `All Switches were deleted successfully!` });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while removing all switches."
+    });
+  }
+};
+
+exports.deleteAllByRoom = async (req, res) => {
+  const roomId = req.query.roomId;
+  
+  try {
+    await Switch.removeAllByRoomId(roomId);
+    res.send({ message: `All switches were deleted successfully from room with ID ${roomId}!` });
   } catch (err) {
     res.status(500).send({
       message: err.message || "Some error occurred while removing all switches."

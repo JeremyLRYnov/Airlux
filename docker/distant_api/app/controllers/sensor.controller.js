@@ -41,6 +41,17 @@ exports.findAll = async (req, res) => {
   }
 };
 
+exports.findAllByRoom = async (req, res) => {
+  try {
+      const data = await Sensor.findAllByRoomId(req.params.roomId);
+      res.send(data);
+  } catch (err) {
+      res.status(500).send({
+          message: err.message || "Some error occurred while retrieving sensors."
+      });
+  }
+};
+
 // Find a single Sensor with a id
 exports.findOne = async (req, res) => {
   try {
@@ -106,10 +117,24 @@ exports.delete = async (req, res) => {
 exports.deleteAll = async (req, res) => {
   try {
     await Sensor.removeAll();
-    res.send({ message: `All Tutorials were deleted successfully!` });
+    res.send({ message: `All sensors were deleted successfully!` });
   } catch (err) {
     res.status(500).send({
-      message: err.message || "Some error occurred while removing all tutorials."
+      message: err.message || "Some error occurred while removing all sensors."
     });
   }
 };
+
+exports.deleteAllByRoom = async (req, res) => {
+  try {
+      await Sensor.removeAllByRoomId(req.params.roomId);
+      res.send({ message: `All sensors were deleted successfully from room ${req.params.roomId}!` });
+  } catch (err) {
+      res.status(500).send({
+          message: err.message || "Some error occurred while removing all sensors."
+      });
+  }
+};
+
+
+

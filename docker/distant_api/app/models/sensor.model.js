@@ -1,4 +1,4 @@
-const db = require("./db.js");
+const { db } = require("./db.js");
 
 class Sensor {
   constructor(sensor) {
@@ -49,6 +49,17 @@ class Sensor {
     }
   }
 
+  static async findAllByRoomId(roomId) {
+    try {
+        const [results] = await db.query("SELECT * FROM Sensors WHERE roomId = ?", [roomId]);
+        console.log("Sensors found: ", results);
+        return results;
+    } catch (error) {
+        console.log("error: ", error);
+        throw error;
+    }
+  }
+
   static async updateById(id, sensor) {
     try {
       const [results] = await db.query("UPDATE Sensors SET name = ?, roomId = ?, value = ?, unit = ? WHERE id = ?", [sensor.name, sensor.roomId, sensor.value, sensor.unit, id]);
@@ -87,6 +98,17 @@ class Sensor {
     } catch (error) {
       console.log("error: ", error);
       throw error;
+    }
+  }
+
+  static async removeAllByRoomId(roomId) {
+    try {
+        const [results] = await db.query("DELETE FROM Sensors WHERE roomId = ?", [roomId]);
+        console.log(`Deleted ${results.affectedRows} sensors`);
+        return results;
+    } catch (error) {
+        console.log("error: ", error);
+        throw error;
     }
   }
 }

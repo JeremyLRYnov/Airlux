@@ -1,4 +1,5 @@
 const Building = require('../models/building.model.js');
+const User = require('../models/user.model.js');
 
 // Create and Save a new Building
 exports.create = async (req, res) => {
@@ -8,14 +9,21 @@ exports.create = async (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
-  // Create a Building
-  const building = new Building({
-    name: req.body.name,
-    createdBy: req.body.createdBy
-  });
-
   try {
+    // Check if the user is an admin
+    const user = await User.findById(req.body.createdBy);
+    if (!user.admin) {
+      return res.status(403).send({
+        message: "User is not authorized to create a building"
+      });
+    }
+
+    // Create a Building
+    const building = new Building({
+      name: req.body.name,
+      createdBy: req.body.createdBy
+    });
+
     const data = await Building.create(building);
     res.send(data);
   } catch (err) {

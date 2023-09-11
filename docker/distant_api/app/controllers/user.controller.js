@@ -1,7 +1,7 @@
 const User = require('../models/user.model.js');
 
 // Créer et enregistrer un nouvel utilisateur
-exports.create = async (req, res) => {
+exports.signup = async (req, res) => {
   // Valider la requête
   if (!req.body) {
     res.status(400).send({
@@ -20,11 +20,52 @@ exports.create = async (req, res) => {
 
   // Enregistrer l'utilisateur dans la base de données
   try {
-    const data = await User.create(user);
+    const data = await User.signup(user);
     res.send(data);
   } catch (err) {
     res.status(500).send({
       message: err.message || "Une erreur est survenue lors de la création de l'utilisateur."
+    });
+  }
+};
+
+//Enregistrer un utilisateur déjà créé sur Redis
+exports.addExternalUser = async (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Le contenu ne peut pas être vide !"
+    });
+    return;
+  }
+
+  const user = new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password, //mot de passe déjà hashé
+    admin: req.body.admin,
+  });
+
+  try {
+    const data = await User.addExternalUser(user);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Une erreur est survenue lors de l'ajout de l'utilisateur."
+    });
+  }
+};
+
+
+// Fonction d'authentification
+exports.signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const data = await User.signin(email, password);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Une erreur est survenue lors de l'authentification."
     });
   }
 };
@@ -118,16 +159,3 @@ exports.update = async (req, res) => {
 };
 
 
-// Fonction d'authentification
-exports.authenticate = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const data = await User.authenticate(email, password);
-    res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Une erreur est survenue lors de l'authentification."
-    });
-  }
-};

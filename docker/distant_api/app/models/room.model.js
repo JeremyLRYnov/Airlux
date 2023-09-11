@@ -1,4 +1,4 @@
-const db = require("./db.js");
+const { db } = require("./db.js");
 
 class Room {
   constructor(room) {
@@ -26,6 +26,17 @@ class Room {
       } else {
         throw { kind: "not_found" };
       }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async findAllByBuildingId(buildingId) {
+    try {
+      const [results] = await db.query(`SELECT * FROM Rooms WHERE buildingId = ?`, [buildingId]);
+      console.log(`Rooms found for building ID ${buildingId}:`, results);
+      return results;
     } catch (error) {
       console.log("erreur: ", error);
       throw error;
@@ -71,6 +82,17 @@ class Room {
         console.log("deleted room with id: ", id);
         return results;
       }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async removeAllByBuildingId(buildingId) {
+    try {
+      const [results] = await db.query(`DELETE FROM Rooms WHERE buildingId = ?`, [buildingId]);
+      console.log(`Deleted ${results.affectedRows} rooms from building ID ${buildingId}`);
+      return results;
     } catch (error) {
       console.log("erreur: ", error);
       throw error;

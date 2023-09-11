@@ -25,7 +25,18 @@ exports.create = async (req, res) => {
   }
 };
 
-// Retrieve all Rooms from the database (with condition).
+exports.findAllByBuilding = async (req, res) => {
+  try {
+    const data = await Room.findAllByBuildingId(req.params.buildingId);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving rooms."
+    });
+  }
+};
+
+// Retrieve all Rooms from the database 
 exports.findAll = async (req, res) => {
   const name = req.query.name;
   
@@ -97,6 +108,17 @@ exports.delete = async (req, res) => {
         message: "Could not delete Room with id " + req.params.id
       });
     }
+  }
+};
+
+exports.deleteAllByBuilding = async (req, res) => {
+  try {
+    await Room.removeAllByBuildingId(req.params.buildingId);
+    res.send({ message: `All rooms were deleted successfully from building ID ${req.params.buildingId}!` });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while removing all rooms."
+    });
   }
 };
 

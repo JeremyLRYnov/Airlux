@@ -5,8 +5,11 @@ module.exports = app => {
     // Create a new Switch
     router.post("/", switches.create);
   
-    // Retrieve all Switches (avec condition optionnelle)
+    // Retrieve all Switches 
     router.get("/", switches.findAll);
+
+    // Retrieve all Switches from a room
+    router.get("/room/:roomId", switches.findAllByRoom);
   
     // Retrieve a single Switch with id
     router.get("/:id", switches.findOne);
@@ -19,6 +22,9 @@ module.exports = app => {
   
     // Delete all Switches
     router.delete("/", switches.deleteAll);
+
+    // Delete all Switches from a room
+    router.delete("/room/:roomId", switches.deleteAllByRoom);
   
     app.use('/api/switches', router);
   };

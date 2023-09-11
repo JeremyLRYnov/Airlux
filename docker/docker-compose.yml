@@ -39,6 +39,8 @@ services:
         - MYSQL_DATABASE=$MYSQLDB_DATABASE
       ports:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+      volumes:  
+        - ./distant_api/data:/var/lib/mysql 
 
     # Création du conteneur API distante
     appmysql:

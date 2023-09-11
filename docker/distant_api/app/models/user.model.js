@@ -1,5 +1,5 @@
 
-const sql = require("./db.js");
+const { db } = require("./db.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -11,10 +11,10 @@ class User {
     this.admin = user.admin;
   }
 
-  static async create(newUser) {
+  static async signup(newUser) {
     try {
       newUser.password = await bcrypt.hash(newUser.password, 12);
-      const [res] = await sql.query("INSERT INTO Users SET ?", newUser);
+      const [res] = await db.query("INSERT INTO Users SET ?", newUser);
       console.log("Utilisateur créé: ", { id: res.insertId, ...newUser });
       return { id: res.insertId, ...newUser };
     } catch (error) {
@@ -23,13 +23,24 @@ class User {
     }
   }
 
-  static async authenticate(email, password) {
+  static async addExternalUser(newUser) {
+    try {
+      const [res] = await db.query("INSERT INTO Users SET ?", newUser);
+      console.log("Utilisateur externe ajouté: ", { id: res.insertId, ...newUser });
+      return { id: res.insertId, ...newUser };
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async signin(email, password) {
     if (!email || !password) {
       throw { kind: "invalid_input" };
     }
 
     try {
-      const [res] = await sql.query(`SELECT * FROM Users WHERE email = ?`, [email]);
+      const [res] = await db.query(`SELECT * FROM Users WHERE email = ?`, [email]);
       if (res.length) {
         const user = res[0];
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -54,7 +65,7 @@ class User {
 
 User.findById = async (id) => {
   try {
-    const [res] = await sql.query(`SELECT * FROM Users WHERE id = ?`, [id]);
+    const [res] = await db.query(`SELECT * FROM Users WHERE id = ?`, [id]);
 
     if (res.length) {
       console.log("found user: ", res[0]);
@@ -76,7 +87,7 @@ User.getAll = async (params) => {
       query += " WHERE name LIKE ?";
     }
 
-    const [res] = await sql.query(query, params ? [`%${params.name}%`] : []);
+    const [res] = await db.query(query, params ? [`%${params.name}%`] : []);
     console.log("users: ", res);
     return res;
   } catch (err) {
@@ -89,7 +100,7 @@ User.updateById = async (id, user) => {
   try {
     user.password = await bcrypt.hash(user.password, 12);
 
-    const [res] = await sql.query(
+    const [res] = await db.query(
       "UPDATE Users SET name = ?, email = ?, password = ?, admin = ? WHERE id = ?",
       [user.name, user.email, user.password, user.admin, id]
     );
@@ -108,7 +119,7 @@ User.updateById = async (id, user) => {
 
 User.remove = async (id) => {
   try {
-    const [res] = await sql.query("DELETE FROM Users WHERE id = ?", [id]);
+    const [res] = await db.query("DELETE FROM Users WHERE id = ?", [id]);
 
     if (res.affectedRows == 0) {
       throw { kind: "not_found" };
@@ -124,7 +135,7 @@ User.remove = async (id) => {
 
 User.removeAll = async () => {
   try {
-    const [res] = await sql.query("DELETE FROM Users");
+    const [res] = await db.query("DELETE FROM Users");
 
     console.log(`deleted ${res.affectedRows} users`);
     return res;
