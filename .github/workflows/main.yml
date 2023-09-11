@@ -14,7 +14,7 @@ on:
       - main
       - zetsuy/git-workflow
 jobs:
-  flutter_Lint:
+  Flutter_Lint:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -72,7 +72,7 @@ jobs:
   
 
 
-  deployment:
+  Deployment:
     runs-on: ubuntu-latest
     defaults:
       run:
