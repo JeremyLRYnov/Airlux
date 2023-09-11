@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import './sensors_tile.dart';
-import '../models/sensor_model.dart';
+import 'package:mobileapp/models/sensor_model.dart';
+import 'package:mobileapp/widgets/sensors_tile.dart';
 
 class SensorsList extends StatefulWidget {
   final List<SensorModel> sensors;
 
-  SensorsList({super.key, required this.sensors});
+  const SensorsList({super.key, required this.sensors});
 
   @override
   State<SensorsList> createState() => _SensorsListState();

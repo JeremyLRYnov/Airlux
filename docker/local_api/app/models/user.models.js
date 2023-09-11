@@ -20,3 +20,5 @@ export const userRepository = client.fetchRepository(userSchema)
 
 /* create the index for Person for search */
 await userRepository.createIndex('userIndex')
+
+// Path: docker/local_api/app/models/building.models.js

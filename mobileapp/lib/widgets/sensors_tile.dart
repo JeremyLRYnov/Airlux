@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SensorTile extends StatelessWidget {
-  SensorTile(
-      {required this.SensorTitle,
+  const SensorTile(
+      {super.key, required this.SensorTitle,
       });
   final String SensorTitle;
 
@@ -12,7 +12,7 @@ class SensorTile extends StatelessWidget {
     return Container(
       height: 80,
       width: 400,
-      margin: new EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
        borderRadius: BorderRadius.circular(9),
         color: Colors.blueGrey[50],

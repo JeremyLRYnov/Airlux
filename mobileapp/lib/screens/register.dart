@@ -5,6 +5,8 @@ import 'package:mobileapp/widgets/rouded_button.dart';
 class Register extends StatefulWidget {
 
   static const String id = 'register_screen';
+
+  const Register({super.key});
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 
@@ -25,7 +27,7 @@ class _RegistrationScreenState extends State<Register> {
       ),
 
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child : SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -33,12 +35,12 @@ class _RegistrationScreenState extends State<Register> {
               children: <Widget>[
                 Hero(
                   tag: 'logo',
-                  child: Container(
+                  child: SizedBox(
                     height: 200.0,
                     child: Image.asset('assets/images/logo.png'),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 48.0,
                 ),
                 TextField(
@@ -49,7 +51,7 @@ class _RegistrationScreenState extends State<Register> {
                     hintText: 'Entrez votre email',
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 ),
                 TextField(
@@ -62,23 +64,23 @@ class _RegistrationScreenState extends State<Register> {
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                           icon: Icon(
-                              !_isObscure ? Icons.visibility : Icons.visibility_off),
+                              !_isObscure ? Icons.visibility : Icons.visibility_off,),
                           onPressed: () {
                             setState(() {
                               _isObscure = !_isObscure;
                             });
-                          })),
+                          },),),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 24.0,
                 ),
                 RoudedButton(
-                  title: 'S\'inscrire',
+                  title: "S'inscrire",
                   onPressed: () async {
                     setState(() {
                       _saving = true;
                     });
-                    await Future.delayed(Duration(seconds: 5));
+                    await Future.delayed(const Duration(seconds: 5));
                     setState(() {
                       _saving = false;
                     });

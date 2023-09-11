@@ -18,10 +18,10 @@ const auth = async (req, res, next) => {
     try {
       if (token && isCustomAuth) {
         decodedData = jwt.verify(token, process.env.JWT_TOKEN_SECRET)
-        req.userId = decodedData?.id
+        req.userId = decodedData.id
       } else {
         decodedData = jwt.decode(token)
-        req.userId = decodedData?.sub
+        req.userId = decodedData.sub
       }
     } catch (error) {
       res.status(401)

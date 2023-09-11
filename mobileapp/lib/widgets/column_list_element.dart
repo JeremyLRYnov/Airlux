@@ -11,7 +11,7 @@ class ColumnListElement extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: kPrimaryButtonActive,
             borderRadius: BorderRadius.circular(20),
@@ -20,7 +20,7 @@ class ColumnListElement extends StatelessWidget {
           height: 80,
         ),
         Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: kPrimaryButtonActive,
             borderRadius: BorderRadius.circular(20),

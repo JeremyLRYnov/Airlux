@@ -41,6 +41,9 @@ dependencies:
   network_info_plus: ^3.0.1
 
 dev_dependencies:
+  lint: ^2.0.0
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
 

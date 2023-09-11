@@ -4,32 +4,36 @@ on:
   push:
     branches:
       - lacazej/workflow
+      - develop
       - main
+      - zetsuy/git-workflow
   pull_request:
     branches:
       - lacazej/workflow
+      - develop
       - main
+      - zetsuy/git-workflow
 jobs:
-  Flutter-run:
+  lint:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./mobileapp/
-
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
-
-      - name: Get dependencies
+        with:
+          channel: 'stable'
+      - name: Add Flutter to PATH
+        run: echo "$HOME/flutter/bin" >> $GITHUB_PATH
+      - name: Install dependencies
         run: flutter pub get
+      - name: Run linter
+        run: flutter analyze
 
-      #- name: Run tests on emulator
-       # run: |
-        #  flutter emulators --launch emulator
-        #  flutter test
-  API-Locale-run:
+  API-Locale:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -37,7 +41,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -50,3 +54,40 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint:fix
+
+      - name: Start Docker Compose for unit tests & RUN
+        run: |
+          ls -l
+          docker-compose up -d
+          sleep 5
+          docker ps
+      
+      - name: Run unit tests
+        run: npm run test:unit
+  
+
+
+  deployment:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./docker/local_api/
+
+    steps:
+      - name : Checkout the repo
+        uses: actions/checkout@v3
+        
+      - name: Create SSH key file
+        run: echo "la machine virtuelle n'est plus disponible"
+      #   run: echo "${{ secrets.KEY }}" > ssh_key && chmod 400 ssh_key
+
+      # - name: copy docker-compose
+      #   run: scp -i ssh_key docker-compose.yml ${{ secrets.USER }}@${{ secrets.HOST }}:~/
+
+      # - name: Deploiement SSH
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     key: ./ssh_key
+      #     script: docker-compose up -d 
+

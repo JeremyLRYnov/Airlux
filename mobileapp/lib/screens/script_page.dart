@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ScriptPage extends StatelessWidget {
+  const ScriptPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,7 +10,7 @@ class ScriptPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text(
               'En développement',
               style: TextStyle(
