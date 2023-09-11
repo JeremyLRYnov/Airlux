@@ -11,9 +11,10 @@ exports.create = (req, res) => {
 
   // Create a Sensor
   const sensor = new Sensor({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published || false
+    name: req.body.name,
+    roomId: req.body.roomId,
+    value: req.body.value ,
+    unit: req.body.unit
   });
 
   // Save Sensor in the database
@@ -29,21 +30,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Tutorials from the database (with condition).
 exports.findAll = (req, res) => {
-  const title = req.query.title;
+  const name = req.query.name;
 
-  Tutorial.getAll(title, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving sensors."
-      });
-    else res.send(data);
-  });
-};
-
-// Find all published Sensors
-exports.findAllPublished = (req, res) => {
-  Sensor.getAllPublished((err, data) => {
+  Sensor.getAll(name, (err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -78,8 +67,6 @@ exports.update = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
-  console.log(req.body);
 
   Sensor.updateById(
     req.params.id,

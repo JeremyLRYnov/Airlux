@@ -9,7 +9,7 @@ export const router = express.Router()
 const { switchSchema } = schema
 
 router.route('/create').post(auth, validator(switchSchema), createSwitch)
-router.route('/:id').get(auth, deleteSwitch)
+router.route('/:id').delete(auth, deleteSwitch)
 router.route('/:id').get(auth, getSwitch)
 router.route('/').get(auth, getSwitches)
 router.route('/:id').patch(auth, updateSwitch)

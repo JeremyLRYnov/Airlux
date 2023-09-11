@@ -5,7 +5,7 @@ export const createBuilding = async (req, res) => {
   const existingBuilding = await buildingRepository.search().where('name').is.equalTo(name).return.first()
   // check if building already registered with the name
   if (existingBuilding) {
-    return res.status(400).json({ message: 'A building already registered with the name.' })
+    return res.status(400).json({ message: 'Un building est déjà enregistré sous ce nom.' })
   }
   const building = await buildingRepository.createAndSave({ name: `${name}`, createdBy, users })
   const { entityId, ...rest } = building.toJSON()
@@ -40,7 +40,7 @@ export const updateBuilding = async (req, res) => {
 export const deleteBuilding = async (req, res) => {
   const { id } = req.params
   await buildingRepository.remove(id)
-  res.status(200).json({ message: 'Building ' + id + ' deleted successfully.' })
+  res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' })
 }
 
 // Path: docker/local_api/app/controller/building.controller.js
