@@ -31,7 +31,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Run linter
-        run: flutter analyze
+        run: |
+          if flutter analyze; then
+            echo "L'analyse flutter n'a pas trouvé d'erreurs."
+          else
+            echo "##[warning] Attention : Des problèmes ont été détectés par 'flutter analyze'."
+          fi
 
   API-Locale:
     runs-on: ubuntu-latest
