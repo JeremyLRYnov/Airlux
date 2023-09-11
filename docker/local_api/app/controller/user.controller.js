@@ -26,14 +26,15 @@ export const signup = async (req, res) => {
     const data = { id: user.entityId, ...rest };
     res.status(200).json({message: "Inscription réussi", result: data, token });
 
-    const socket = new WebSocket('ws://localhost:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
+    const socket = new WebSocket('ws://127.0.0.0:6868'); // Remplacez l'URL par celle de votre serveur WebSocket.
     console.log('Début websocket');
+
     // Événement déclenché lorsque la connexion WebSocket est ouverte.
-    socket.addEventListener('open', (message) => {
+    socket.on('open', (mes) => {
     console.log('Connexion WebSocket établie avec succès.');
     
     // Vous pouvez envoyer des messages après la connexion.
-    socket.send(message);
+    socket.send(req.body);
       //sendWebSocketMessage(req.body);
   });
 };
