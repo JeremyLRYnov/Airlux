@@ -148,3 +148,9 @@ Résultat :
     "result": "User 01H9ZJ4PAKPD9DTSCD90Q5X4S4 deleted successfully."
 }
 ```
+
+Vous pouvez retrouver les différentes routes ici :
+
+| Routes de user | Routes de building | Routes de room | Routes de sensor | Routes de switch |
+| :---:| :---:    | :---:| :---:  | :---:  |
+| [User](user/README.md) | [Building](building/README.md) | [Room](room/README.md) | [Sensor](sensor/README.md) | [Switch](switch/README.md) |
