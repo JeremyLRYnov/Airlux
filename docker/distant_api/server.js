@@ -32,4 +32,4 @@ app.listen(PORT, () => {
 const { createTables } = require('./app/models/db');
 setTimeout(() => {
   createTables();
-}, 10000); 
+}, 30000); 
