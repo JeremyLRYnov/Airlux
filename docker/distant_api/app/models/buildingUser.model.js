@@ -1,34 +1,57 @@
-const sql = require("./db.js");
+const { db } = require("./db.js");
 
-const BuildingUser = function(buildingUser) {
-  this.buildingId = buildingUser.buildingId;
-  this.userId = buildingUser.userId;
-};
+class BuildingUser {
+  constructor(buildingUser) {
+    this.buildingId = buildingUser.buildingId;
+    this.userId = buildingUser.userId;
+  }
 
-BuildingUser.assignUserToBuilding = (newBuildingUser, result) => {
-  sql.query("INSERT INTO BuildingUsers SET ?", newBuildingUser, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
+  static async assignUserToBuilding(newBuildingUser) {
+    try {
+      const [result] = await db.query("INSERT INTO BuildingUsers SET ?", newBuildingUser);
+      console.log("User assigned to building: ", { ...newBuildingUser });
+      return { ...newBuildingUser };
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-    console.log("User assigned to building: ", { ...newBuildingUser });
-    result(null, { ...newBuildingUser });
-  });
-};
+  }
 
-BuildingUser.findUsersByBuildingId = (buildingId, result) => {
-  sql.query("SELECT * FROM Users INNER JOIN BuildingUsers ON Users.id = BuildingUsers.userId WHERE BuildingUsers.buildingId = ?", [buildingId], (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
+  static async findUsersByBuildingId(buildingId) {
+    try {
+      const [results] = await db.query("SELECT Users.id, Users.name, Users.email, Users.password, Users.admin FROM Users INNER JOIN BuildingUsers ON Users.id = BuildingUsers.userId WHERE BuildingUsers.buildingId = ?", [buildingId]);
+      console.log("Users found: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-    console.log("Users found: ", res);
-    result(null, res);
-  });
-};
+  }
 
-// Add other necessary methods like removing a user from a building, finding buildings by user ID, etc.
+  static async findBuildingsByUserId(userId) {
+    try {
+      const [results] = await db.query("SELECT Buildings.* FROM Buildings INNER JOIN BuildingUsers ON Buildings.id = BuildingUsers.buildingId WHERE BuildingUsers.userId = ?", [userId]);
+      console.log("Buildings found: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async removeBuildingsByUserId(userId) {
+    try {
+      const [results] = await db.query("DELETE FROM BuildingUsers WHERE userId = ?", [userId]);
+      console.log(`Deleted buildings for user id: ${userId}`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+  
+  
+
+}
 
 module.exports = BuildingUser;
