@@ -7,6 +7,7 @@ filter_script.cpython-39.pyc
 docker/mosquitto/data/mosquitto.db
 docker/mosquitto/log
 docker/redis-stack/*.rdb
+docker/distant_api/data/
 
 # Miscellaneous
 *.class
