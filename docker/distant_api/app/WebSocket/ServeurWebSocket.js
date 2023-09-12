@@ -1,7 +1,12 @@
-import WebSocket from 'ws';
+import { WebSocketServer } from 'ws';
 
-const wss = new WebSocket.Server({ port: 8080 });
+console.log('Début Websocket.');
 
+const wss = new WebSocketServer({ port: 8080 });
+
+console.log('Création serveur Websocket.');
+
+ws.on('error', console.error);
 
 wss.on('connection', (ws) => {
   console.log('Nouvelle connexion WebSocket établie.');
@@ -18,7 +23,7 @@ wss.on('connection', (ws) => {
 
   } 
   catch (error) {
-    console.error('Erreur lors de l analyse du message JSON :', error);
+    console.error('Erreur lors de l"analyse du message JSON :', error);
 }
 
   ws.on('close', () => {
@@ -28,5 +33,4 @@ wss.on('connection', (ws) => {
   });
 });
 
-
-export { WebSocket };
+module.exports = WebSocket;
