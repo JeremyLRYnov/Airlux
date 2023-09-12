@@ -1,7 +1,9 @@
 const { db } = require("./db.js");
+const { v4: uuidv4 } = require('uuid');
 
 class Sensor {
   constructor(sensor) {
+    this.id = sensor.id,
     this.name = sensor.name;
     this.roomId = sensor.roomId;
     this.value = sensor.value;
@@ -10,9 +12,12 @@ class Sensor {
 
   static async create(newSensor) {
     try {
+      if(!newSensor.id) {
+        newSensor.id = uuidv4();  // Génére un UUID si aucun ID n'est fourni
+      }
       const [result] = await db.query("INSERT INTO Sensors SET ?", newSensor);
-      console.log("created sensor: ", { id: result.insertId, ...newSensor });
-      return { id: result.insertId, ...newSensor };
+      console.log("created sensor: ", { id: newSensor.id, ...newSensor });
+      return { id: newSensor.id, ...newSensor };
     } catch (error) {
       console.log("grosse erreur: ", error);
       throw error;

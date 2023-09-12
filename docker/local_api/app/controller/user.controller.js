@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { userRepository } from '../models/user.models.js';
 import WebSocket from 'ws';
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 //import { sendWebSocketMessage } from '../WebSocket/EnvoiMessage.js';
 
@@ -26,7 +27,17 @@ export const signup = async (req, res) => {
     const data = { id: user.entityId, ...rest };
     res.status(200).json({message: "Inscription réussi", result: data, token });
 
-    const ws = new WebSocket('ws://appmysql:8081/'); // Remplacez l'URL par celle de votre serveur WebSocket.
+    //Data to send in the socket
+    const dataToSend = {
+      id: user.entityId,
+      name: name,
+      email: email,
+      password: hashedPassword, 
+      admin: admin
+    };
+
+    syncService.syncData(dataToSend, 'user', 'create');
+    /*const ws = new WebSocket('ws://appmysql:8081/'); // Remplacez l'URL par celle de votre serveur WebSocket.
     console.log('Début websocket');
 
     // Événement déclenché lorsque la connexion WebSocket est ouverte.
@@ -34,13 +45,15 @@ export const signup = async (req, res) => {
     console.log('Connexion WebSocket établie avec succès.');
     
     // Vous pouvez envoyer des messages après la connexion.
-    ws.send(req.body);
+    ws.send(JSON.stringify(req.body));
       console.log('Message envoyer');
-  });
+    });
 
     ws.on('error', function (error) {
       console.error('Erreur de connexion WebSocket :', error);
-  });
+    });
+    */
+
 };
 
 export const signin = async (req, res) => {
@@ -76,12 +89,26 @@ export const updateUser = async (req, res) => {
   await userRepository.save(user)
 
   res.status(200).json({ result: user })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: id,
+    name: user.name,
+    email: user.email,
+    password: user.password, 
+    admin: user.admin
+  };
+
+  syncService.syncData(dataToSend, 'user', 'update');
 }
 
 export const deleteUser = async (req, res) => {
   const { id } = req.params
   await userRepository.remove(id)
   res.status(200).json({ result: 'User ' + id + ' Supprimé avec succès.' })
+
+  //WebSocket
+  syncService.syncData({id: id}, 'user', 'delete');
 }
 
 export const getUser = async (req, res) => {

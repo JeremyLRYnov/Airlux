@@ -2,9 +2,11 @@
 const { db } = require("./db.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
 class User {
   constructor(user) {
+    this.id = user.id;
     this.name = user.name;
     this.email = user.email;
     this.password = user.password;
@@ -13,10 +15,14 @@ class User {
 
   static async signup(newUser) {
     try {
+      if (!newUser.id) {
+        newUser.id = uuidv4();  // Génère un ID unique si aucun ID n'est fourni
+      }
       newUser.password = await bcrypt.hash(newUser.password, 12);
+      console.log('Inserting user:', newUser);
       const [res] = await db.query("INSERT INTO Users SET ?", newUser);
-      console.log("Utilisateur créé: ", { id: res.insertId, ...newUser });
-      return { id: res.insertId, ...newUser };
+      console.log("Utilisateur créé: ", { id: newUser.id, ...newUser});
+      return { id: newUser.id, ...newUser };
     } catch (error) {
       console.log("erreur: ", error);
       throw error;
@@ -24,10 +30,20 @@ class User {
   }
 
   static async addExternalUser(newUser) {
+    // Vérifiez si un utilisateur avec cet ID existe déjà
+    if (newUser.id) {
+      const [existingUser] = await db.query("SELECT * FROM Users WHERE id = ?", [newUser.id]);
+      if (existingUser.length) {
+        throw { kind: "duplicate_id", message: "An user with this ID already exists" };
+      }
+    } else {
+      newUser.id = uuidv4();  // Génère un ID unique si aucun ID n'est fourni
+    }
     try {
-      const [res] = await db.query("INSERT INTO Users SET ?", newUser);
-      console.log("Utilisateur externe ajouté: ", { id: res.insertId, ...newUser });
-      return { id: res.insertId, ...newUser };
+      let query = "INSERT INTO Users SET ?";
+      const [res] = await db.query(query, newUser);
+      console.log("Utilisateur externe ajouté: ", { id: newUser.id, ...newUser });
+      return { id: newUser.id, ...newUser };
     } catch (error) {
       console.log("erreur: ", error);
       throw error;

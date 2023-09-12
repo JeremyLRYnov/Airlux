@@ -1,28 +1,28 @@
 import WebSocket from 'ws';
 
-const wss = new WebSocket.Server({ port: 8080 });
+class SyncService {
+  constructor() {
+    this.ws = new WebSocket('ws://appmysql:8081/');
+    console.log('Début websocket');
+    this.ws.on('open', () => console.log('Connexion WebSocket établie avec succès.'));
+    this.ws.on('error', error => console.error('Erreur de connexion WebSocket :', error));
+  }
 
-wss.on('connection', (ws) => {
-  console.log('Nouvelle connexion WebSocket établie.');
-
-  // Traitez le message ici et envoyez une réponse si nécessaire.
-  ws.on('message', (message) => {
-    console.log(`Message reçu : ${message}`);
-
-  try {
-    const data = JSON.parse(message);
-    console.log('Message reçu :', data);
-  } 
-  catch (error) {
-    console.error('Erreur lors de l analyse du message JSON :', error);
+  //Envoit des données avec la WebSocket
+  syncData(data, entityType, action) {
+    //Informations sur la donnée à envoyer : type(ex: user, sensor,...), action(ex: create, delete, ...) et data(req.body)
+    const sendData = {
+      type: entityType,
+      action: action,
+      data: data,
+    };
+    if (this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(sendData));
+      console.log('Message envoyé');
+    } else {
+      console.error('Connexion WebSocket non disponible');
+    }
+  }
 }
 
-  ws.on('close', () => {
-    console.log('Connexion WebSocket fermée.');
-    clients.delete(ws);
-    });
-  });
-});
-
-
-export { WebSocket };
+export const syncService = new SyncService();

@@ -11,6 +11,7 @@ exports.create = async (req, res) => {
 
   // Create a Room
   const room = new Room({
+    id: req.body.id,
     name: req.body.name,
     buildingId: req.body.buildingId
   });

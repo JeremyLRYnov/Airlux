@@ -20,6 +20,7 @@ exports.create = async (req, res) => {
 
     // Create a Building
     const building = new Building({
+      id: req.body.id,
       name: req.body.name,
       createdBy: req.body.createdBy
     });

@@ -1,5 +1,26 @@
 const User = require('../models/user.model.js');
 
+ // Logique pour gérer les messages WebSocket pour les utilisateurs
+exports.handleWebSocketMessage = async (message) => {
+  if (message.action === 'create') {
+    console.log("action récupérée");
+    await exports.addExternalUser({ body: message.data });
+    console.log("données stockées sur mysql");
+  } 
+
+  if(message.action === 'delete') {
+    console.log("action récupérée");
+    await exports.delete({ params: { id: message.data.id } }, null);
+    console.log("données supprimées sur mysql");
+  }
+
+  if(message.action === 'update') {
+    console.log("action récupérée");
+    await exports.update({ params: { id: message.data.id }, body: message.data }, null);
+    console.log("données mises à jour sur mysql");
+  }
+};
+
 // Créer et enregistrer un nouvel utilisateur
 exports.signup = async (req, res) => {
   // Valider la requête
@@ -12,6 +33,7 @@ exports.signup = async (req, res) => {
 
   // Créer un utilisateur
   const user = new User({
+    id: req.body.id,
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -32,13 +54,17 @@ exports.signup = async (req, res) => {
 //Enregistrer un utilisateur déjà créé sur Redis
 exports.addExternalUser = async (req, res) => {
   if (!req.body) {
-    res.status(400).send({
-      message: "Le contenu ne peut pas être vide !"
-    });
+    if (res) {
+      res.status(400).send({
+        message: "Le contenu ne peut pas être vide !"
+      });
+    }
+    console.error("Le contenu ne peut pas être vide !");
     return;
   }
 
   const user = new User({
+    id: req.body.id,
     name: req.body.name,
     email: req.body.email,
     password: req.body.password, //mot de passe déjà hashé
@@ -47,14 +73,18 @@ exports.addExternalUser = async (req, res) => {
 
   try {
     const data = await User.addExternalUser(user);
-    res.send(data);
+    if (res) {
+      res.send(data);
+    }  
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Une erreur est survenue lors de l'ajout de l'utilisateur."
-    });
+    if(res){
+      res.status(500).send({
+        message: err.message || "Une erreur est survenue lors de l'ajout de l'utilisateur."
+      });
+    }
+    console.error("Une erreur est survenue lors de l'ajout de l'utilisateur: ", err.message);
   }
 };
-
 
 // Fonction d'authentification
 exports.signin = async (req, res) => {
@@ -102,23 +132,35 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Supprimer un utilisateur avec l'id spécifié dans la demande
 exports.delete = async (req, res) => {
   try {
     const data = await User.remove(req.params.id);
-    res.send({ message: `L'utilisateur a été supprimé avec succès !` });
+    if (res) {
+      res.send({ message: `L'utilisateur a été supprimé avec succès !` });
+    } else {
+      console.log(`L'utilisateur avec l'id ${req.params.id} a été supprimé avec succès !`);
+    }
   } catch (err) {
     if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Utilisateur non trouvé avec l'id ${req.params.id}.`
-      });
+      if (res) {
+        res.status(404).send({
+          message: `Utilisateur non trouvé avec l'id ${req.params.id}.`
+        });
+      } else {
+        console.error(`Utilisateur non trouvé avec l'id ${req.params.id}.`);
+      }
     } else {
-      res.status(500).send({
-        message: "Impossible de supprimer l'utilisateur avec l'id " + req.params.id
-      });
+      if (res) {
+        res.status(500).send({
+          message: "Impossible de supprimer l'utilisateur avec l'id " + req.params.id
+        });
+      } else {
+        console.error("Impossible de supprimer l'utilisateur avec l'id " + req.params.id);
+      }
     }
   }
 };
+
 
 // Supprimer tous les utilisateurs de la base de données
 exports.deleteAll = async (req, res) => {
@@ -136,26 +178,37 @@ exports.deleteAll = async (req, res) => {
 exports.update = async (req, res) => {
   // Valider la demande
   if (!req.body) {
-    res.status(400).send({
-      message: "Le contenu ne peut pas être vide !"
-    });
+    if (res) {
+      res.status(400).send({
+        message: "Le contenu ne peut pas être vide !"
+      });
+    }
+    console.error("Le contenu ne peut pas être vide !");
     return;
   }
 
   try {
     const data = await User.updateById(req.params.id, new User(req.body));
-    res.send(data);
-  } catch (err) {
-    if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Utilisateur non trouvé avec l'id ${req.params.id}.`
-      });
+    if (res) {
+      res.send(data);
     } else {
-      res.status(500).send({
-        message: "Erreur lors de la mise à jour de l'utilisateur avec l'id " + req.params.id
-      });
+      console.log(`Utilisateur avec l'id ${req.params.id} a été mis à jour avec succès.`);
     }
+  } catch (err) {
+    if (res) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Utilisateur non trouvé avec l'id ${req.params.id}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Erreur lors de la mise à jour de l'utilisateur avec l'id " + req.params.id
+        });
+      }
+    }
+    console.error("Erreur lors de la mise à jour de l'utilisateur: ", err.message);
   }
 };
+
 
 
