@@ -1,10 +1,10 @@
 const Room = require('../models/room.model.js');
 
 // Create and Save a new Room
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
   if (!req.body) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
@@ -15,101 +15,121 @@ exports.create = (req, res) => {
     buildingId: req.body.buildingId
   });
 
-  // Save Room in the database
-  Room.create(room, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Room."
-      });
-    else res.send(data);
-  });
+  try {
+    const data = await Room.create(room);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while creating the Room."
+    });
+  }
 };
 
-// Retrieve all Rooms from the database (with condition).
-exports.findAll = (req, res) => {
-  const name = req.query.name;
+exports.findAllByBuilding = async (req, res) => {
+  try {
+    const data = await Room.findAllByBuildingId(req.params.buildingId);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving rooms."
+    });
+  }
+};
 
-  Room.getAll(name, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving rooms."
-      });
-    else res.send(data);
-  });
+// Retrieve all Rooms from the database 
+exports.findAll = async (req, res) => {
+  const name = req.query.name;
+  
+  try {
+    const data = await Room.getAll(name);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving rooms."
+    });
+  }
 };
 
 // Find a single Room with a roomId
-exports.findOne = (req, res) => {
-  Room.findById(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Room with id ${req.params.id}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving Room with id " + req.params.id
-        });
-      }
-    } else res.send(data);
-  });
+exports.findOne = async (req, res) => {
+  try {
+    const data = await Room.findById(req.params.id);
+    res.send(data);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Room with id ${req.params.id}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error retrieving Room with id " + req.params.id
+      });
+    }
+  }
 };
 
 // Update a Room identified by the roomId in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   // Validate Request
   if (!req.body) {
-    res.status(400).send({
+    return res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
-  Room.updateById(
-    req.params.id,
-    new Room(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Room with id ${req.params.id}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating Room with id " + req.params.id
-          });
-        }
-      } else res.send(data);
+  try {
+    const data = await Room.updateById(req.params.id, new Room(req.body));
+    res.send(data);
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Room with id ${req.params.id}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Error updating Room with id " + req.params.id
+      });
     }
-  );
+  }
 };
 
 // Delete a Room with the specified roomId in the request
-exports.delete = (req, res) => {
-  Room.remove(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found Room with id ${req.params.id}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Could not delete Room with id " + req.params.id
-        });
-      }
-    } else res.send({ message: `Room was deleted successfully!` });
-  });
+exports.delete = async (req, res) => {
+  try {
+    await Room.remove(req.params.id);
+    res.send({ message: `Room was deleted successfully!` });
+  } catch (err) {
+    if (err.kind === "not_found") {
+      res.status(404).send({
+        message: `Not found Room with id ${req.params.id}.`
+      });
+    } else {
+      res.status(500).send({
+        message: "Could not delete Room with id " + req.params.id
+      });
+    }
+  }
+};
+
+exports.deleteAllByBuilding = async (req, res) => {
+  try {
+    await Room.removeAllByBuildingId(req.params.buildingId);
+    res.send({ message: `All rooms were deleted successfully from building ID ${req.params.buildingId}!` });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while removing all rooms."
+    });
+  }
 };
 
 // Delete all Rooms from the database.
-exports.deleteAll = (req, res) => {
-  Room.removeAll((err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all rooms."
-      });
-    else res.send({ message: `All Rooms were deleted successfully!` });
-  });
+exports.deleteAll = async (req, res) => {
+  try {
+    await Room.removeAll();
+    res.send({ message: `All Rooms were deleted successfully!` });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Some error occurred while removing all rooms."
+    });
+  }
 };

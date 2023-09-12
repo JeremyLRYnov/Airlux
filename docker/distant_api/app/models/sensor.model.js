@@ -1,116 +1,116 @@
-const sql = require("./db.js");
+const { db } = require("./db.js");
 
-// constructor
-const Sensor = function(sensor) {
-  this.name = sensor.name;
-  this.roomId = sensor.roomId;
-  this.value = sensor.value;
-  this.unit = sensor.unit
-};
-
-Sensor.create = (newSensor, result) => {
-  sql.query("INSERT INTO Sensors SET ?", newSensor, (err, res) => {
-    if (err) {
-      console.log("grosse erreur: ", err);
-      result(err, null);
-      return;
-    }
-    console.log("created sensor: ", { id: res.insertId, ...newSensor });
-    result(null, { id: res.insertId, ...newSensor });
-  });
-};
-
-Sensor.findById = (id, result) => {
-  sql.query(`SELECT * FROM Sensors WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found sensor: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Sensor with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Sensor.getAll = (name, result) => {
-  let query = "SELECT * FROM Sensors";
-
-  if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
+class Sensor {
+  constructor(sensor) {
+    this.name = sensor.name;
+    this.roomId = sensor.roomId;
+    this.value = sensor.value;
+    this.unit = sensor.unit;
   }
 
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
+  static async create(newSensor) {
+    try {
+      const [result] = await db.query("INSERT INTO Sensors SET ?", newSensor);
+      console.log("created sensor: ", { id: result.insertId, ...newSensor });
+      return { id: result.insertId, ...newSensor };
+    } catch (error) {
+      console.log("grosse erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("sensors: ", res);
-    result(null, res);
-  });
-};
-
-Sensor.updateById = (id, sensor, result) => {
-  sql.query(
-    "UPDATE Sensors SET name = ?, roomId = ?, value = ?, unit = ? WHERE id = ?",
-    [sensor.name, sensor.roomId, sensor.value, sensor.unit, id],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
+  static async findById(id) {
+    try {
+      const [results] = await db.query(`SELECT * FROM Sensors WHERE id = ?`, [id]);
+      if (results.length) {
+        console.log("found sensor: ", results[0]);
+        return results[0];
+      } else {
+        throw { kind: "not_found" };
       }
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
+    }
+  }
 
-      if (res.affectedRows == 0) {
-        // not found Sensor with the id
-        result({ kind: "not_found" }, null);
-        return;
+  static async getAll(name) {
+    try {
+      let query = "SELECT * FROM Sensors";
+      if (name) {
+        query += ` WHERE name LIKE ?`;
       }
-
-      console.log("updated sensor: ", { id: id, ...sensor });
-      result(null, { id: id, ...sensor });
+      const [results] = await db.query(query, [`%${name}%`]);
+      console.log("sensors: ", results);
+      return results;
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
     }
-  );
-};
+  }
 
-Sensor.remove = (id, result) => {
-  sql.query("DELETE FROM Sensors WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
+  static async findAllByRoomId(roomId) {
+    try {
+        const [results] = await db.query("SELECT * FROM Sensors WHERE roomId = ?", [roomId]);
+        console.log("Sensors found: ", results);
+        return results;
+    } catch (error) {
+        console.log("error: ", error);
+        throw error;
     }
+  }
 
-    if (res.affectedRows == 0) {
-      // not found Sensor with the id
-      result({ kind: "not_found" }, null);
-      return;
+  static async updateById(id, sensor) {
+    try {
+      const [results] = await db.query("UPDATE Sensors SET name = ?, roomId = ?, value = ?, unit = ? WHERE id = ?", [sensor.name, sensor.roomId, sensor.value, sensor.unit, id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated sensor: ", { id: id, ...sensor });
+        return { id: id, ...sensor };
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
     }
+  }
 
-    console.log("deleted sensor with id: ", id);
-    result(null, res);
-  });
-};
-
-Sensor.removeAll = result => {
-  sql.query("DELETE FROM Sensors", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
+  static async remove(id) {
+    try {
+      const [results] = await db.query("DELETE FROM Sensors WHERE id = ?", [id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("deleted sensor with id: ", id);
+        return results;
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
     }
+  }
 
-    console.log(`deleted ${res.affectedRows} sensors`);
-    result(null, res);
-  });
-};
+  static async removeAll() {
+    try {
+      const [results] = await db.query("DELETE FROM Sensors");
+      console.log(`deleted ${results.affectedRows} sensors`);
+      return results;
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
+    }
+  }
+
+  static async removeAllByRoomId(roomId) {
+    try {
+        const [results] = await db.query("DELETE FROM Sensors WHERE roomId = ?", [roomId]);
+        console.log(`Deleted ${results.affectedRows} sensors`);
+        return results;
+    } catch (error) {
+        console.log("error: ", error);
+        throw error;
+    }
+  }
+}
 
 module.exports = Sensor;

@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
     const authorization = req.headers.authorization || req.headers['x-access-token']
 
     if (!authorization) {
-      return res.status(400).json({ message: 'No token provided' })
+      return res.status(400).json({ message: 'Aucun token fourni' })
     }
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1]
@@ -25,7 +25,7 @@ const auth = async (req, res, next) => {
       }
     } catch (error) {
       res.status(401)
-      return res.status(400).json({ message: 'Invalid token' })
+      return res.status(400).json({ message: 'Token invalide' })
     }
     next()
   } catch (error) {

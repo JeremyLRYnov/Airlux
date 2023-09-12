@@ -2,9 +2,9 @@ import { check } from 'express-validator'
 
 export default {
   buildingSchema: [
-    check('name').not().isEmpty().withMessage('name field is required.'),
-    check('createdBy').not().isEmpty().withMessage('createdBy field is required.'),
-    check('users').not().isEmpty().withMessage('users field is required.')
+    check('name').not().isEmpty().withMessage('Le champ \'name\' est requis.'),
+    check('createdBy').not().isEmpty().withMessage('Le champ \'createdBy\' est requis.'),
+    check('users').not().isEmpty().withMessage('Le champ \'users\' est requis.')
   ]
 }
 

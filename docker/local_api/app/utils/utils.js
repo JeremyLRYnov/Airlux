@@ -11,7 +11,7 @@ class ApplicationError extends Error {
      * @param {string} message error message
      * @param {string} errors an array containing errors
      */
-  constructor (statusCode, message = 'an error occurred', errors) {
+  constructor (statusCode, message = "Une erreur s'est produite", errors) {
     super(message)
     this.statusCode = statusCode || 500
     this.message = message
