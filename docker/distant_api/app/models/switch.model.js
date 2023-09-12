@@ -1,114 +1,115 @@
-const sql = require("./db.js");
+const { db } = require("./db.js");
 
-const Switch = function(switchEntity) {
-  this.name = switchEntity.name;
-  this.roomId = switchEntity.roomId;
-  this.status = switchEntity.status;
-};
-
-Switch.create = (newSwitch, result) => {
-  sql.query("INSERT INTO Switches SET ?", newSwitch, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-    console.log("Switch créé: ", { id: res.insertId, ...newSwitch });
-    result(null, { id: res.insertId, ...newSwitch });
-  });
-};
-
-Switch.findById = (id, result) => {
-  sql.query(`SELECT * FROM Switches WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found switch: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Switch with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Switch.getAll = (name, result) => {
-  let query = "SELECT * FROM Switches";
-
-  if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
+class Switch {
+  constructor(switchEntity) {
+    this.name = switchEntity.name;
+    this.roomId = switchEntity.roomId;
+    this.status = switchEntity.status;
   }
 
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async create(newSwitch) {
+    try {
+      const [result] = await db.query("INSERT INTO Switches SET ?", newSwitch);
+      console.log("Switch créé: ", { id: result.insertId, ...newSwitch });
+      return { id: result.insertId, ...newSwitch };
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("switches: ", res);
-    result(null, res);
-  });
-};
-
-Switch.updateById = (id, switchEntity, result) => {
-  sql.query(
-    "UPDATE Switches SET name = ?, roomId = ?, status = ? WHERE id = ?",
-    [switchEntity.name, switchEntity.roomId, switchEntity.status, id],
-    (err, res) => {
-      if (err) {
-        console.log("erreur: ", err);
-        result(null, err);
-        return;
+  static async findById(id) {
+    try {
+      const [results] = await db.query(`SELECT * FROM Switches WHERE id = ?`, [id]);
+      if (results.length) {
+        console.log("found switch: ", results[0]);
+        return results[0];
+      } else {
+        throw { kind: "not_found" };
       }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
 
-      if (res.affectedRows == 0) {
-        // not found Switch with the id
-        result({ kind: "not_found" }, null);
-        return;
+  static async getAll(name) {
+    try {
+      let query = "SELECT * FROM Switches";
+      if (name) {
+        query += ` WHERE name LIKE ?`;
       }
-
-      console.log("updated switch: ", { id: id, ...switchEntity });
-      result(null, { id: id, ...switchEntity });
+      const [results] = await db.query(query, [`%${name}%`]);
+      console.log("switches: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-  );
-};
+  }
 
-Switch.remove = (id, result) => {
-  sql.query("DELETE FROM Switches WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async findAllByRoomId(roomId) {
+    try {
+      const [results] = await db.query("SELECT * FROM Switches WHERE roomId = ?", [roomId]);
+      console.log("switches: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    if (res.affectedRows == 0) {
-      // not found Switch with the id
-      result({ kind: "not_found" }, null);
-      return;
+  static async updateById(id, switchEntity) {
+    try {
+      const [results] = await db.query("UPDATE Switches SET name = ?, roomId = ?, status = ? WHERE id = ?", [switchEntity.name, switchEntity.roomId, switchEntity.status, id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated switch: ", { id: id, ...switchEntity });
+        return { id: id, ...switchEntity };
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("deleted switch with id: ", id);
-    result(null, res);
-  });
-};
-
-Switch.removeAll = result => {
-  sql.query("DELETE FROM Switches", (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async remove(id) {
+    try {
+      const [results] = await db.query("DELETE FROM Switches WHERE id = ?", [id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("deleted switch with id: ", id);
+        return results;
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log(`deleted ${res.affectedRows} switches`);
-    result(null, res);
-  });
-};
+  static async removeAll() {
+    try {
+      const [results] = await db.query("DELETE FROM Switches");
+      console.log(`deleted ${results.affectedRows} switches`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async removeAllByRoomId(roomId) {
+    try {
+      const [results] = await db.query("DELETE FROM Switches WHERE roomId = ?", [roomId]);
+      console.log(`deleted ${results.affectedRows} switches`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+}
 
 module.exports = Switch;

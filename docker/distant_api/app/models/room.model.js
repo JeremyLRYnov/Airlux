@@ -1,113 +1,114 @@
-const sql = require("./db.js");
+const { db } = require("./db.js");
 
-const Room = function(room) {
-  this.name = room.name;
-  this.buildingId = room.buildingId;
-};
-
-Room.create = (newRoom, result) => {
-  sql.query("INSERT INTO Rooms SET ?", newRoom, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-    console.log("Room créée: ", { id: res.insertId, ...newRoom });
-    result(null, { id: res.insertId, ...newRoom });
-  });
-};
-
-Room.findById = (id, result) => {
-  sql.query(`SELECT * FROM Rooms WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found room: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Room with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Room.getAll = (name, result) => {
-  let query = "SELECT * FROM Rooms";
-
-  if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
+class Room {
+  constructor(room) {
+    this.name = room.name;
+    this.buildingId = room.buildingId;
   }
 
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async create(newRoom) {
+    try {
+      const [result] = await db.query("INSERT INTO Rooms SET ?", newRoom);
+      console.log("Room créée: ", { id: result.insertId, ...newRoom });
+      return { id: result.insertId, ...newRoom };
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("rooms: ", res);
-    result(null, res);
-  });
-};
-
-Room.updateById = (id, room, result) => {
-  sql.query(
-    "UPDATE Rooms SET name = ?, buildingId = ? WHERE id = ?",
-    [room.name, room.buildingId, id],
-    (err, res) => {
-      if (err) {
-        console.log("erreur: ", err);
-        result(null, err);
-        return;
+  static async findById(id) {
+    try {
+      const [results] = await db.query(`SELECT * FROM Rooms WHERE id = ?`, [id]);
+      if (results.length) {
+        console.log("found room: ", results[0]);
+        return results[0];
+      } else {
+        throw { kind: "not_found" };
       }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
 
-      if (res.affectedRows == 0) {
-        // not found Room with the id
-        result({ kind: "not_found" }, null);
-        return;
+  static async findAllByBuildingId(buildingId) {
+    try {
+      const [results] = await db.query(`SELECT * FROM Rooms WHERE buildingId = ?`, [buildingId]);
+      console.log(`Rooms found for building ID ${buildingId}:`, results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async getAll(name) {
+    try {
+      let query = "SELECT * FROM Rooms";
+      if (name) {
+        query += ` WHERE name LIKE ?`;
       }
-
-      console.log("updated room: ", { id: id, ...room });
-      result(null, { id: id, ...room });
+      const [results] = await db.query(query, [`%${name}%`]);
+      console.log("rooms: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-  );
-};
+  }
 
-Room.remove = (id, result) => {
-  sql.query("DELETE FROM Rooms WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async updateById(id, room) {
+    try {
+      const [results] = await db.query("UPDATE Rooms SET name = ?, buildingId = ? WHERE id = ?", [room.name, room.buildingId, id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated room: ", { id: id, ...room });
+        return { id: id, ...room };
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    if (res.affectedRows == 0) {
-      // not found Room with the id
-      result({ kind: "not_found" }, null);
-      return;
+  static async remove(id) {
+    try {
+      const [results] = await db.query("DELETE FROM Rooms WHERE id = ?", [id]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("deleted room with id: ", id);
+        return results;
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("deleted room with id: ", id);
-    result(null, res);
-  });
-};
-
-Room.removeAll = result => {
-  sql.query("DELETE FROM Rooms", (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async removeAllByBuildingId(buildingId) {
+    try {
+      const [results] = await db.query(`DELETE FROM Rooms WHERE buildingId = ?`, [buildingId]);
+      console.log(`Deleted ${results.affectedRows} rooms from building ID ${buildingId}`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log(`deleted ${res.affectedRows} rooms`);
-    result(null, res);
-  });
-};
+  static async removeAll() {
+    try {
+      const [results] = await db.query("DELETE FROM Rooms");
+      console.log(`deleted ${results.affectedRows} rooms`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+}
 
 module.exports = Room;

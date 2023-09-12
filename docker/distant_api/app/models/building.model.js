@@ -1,114 +1,97 @@
-const sql = require("./db.js");
+const { db } = require("./db.js");
 
-// constructor
-const Building = function(building) {
-  this.name = building.name;
-  this.createdBy = building.createdBy;
-};
-
-Building.create = (newBuilding, result) => {
-  sql.query("INSERT INTO Buildings SET ?", newBuilding, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-    console.log("created building: ", { id: res.insertId, ...newBuilding });
-    result(null, { id: res.insertId, ...newBuilding });
-  });
-};
-
-Building.findById = (id, result) => {
-  sql.query(`SELECT * FROM Buildings WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(err, null);
-      return;
-    }
-
-    if (res.length) {
-      console.log("found building: ", res[0]);
-      result(null, res[0]);
-      return;
-    }
-
-    // not found Building with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Building.getAll = (name, result) => {
-  let query = "SELECT * FROM Buildings";
-
-  if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
+class Building {
+  constructor(building) {
+    this.name = building.name;
+    this.createdBy = building.createdBy;
   }
 
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async create(newBuilding) {
+    try {
+      const [result] = await db.query("INSERT INTO Buildings SET ?", newBuilding);
+      console.log("created building: ", { id: result.insertId, ...newBuilding });
+      return { id: result.insertId, ...newBuilding };
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    console.log("buildings: ", res);
-    result(null, res);
-  });
-};
+  static async findById(id) {
+    try {
+      const [results] = await db.query("SELECT * FROM Buildings WHERE id = ?", [id]);
+      
+      if (results.length) {
+        console.log("found building: ", results[0]);
+        return results[0];
+      } else {
+        throw { kind: "not_found" };
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
 
-Building.updateById = (id, building, result) => {
-  sql.query(
-    "UPDATE Buildings SET name = ?, createdBy = ? WHERE id = ?",
-    [building.name, building.createdBy, id],
-    (err, res) => {
-      if (err) {
-        console.log("erreur: ", err);
-        result(null, err);
-        return;
+  static async getAll(name) {
+    try {
+      let query = "SELECT * FROM Buildings";
+
+      if (name) {
+        query += " WHERE name LIKE ?";
       }
 
-      if (res.affectedRows == 0) {
-        // not found Building with the id
-        result({ kind: "not_found" }, null);
-        return;
+      const [results] = await db.query(query, [`%${name}%`]);
+      console.log("buildings: ", results);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+
+  static async updateById(id, building) {
+    try {
+      const [result] = await db.query("UPDATE Buildings SET name = ?, createdBy = ? WHERE id = ?", [building.name, building.createdBy, id]);
+      
+      if (result.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated building: ", { id: id, ...building });
+        return { id: id, ...building };
       }
-
-      console.log("updated building: ", { id: id, ...building });
-      result(null, { id: id, ...building });
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-  );
-};
+  }
 
-Building.remove = (id, result) => {
-  sql.query("DELETE FROM Buildings WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
+  static async remove(id) {
+    try {
+      const [result] = await db.query("DELETE FROM Buildings WHERE id = ?", [id]);
+      
+      if (result.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("deleted building with id: ", id);
+        return result;
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
+  }
 
-    if (res.affectedRows == 0) {
-      // not found Building with the id
-      result({ kind: "not_found" }, null);
-      return;
+  static async removeAll() {
+    try {
+      const [result] = await db.query("DELETE FROM Buildings");
+      console.log(`deleted ${result.affectedRows} buildings`);
+      return result;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
     }
-
-    console.log("deleted building with id: ", id);
-    result(null, res);
-  });
-};
-
-Building.removeAll = result => {
-  sql.query("DELETE FROM Buildings", (err, res) => {
-    if (err) {
-      console.log("erreur: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log(`deleted ${res.affectedRows} buildings`);
-    result(null, res);
-  });
-};
+  }
+}
 
 module.exports = Building;
