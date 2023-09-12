@@ -10,7 +10,7 @@ services:
       restart: unless-stopped
       hostname: redis
       volumes:
-        - ./redis-stack:/data
+        - ./redis_stack/data:/data
       ports:
         - 6379:6379
         - 8001:8001
@@ -40,7 +40,7 @@ services:
       ports:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
       volumes:  
-        - ./distant_api/data:/var/lib/mysql 
+        - ./mysql/data:/var/lib/mysql 
 
     # Création du conteneur API distante
     appmysql:
