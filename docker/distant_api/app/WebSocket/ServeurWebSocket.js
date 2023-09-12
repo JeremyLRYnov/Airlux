@@ -14,11 +14,11 @@ wss.on('connection', (ws) => {
   ws.on('error', console.error);
 
   // Traitez le message ici et envoyez une réponse si nécessaire.
-  ws.on('mes', (message) => {
-    console.log(`Message reçu : ${message}`);
+  ws.on('message', (mes) => {
+    console.log(`Message reçu : ${mes}`);
 
   try {
-    const data = JSON.parse(message);
+    const data = JSON.parse(mes);
     console.log('Message reçu :', data);
 
   } 
