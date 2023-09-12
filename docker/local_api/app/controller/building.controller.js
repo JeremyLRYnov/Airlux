@@ -24,6 +24,34 @@ export const getBuilding = async (req, res) => {
   res.status(200).json({ result: building })
 }
 
+export const getBuildingsByUserId = async (req, res) => {
+  const { userId } = req.params
+  const building = await buildingRepository.search().where('createdBy').is.equalTo(userId).return.all()
+  if (!building) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ result: building })
+}
+
+export const getBuildingsByUserEmail = async (req, res) => {
+  const { email } = req.params
+  const building = await buildingRepository.search().where('users').contain(email).return.all()
+  if (!building) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ result: building })
+}
+
+export const getBuildingsByUser = async (req, res) => {
+  const { userId, email } = req.body
+  const buildingUserId = await buildingRepository.search().where('createdBy').is.equalTo(userId).return.all()
+  const buildingUserEmail = await buildingRepository.search().where('users').contain(email).return.all()
+  if (!buildingUserId && !buildingUserEmail) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ buildingByCreatedBy: buildingUserId, buildingByUserEmail: buildingUserEmail })
+}
+
 export const updateBuilding = async (req, res) => {
   const { id } = req.params
   const building = await buildingRepository.fetch(id)
