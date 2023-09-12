@@ -34,14 +34,13 @@ export const signup = async (req, res) => {
     console.log('Connexion WebSocket établie avec succès.');
     
     // Vous pouvez envoyer des messages après la connexion.
-    ws.send("req.body");
-      //sendWebSocketMessage(req.body);
+    ws.send(req.body);
+      console.log('Message envoyer');
   });
 
     ws.on('error', function (error) {
       console.error('Erreur de connexion WebSocket :', error);
   });
-    res.status(200).json({message: "Inscription réussi.", result: data, token });
 };
 
 export const signin = async (req, res) => {
