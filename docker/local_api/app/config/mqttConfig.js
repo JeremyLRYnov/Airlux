@@ -14,4 +14,9 @@ mqttClient.on('error', (error) => {
   console.error('Erreur de connexion MQTT :', error);
 });
 
+// Gestionnaire d'événements pour la réception de messages sur les topics
+mqttClient.on('message', (topic, message) => {
+  console.log(`Message reçu sur le topic "${topic}": ${message.toString()}`);
+});
+
 export default mqttClient
