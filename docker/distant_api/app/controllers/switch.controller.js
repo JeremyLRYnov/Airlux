@@ -12,6 +12,7 @@ exports.create = async (req, res) => {
   // Create a Switch
   const switchEntity = new Switch({
     id: req.body.id,
+    switchId: req.body.switchId,
     name: req.body.name,
     roomId: req.body.roomId,
     status: req.body.status

@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 class Sensor {
   constructor(sensor) {
     this.id = sensor.id,
+    this.sensorId = sensor.sensorId,
     this.name = sensor.name;
     this.roomId = sensor.roomId;
     this.value = sensor.value;

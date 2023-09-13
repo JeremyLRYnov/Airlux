@@ -22,13 +22,13 @@ async function createTables() {
     await connection.execute("CREATE TABLE IF NOT EXISTS Rooms (id VARCHAR(36) PRIMARY KEY, name VARCHAR(255), buildingId VARCHAR(36), FOREIGN KEY (buildingId) REFERENCES Buildings(id));");
     console.log("Create table Rooms.");
 
-    await connection.execute("CREATE TABLE IF NOT EXISTS Sensors (id VARCHAR(36) PRIMARY KEY, name VARCHAR(255), roomId VARCHAR(36), value INT, unit VARCHAR(255), FOREIGN KEY (roomId) REFERENCES Rooms(id));");
+    await connection.execute("CREATE TABLE IF NOT EXISTS Sensors (id VARCHAR(36) PRIMARY KEY, sensorId INT, name VARCHAR(255), roomId VARCHAR(36), value INT, unit VARCHAR(255), FOREIGN KEY (roomId) REFERENCES Rooms(id));");
     console.log("Create table Sensors.");
 
     await connection.execute("CREATE TABLE IF NOT EXISTS BuildingUsers (buildingId VARCHAR(36), userId VARCHAR(36), FOREIGN KEY (buildingId) REFERENCES Buildings(id), FOREIGN KEY (userId) REFERENCES Users(id));");
     console.log("Create table BuildingUsers.");
 
-    await connection.execute("CREATE TABLE IF NOT EXISTS Switches (id VARCHAR(36) PRIMARY KEY, name VARCHAR(255), roomId VARCHAR(36), status BOOL, FOREIGN KEY (roomId) REFERENCES Rooms(id));");
+    await connection.execute("CREATE TABLE IF NOT EXISTS Switches (id VARCHAR(36) PRIMARY KEY, switchId INT, name VARCHAR(255), roomId VARCHAR(36), status BOOL, FOREIGN KEY (roomId) REFERENCES Rooms(id));");
     console.log("Create table Switches.");
 
     console.log("Successfully connected to the database.");

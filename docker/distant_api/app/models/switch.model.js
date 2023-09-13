@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 class Switch {
   constructor(switchEntity) {
     this.id = switchEntity.id;
+    this.swichId = switchEntity.swichId;
     this.name = switchEntity.name;
     this.roomId = switchEntity.roomId;
     this.status = switchEntity.status;

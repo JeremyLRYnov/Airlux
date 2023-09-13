@@ -12,6 +12,7 @@ exports.create = async (req, res) => {
   // Create a Sensor
   const sensor = new Sensor({
     id: req.body.id,
+    sensorId: req.body.sensorId,
     name: req.body.name,
     roomId: req.body.roomId,
     value: req.body.value,

@@ -35,6 +35,7 @@ export const updateSwitch = async (req, res) => {
   await switchRepository.save(switchSensor)
 
   res.status(200).json({ result: switchSensor })
+
 }
 
 export const deleteSwitch = async (req, res) => {
