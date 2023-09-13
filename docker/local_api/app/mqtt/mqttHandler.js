@@ -1,5 +1,5 @@
 import { updateSensorValue } from '../controller/sensor.controller.js'; // Importez le contrôleur pour mettre à jour un capteur
-import { updateSwitchBoolean } from '../controller/switch.controller.js'; // Importez le contrôleur pour mettre à jour un commutateur
+import { updateSwitchStatusFromMqtt } from '../controller/switch.controller.js'; // Importez le contrôleur pour mettre à jour un commutateur
 import mqtt from 'mqtt';
 
 const mqttClient = mqtt.connect('mqtt://mqtt:1883');
@@ -32,7 +32,7 @@ mqttClient.on('message', (topic, message) => {
         break;
       case 'lumiere':
         // Pour le topic "lumiere", appelez la fonction updateSwitchBoolean
-        updateSwitchBoolean(donnees.id, donnees.status);
+        updateSwitchStatusFromMqtt(donnees.id, donnees.status);
         break;
       default:
         console.error('Topic MQTT non pris en charge :', topic);
