@@ -48,7 +48,7 @@ export const updateSwitchStatusFromApi = async (req, res) => {
 
   const message = JSON.stringify({ id: switchSensor.switchId, name: switchSensor.name, status: switchSensor.status })
   console.log(message)
-  mqttClient.publish('lumiere', message)
+  mqttClient.publish('switchLight', message)
 
   res.status(200).json({ result: switchSensor })
 }
