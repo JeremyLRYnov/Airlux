@@ -1,5 +1,14 @@
 const BuildingUser = require("../models/buildingUser.model.js");
 
+// Logique pour gérer les messages WebSocket pour les bâtiments
+exports.handleWebSocketMessage = async (message) => {
+  if (message.action === 'create') {
+    console.log("action récupérée");
+    message.data.users.foreach(async (element) => await exports.assignUserToBuilding({ body: message.data.id, element }));
+    console.log("données stockées sur mysql");
+  } 
+};
+
 // Assign a user to a building
 exports.assignUserToBuilding = async (req, res) => {
   if (!req.body) {
@@ -8,8 +17,14 @@ exports.assignUserToBuilding = async (req, res) => {
     });
   }
 
+  if(!req.body.buildingId) {
+    let buildingId = req.body.id;
+  } else {
+    let buildingId = req.body.buildingId;
+  }
+
   const buildingUser = new BuildingUser({
-    buildingId: req.body.buildingId,
+    buildingId: buildingId,
     userId: req.body.userId
   });
 

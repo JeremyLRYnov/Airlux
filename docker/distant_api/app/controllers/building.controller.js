@@ -1,6 +1,15 @@
 const Building = require('../models/building.model.js');
 const User = require('../models/user.model.js');
 
+// Logique pour gérer les messages WebSocket pour les bâtiments
+exports.handleWebSocketMessage = async (message) => {
+  if (message.action === 'create') {
+    console.log("action récupérée");
+    await exports.create({ body: message.data });
+    console.log("données stockées sur mysql");
+  } 
+};
+
 // Create and Save a new Building
 exports.create = async (req, res) => {
   // Validate request

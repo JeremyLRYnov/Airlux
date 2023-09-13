@@ -11,6 +11,16 @@ export const createBuilding = async (req, res) => {
   const { entityId, ...rest } = building.toJSON()
   const data = { id: building.entityId, ...rest }
   res.status(200).json({ result: data })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: building.entityId,
+    name: name,
+    createdBy: createdBy,
+    users: users
+  };
+
+  syncService.syncData(dataToSend, 'building', 'create');
 }
 
 export const getBuildings = async (req, res) => {

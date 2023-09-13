@@ -40,6 +40,8 @@ setTimeout(() => {
 
 
 const userController = require("./app/controllers/user.controller");
+const buildingController = require("./app/controllers/building.controller");
+const buildingUsersController = require("./app/controllers/buildingUser.controller");
 
 const wss = new WebSocket.Server({ port: 8081 });
 
@@ -57,16 +59,15 @@ wss.on('connection', (ws) => {
       if (data.type === 'user') {
         await userController.handleWebSocketMessage(data);
         console.log("message envoyé au controller user");
-      } else if (data.type == 'sensor') {
-        console.log("message envoyé au controller sensor");
-      }
+      } else if (data.type == 'building') {
+        await buildingController.handleWebSocketMessage(data);
+        console.log("message envoyé au controller building");
+        await buildingUsersController.handleWebSocketMessage(data);
+        console.log("message envoyé au controller buildingUsers");
+      } 
 
     } catch (error) {
       console.error('Erreur lors de l"analyse du message JSON :', error);
     }
-  });
-
-  ws.on('close', () => {
-    console.log('Connexion WebSocket fermée.');
   });
 });
