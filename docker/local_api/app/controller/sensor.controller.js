@@ -38,6 +38,23 @@ export const updateSensor = async (req, res) => {
   res.status(200).json({ result: sensor })
 }
 
+export const updateSensorValue = async (sensorId, newValue) => {
+  try {
+    // Récupérez le sensor à partir de la base de données en utilisant son ID
+    const sensor = await sensorRepository.search().where('sensorId').is.equalTo(sensorId).return.first();
+
+    // Mettez à jour la valeur du sensor
+    sensor.value = newValue;
+
+    // Enregistrez les modifications dans Redis
+    await sensorRepository.save(sensor);
+
+    console.log(`Sensor ${sensorId} mis à jour avec succès avec la nouvelle valeur ${newValue}`);
+  } catch (error) {
+    console.error(`Erreur lors de la mise à jour du sensor ${sensorId} :`, error);
+  }
+};
+
 export const deleteSensor = async (req, res) => {
   const { id } = req.params
   await sensorRepository.remove(id)

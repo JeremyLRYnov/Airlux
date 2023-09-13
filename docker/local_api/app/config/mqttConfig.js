@@ -1,9 +1,17 @@
 import mqtt from 'mqtt';
 
-const mqttClient = mqtt.connect('mqtt://votre_broker_mqtt');
+const mqttClient = mqtt.connect('mqtt://mqtt:1883');
 
 mqttClient.on('connect', () => {
-  mqttClient.subscribe('topic_des_capteurs');
+  console.log('Connecté au serveur MQTT avec succès');
+  mqttClient.subscribe('temperature');
+  mqttClient.subscribe('humidite');
+  mqttClient.subscribe('lumiere');
 });
 
-export default mqttClient;
+// Gestionnaire d'événements pour les erreurs de connexion
+mqttClient.on('error', (error) => {
+  console.error('Erreur de connexion MQTT :', error);
+});
+
+export default mqttClient

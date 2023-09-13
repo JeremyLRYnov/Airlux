@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import { errorHandler, notFound } from './app/middleware/error.js'
+import  mqttClient  from './app/config/mqttConfig.js'
 
 /* import routers */
 import { router as userRouter } from './app/routes/user.routes.js'

@@ -37,6 +37,23 @@ export const updateSwitch = async (req, res) => {
   res.status(200).json({ result: switchSensor })
 }
 
+export const updateSwitchBoolean = async (switchId, newStatus) => {
+  try {
+    // Récupérez le switch à partir de la base de données en utilisant son ID
+    const switchSensor = await switchRepository.search().where('switchId').is.equalTo(switchId).return.first();
+
+    // Mettez à jour l'état du switch
+    switchSensor.status = newStatus;
+
+    // Enregistrez les modifications dans Redis
+    await switchRepository.save(switchSensor);
+
+    console.log(`Switch ${switchId} mis à jour avec succès avec le nouvel état ${newStatus}`);
+  } catch (error) {
+    console.error(`Erreur lors de la mise à jour du switch ${switchId} :`, error);
+  }
+}
+
 export const deleteSwitch = async (req, res) => {
   const { id } = req.params
   await switchRepository.remove(id)
