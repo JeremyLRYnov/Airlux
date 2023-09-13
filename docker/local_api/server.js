@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import { errorHandler, notFound } from './app/middleware/error.js'
-import  mqttClient  from './app/config/mqttConfig.js'
+import  mqttClient  from './app/mqtt/mqttHandler.js'
 
 console.log('Mqtt est bien connecté : ' + mqttClient.connected)
 
