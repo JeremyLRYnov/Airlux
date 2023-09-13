@@ -75,3 +75,27 @@ et mettre le **baud rate** écrit dans le code *(Par exemple 115200)
 Vous trouverez ci-dessous le processus de connexion au WiFi avec l'ESP32.
 
 ![Processus](https://cdn.discordapp.com/attachments/1030042569519923221/1068471993919357000/process_connexion_esp32.png)
+
+
+---
+
+
+**A l'heure actuelle il faut :**
+
+1 - Allumer l'esp32
+2 - Se connecter au point d'accès de l'esp32
+3 - Aller sur l'url : 192.168.4.1
+4 - Cliquer sur configure wifi
+5 - Choisir le wifi sur lequel on va connecter l'esp32 et cliquer sur save 
+
+![Wifi Manager](https://cdn.discordapp.com/attachments/1030042569519923221/1150427556974186617/image.png)
+
+6 - L'esp32 est désormais connecté au wifi et envoie les données au MQTT
+
+7 - On peut aller ensuite sur l'application MQTT Explorer en mettant l'adresse ip (ipconfig) de la carte wifi connecté au point d'acces de l'ordinateur avec le docker mosquitto lancé
+
+![MQTT EXPLORER CONNEXTION](https://cdn.discordapp.com/attachments/1030042569519923221/1150428246484197466/image.png)
+
+8 - Enfin on peut voir les données envoyées et reçues par le MQTT. 
+
+![MQTT EXPLORER](https://cdn.discordapp.com/attachments/1030042569519923221/1150428712718843974/image.png)
