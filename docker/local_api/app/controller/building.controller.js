@@ -5,7 +5,7 @@ export const createBuilding = async (req, res) => {
   const existingBuilding = await buildingRepository.search().where('name').is.equalTo(name).return.first()
   // check if building already registered with the name
   if (existingBuilding) {
-    return res.status(400).json({ message: 'A building already registered with the name.' })
+    return res.status(400).json({ message: 'Un building est déjà enregistré sous ce nom.' })
   }
   const building = await buildingRepository.createAndSave({ name: `${name}`, createdBy, users })
   const { entityId, ...rest } = building.toJSON()
@@ -24,6 +24,34 @@ export const getBuilding = async (req, res) => {
   res.status(200).json({ result: building })
 }
 
+export const getBuildingsByUserId = async (req, res) => {
+  const { userId } = req.params
+  const building = await buildingRepository.search().where('createdBy').is.equalTo(userId).return.all()
+  if (!building) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ result: building })
+}
+
+export const getBuildingsByUserEmail = async (req, res) => {
+  const { email } = req.params
+  const building = await buildingRepository.search().where('users').contain(email).return.all()
+  if (!building) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ result: building })
+}
+
+export const getBuildingsByUser = async (req, res) => {
+  const { userId, email } = req.body
+  const buildingUserId = await buildingRepository.search().where('createdBy').is.equalTo(userId).return.all()
+  const buildingUserEmail = await buildingRepository.search().where('users').contain(email).return.all()
+  if (!buildingUserId && !buildingUserEmail) {
+    return res.status(400).json({ message: 'Aucun building trouvé.' })
+  }
+  res.status(200).json({ buildingByCreatedBy: buildingUserId, buildingByUserEmail: buildingUserEmail })
+}
+
 export const updateBuilding = async (req, res) => {
   const { id } = req.params
   const building = await buildingRepository.fetch(id)
@@ -40,7 +68,7 @@ export const updateBuilding = async (req, res) => {
 export const deleteBuilding = async (req, res) => {
   const { id } = req.params
   await buildingRepository.remove(id)
-  res.status(200).json({ message: 'Building ' + id + ' deleted successfully.' })
+  res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' })
 }
 
 // Path: docker/local_api/app/controller/building.controller.js

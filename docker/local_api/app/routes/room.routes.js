@@ -9,7 +9,7 @@ export const router = express.Router()
 const { roomSchema } = schema
 
 router.route('/create').post(auth, validator(roomSchema), createRoom)
-router.route('/:id').get(auth, deleteRoom)
+router.route('/:id').delete(auth, deleteRoom)
 router.route('/:id').get(auth, getRoom)
 router.route('/').get(auth, getRooms)
 router.route('/:id').patch(auth, updateRoom)

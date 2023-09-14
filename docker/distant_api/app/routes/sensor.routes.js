@@ -9,6 +9,9 @@ module.exports = app => {
   // Retrieve all Sensors
   router.get("/", sensors.findAll);
 
+  // Retrieve all Sensors from a specific room
+  router.get("/room/:roomId", sensors.findAllByRoom);
+
   // Retrieve a single Sensor with id
   router.get("/:id", sensors.findOne);
 
@@ -20,6 +23,9 @@ module.exports = app => {
 
   // Delete all Sensors
   router.delete("/", sensors.deleteAll);
+
+  // Delete all Sensors from a specific room
+  router.delete("/room/:roomId", sensors.deleteAllByRoom);
 
   app.use('/api/sensors', router);
 };

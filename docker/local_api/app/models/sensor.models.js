@@ -7,6 +7,7 @@ class Sensor extends Entity {};
 /* create a Schema for Sensor */
 const sensorSchema = new Schema(Sensor, {
   name: { type: 'string' },
+  sensorId: { type: 'string' },
   roomId: { type: 'string' },
   value: { type: 'number' },
   unit: { type: 'string' }

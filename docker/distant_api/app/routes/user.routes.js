@@ -3,10 +3,13 @@ module.exports = app => {
     const router = require("express").Router();
   
     // Create a new User
-    router.post("/", users.create);
+    router.post("/signup", users.signup);
+
+    // Add an external user
+    router.post("/addExternalUser", users.addExternalUser);
   
     // Authenticate a User
-    router.post("/authenticate", users.authenticate);
+    router.post("/signin", users.signin);
 
     // Retrieve all Users
     router.get("/", users.findAll);
