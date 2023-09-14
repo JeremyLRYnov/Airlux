@@ -76,12 +76,6 @@ class _AppairagePageState extends State<AppairagePage> {
                   decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Mot de passe du Wifi',
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Entrez un mot de passe';
-                    }
-                    return null;
-                  },
                   onSaved: (value) => _password = value!,
                 ),
                 SizedBox(
@@ -89,7 +83,7 @@ class _AppairagePageState extends State<AppairagePage> {
                 ),
                 RectangleButton(
                     title: 'Appairer',
-                    onPressed: _submit,                  
+                    onPressed: _submit,
                     color: kPrimaryBlue),
               ],
             ),
