@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/buildings_page.dart';
+import 'package:mobileapp/screens/test_wifi/appairage_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/constants.dart';
@@ -20,6 +21,13 @@ class SettingsPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => BuildingListPage()),
+              );
+            }, color: kPrimaryBlue),
+            SizedBox(height: 40.0,),
+            RectangleButton(title: 'APPAIRER VOTRE BOX', onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AppairagePage()),
               );
             }, color: kPrimaryBlue),
             SizedBox(height: 40.0,),
