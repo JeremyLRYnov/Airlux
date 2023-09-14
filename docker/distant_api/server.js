@@ -28,3 +28,8 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+const { createTables } = require('./app/models/db');
+setTimeout(() => {
+  createTables();
+}, 30000); 
