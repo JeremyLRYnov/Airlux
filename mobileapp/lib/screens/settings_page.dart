@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/buildings_page.dart';
-import 'package:mobileapp/screens/test_wifi/appairage_page.dart';
+import 'package:mobileapp/screens/appairage_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/constants.dart';

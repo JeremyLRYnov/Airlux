@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../models/constants.dart';
-import '../settings_page.dart';
+import '../models/constants.dart';
+import 'settings_page.dart';
 
 class AppairagePage extends StatefulWidget {
   const AppairagePage({super.key});
