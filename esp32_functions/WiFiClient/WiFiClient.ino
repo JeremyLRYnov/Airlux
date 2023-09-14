@@ -11,35 +11,37 @@
 
 DHT dht(DHTPIN, DHTTYPE);
 
+WiFiServer server(80);
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
-//mettre l'adresse ip (ipconfig) de la carte wifi connecté au point d'acces de l'ordinateur avec le docker mosquitto lancé
-const char* ipbroker = "ip";
+const char* ipbroker = SECRET_IP_MQTT;
 int portbroker = 1883;
 
-bool lightState = false; 
-
+bool lightState = false;
+bool wifiConnected = false;
 bool AccessPointOn = true;
 
-unsigned long lastUpdate = 0;
-const unsigned long updateInterval = 30000;
+String ssid_wifi;
+String password_wifi;
 
 
 void setup() {
   Serial.begin(115200);
-  pointAccesWifi();
-  connecterMQTT();
-  mqttClient.setCallback(callback);
-  pinMode (LEDPIN, OUTPUT);
+  pointAcces();
+  server.begin();
+  pinMode(LEDPIN, OUTPUT);
   dht.begin();
-  etatLumiere();  
+  etatLumiere();
 }
 
 
+
 void loop() {
-  connectionWifi();
-  if (!AccessPointOn) {
+  if (!wifiConnected) {
+    connectionWifi();
+    delay(10000);
+  } else {
     if (mqttClient.connected()) {
       gestionConnectedObjects();
       mqttClient.loop();
@@ -69,42 +71,61 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
 }
 
-void pointAccesWifi(){
-  WiFiManager wifiManager;
-  wifiManager.resetSettings();
-  wifiManager.autoConnect(SECRET_SSID_POINT_ACCESS);
-  Serial.println("ESP connecté au réseau de la maison");
-  Serial.print("Adresse IP : ");
-  Serial.println(WiFi.localIP());
-  AccessPointOn = false;
+void pointAcces() {
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(SECRET_SSID_POINT_ACCESS);
+  Serial.println();
+  Serial.print("IP address: ");
+  Serial.println(WiFi.softAPIP());
 }
 
-void connecterMQTT(){
+
+void connecterMQTT() {
   mqttClient.setServer(ipbroker, portbroker);
   if (mqttClient.connect("ESP32")) {
     Serial.println("Connecté au broker MQTT!");
+    mqttClient.subscribe("switchLight");
   }
-
 }
 
 void reconnecterMQTT() {
   while (!mqttClient.connected()) {
     Serial.println("Tentative de reconnexion au broker MQTT...");
-    if (mqttClient.connect("ESP32")) {
-      Serial.println("Connecté au broker MQTT!");
-      mqttClient.subscribe("switchLight");
-    } else {
-      delay(5000);
-    }
+    connecterMQTT();
+    delay(5000);
   }
 }
 
 void connectionWifi() {
-  if (WiFi.status() != WL_CONNECTED) {
-    AccessPointOn = true;
-    Serial.println("Déconnecté du Wi-Fi. Redémarrage du point d'accès.");
-    WiFi.disconnect(true);
-    ESP.restart();
+  Serial.println("Ajouter un ssid et un mot de passe sur l'application mobile");
+  wifiClient = server.available();
+  if (wifiClient) {
+    ssid_wifi = wifiClient.readStringUntil('\n');
+    password_wifi = wifiClient.readStringUntil('\n');
+    while (ssid_wifi.isEmpty()) {
+      
+      delay(5000);
+      ssid_wifi = wifiClient.readStringUntil('\n');
+      password_wifi = wifiClient.readStringUntil('\n');
+    }
+
+    ssid_wifi.trim();
+    password_wifi.trim();
+
+    WiFi.begin(ssid_wifi.c_str(), password_wifi.c_str());
+    while (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Connexion au wifi en attente");
+      delay(5000);
+    }
+
+    wifiConnected = true;
+    Serial.print("Connecté au Wi-Fi ");
+    Serial.println(ssid_wifi);
+    Serial.print("Adresse IP : ");
+    Serial.println(WiFi.localIP());
+    WiFi.softAPdisconnect(true);
+    Serial.print("Point d'accès arrêté : ");
+    AccessPointOn = false;
   }
 }
 
@@ -146,25 +167,6 @@ void gestionLumiere(){
   mqttClient.connect("ESP32"); // Connexion au broker MQTT
   mqttClient.publish("lumiere", json.c_str()); // Envoie des données MQTT
   Serial.println("Envoi etat lumiere sur MQTT");
-}
-
-void EtatLumiereLancement(){
-  Serial.print("Lumiere: ");
-  Serial.println(lightState);
-
-  StaticJsonDocument<200> doc;
-  doc["id"] = "3";
-  doc["name"] = "lumiere";
-  doc["status"] = lightState;
-
-  String json;
-  serializeJson(doc, json);
-
-
-  if (mqttClient.connected()) {
-      mqttClient.publish("lumiere", json.c_str());
-      Serial.println("Envoi état initial de la lumière sur MQTT"); // Envoie des données MQTT
-  }
 }
 
 void gestionTemperature(){
