@@ -89,30 +89,7 @@ class _AppairagePageState extends State<AppairagePage> {
                 ),
                 RectangleButton(
                     title: 'Appairer',
-                    onPressed: () async {
-                      if (_ssid.isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Nom obligatoire"),
-                              content:
-                                  Text("Veuillez remplir le nom du Wifi."),
-                              actions: [
-                                TextButton(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        _submit;
-                      }
-                    },
+                    onPressed: _submit,                  
                     color: kPrimaryBlue),
               ],
             ),
