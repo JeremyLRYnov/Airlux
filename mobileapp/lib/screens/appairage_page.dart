@@ -48,47 +48,72 @@ class _AppairagePageState extends State<AppairagePage> {
         title: Text('Appairage Box'),
         backgroundColor: kPrimaryBlue,
       ),
-      body: Center(
-        child: Padding(
-          padding:const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // Centrer verticalement
-              children: <Widget>[
-                TextFormField(
-                  decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Nom du Wifi',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Entrez un SSID';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _ssid = value!,
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                TextFormField(
-                  decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Mot de passe du Wifi',
-                  ),
-                  onSaved: (value) => _password = value!,
-                ),
-                SizedBox(
-                  height: 40.0,
-                ),
-                RectangleButton(
-                    title: 'Appairer',
-                    onPressed: _submit,
-                    color: kPrimaryBlue),
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 24.0),
+            child: Text(
+              'Étape 1 : Connectez-vous à l\'ESP32',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
+          Container(
+            height: 2.0,
+            color: Colors.grey,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Étape 2 : Insérez les identifiants WiFi',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    TextFormField(
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Nom du Wifi',
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Entrez un SSID';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _ssid = value!,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    TextFormField(
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Mot de passe du Wifi',
+                      ),
+                      obscureText: true,
+                      onSaved: (value) => _password = value!,
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    RectangleButton(
+                      title: 'Appairer',
+                      onPressed: _submit,
+                      color: kPrimaryBlue,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
