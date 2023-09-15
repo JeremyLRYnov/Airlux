@@ -82,6 +82,7 @@ void pointAcces() {
 
 void connecterMQTT() {
   mqttClient.setServer(ipbroker, portbroker);
+  mqttClient.setCallback(callback);
   if (mqttClient.connect("ESP32")) {
     Serial.println("Connecté au broker MQTT!");
     mqttClient.subscribe("switchLight");
