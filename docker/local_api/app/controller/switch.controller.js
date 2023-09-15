@@ -1,4 +1,5 @@
 import { switchRepository } from '../models/switch.models.js'
+import mqttClient from '../mqtt/mqttHandler.js'
 
 export const createSwitch = async (req, res) => {
   const { name, switchId, roomId, status } = req.body
@@ -37,7 +38,22 @@ export const updateSwitch = async (req, res) => {
   res.status(200).json({ result: switchSensor })
 }
 
-export const updateSwitchBoolean = async (switchId, newStatus) => {
+export const updateSwitchStatusFromApi = async (req, res) => {
+  const { id } = req.params
+  const switchSensor = await switchRepository.fetch(id)
+
+  switchSensor.status = req.body.status ?? null
+
+  await switchRepository.save(switchSensor)
+
+  const message = JSON.stringify({ id: switchSensor.switchId, name: switchSensor.name, status: switchSensor.status })
+  console.log(message)
+  mqttClient.publish('switchLight', message)
+
+  res.status(200).json({ result: switchSensor })
+}
+
+export const updateSwitchStatusFromMqtt = async (switchId, newStatus) => {
   try {
     // Récupérez le switch à partir de la base de données en utilisant son ID
     const switchSensor = await switchRepository.search().where('switchId').is.equalTo(switchId).return.first();
