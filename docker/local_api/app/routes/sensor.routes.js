@@ -9,7 +9,7 @@ export const router = express.Router()
 const { sensorSchema } = schema
 
 router.route('/create').post(auth, validator(sensorSchema), createSensor)
-router.route('/:id').get(auth, deleteSensor)
+router.route('/:id').delete(auth, deleteSensor)
 router.route('/:id').get(auth, getSensor)
 router.route('/').get(auth, getSensors)
 router.route('/:id').patch(auth, updateSensor)

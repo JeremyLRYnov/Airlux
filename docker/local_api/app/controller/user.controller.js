@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
     const existingUser = await userRepository.search().where("email").is.equalTo(email).return.first();
     //check if user already registered with the email
     if (existingUser) {
-      return res.status(400).json({ message: "A user already registered with the email." });
+      return res.status(400).json({ message: "Un user est déjà enregistré sous ce nom." });
     }
     // if (req.body.password !== confirmPassword) {
     //   return res.status(400).json({ message: "Passwords don't match." });
@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     });
     const { entityId, password, ...rest } = user.toJSON();
     const data = { id: user.entityId, ...rest };
-    res.status(200).json({message: "Inscription réussi", result: data, token });
+    res.status(200).json({message: "Inscription réussi.", result: data, token });
 };
 
 export const signin = async (req, res) => {
@@ -31,12 +31,12 @@ export const signin = async (req, res) => {
     const existingUser = await userRepository.search().where("email").is.equalTo(email).return.first();
     //check if user exists
     if (!existingUser) {
-      return res.status(404).json({ message: "User not found." });
+      return res.status(404).json({ message: "Utilisateur introuvable." });
     }
     //check for correct password
     const isPasswordCorrect = await bcrypt.compare(req.body.password, existingUser.password);
     if (!isPasswordCorrect) {
-      return res.status(404).json({ message: "invalid Credentials" });
+      return res.status(404).json({ message: "Mot de passe invalide." });
     }
     //create auth token
     const token = jwt.sign({ email: existingUser.email, id: existingUser.entityId }, process.env.JWT_TOKEN_SECRET, {
@@ -44,7 +44,7 @@ export const signin = async (req, res) => {
     });
     const { entityId, password, ...rest } = existingUser.toJSON();
     const data = { id: existingUser.entityId, ...rest };
-    res.status(200).json({message: "Connexion réussi", result: data, token });
+    res.status(200).json({message: "Connexion réussi.", result: data, token });
 };
 
 export const updateUser = async (req, res) => {
@@ -64,7 +64,7 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const { id } = req.params
   await userRepository.remove(id)
-  res.status(200).json({ result: 'User ' + id + ' deleted successfully.' })
+  res.status(200).json({ result: 'User ' + id + ' Supprimé avec succès.' })
 }
 
 export const getUser = async (req, res) => {

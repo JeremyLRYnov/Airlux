@@ -7,6 +7,7 @@ class Switch extends Entity {};
 /* create a Schema for Switch */
 const switchSchema = new Schema(Switch, {
   name: { type: 'string' },
+  switchId: { type: 'string' },
   roomId: { type: 'string' },
   status: { type: 'boolean' }
 },

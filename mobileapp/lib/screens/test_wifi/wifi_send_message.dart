@@ -3,6 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(
+    MaterialApp(
+      home: SendDataScreen(),
+    ),
+  );
+}
+
 class SendDataScreen extends StatefulWidget {
   const SendDataScreen({super.key});
 
