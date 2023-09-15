@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileapp/models/constants.dart';
+import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Building {
-
+  late final String entityId;
   late final String userEmail;
   final String name;
   final String createdBy;
 
-  Building({required this.name, required this.createdBy});
+  Building({this.entityId = "", required this.name, required this.createdBy});
 
   Future<Map<String, dynamic>> toJson() async {
     final prefs = await SharedPreferences.getInstance();
@@ -57,7 +58,11 @@ class _BuildingListPageState extends State<BuildingListPage> {
         if (jsonData['result'] != null) {
           final List<dynamic> buildingList = jsonData['result'] as List<dynamic>;
           final List<Building> loadedBuildings = buildingList.map((item) {
-            return Building(name: item['name'] as String, createdBy: item['createdBy'] as String);
+            return Building(
+              entityId: item['entityId'] as String,
+              name: item['name'] as String,
+              createdBy: item['createdBy'] as String,
+            );
           }).toList();
           setState(() {
             buildings = loadedBuildings;
@@ -76,6 +81,14 @@ class _BuildingListPageState extends State<BuildingListPage> {
   void initState() {
     super.initState();
     fetchBuildings();
+  }
+
+  Future<void> navigateToHomePage(String entityId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedBuildingEntityId', entityId);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => FooterMenu(),
+    ));
   }
 
   Future<void> addBuilding() async {
@@ -107,10 +120,25 @@ class _BuildingListPageState extends State<BuildingListPage> {
     }
   }
 
-  void removeBuilding(int index) {
-    setState(() {
-      //buildings.removeAt(index);
-    });
+  Future<void> removeBuilding(String id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://10.0.2.2:6869/building/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('Building deleted successfully');
+        fetchBuildings();
+      } else {
+        print('Failed to delete building: ${response.body}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override
@@ -126,13 +154,18 @@ class _BuildingListPageState extends State<BuildingListPage> {
           return Card(
             elevation: 4,
             margin: EdgeInsets.all(8),
-            child: ListTile(
-              title: Text(buildings[index].name),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  removeBuilding(index);
-                },
+            child: GestureDetector(
+              onTap: () {
+                navigateToHomePage(buildings[index].entityId);
+              },
+              child: ListTile(
+                title: Text(buildings[index].name),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    removeBuilding(buildings[index].entityId);
+                  },
+                ),
               ),
             ),
           );
