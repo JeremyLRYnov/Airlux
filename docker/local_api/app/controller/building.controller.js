@@ -94,14 +94,13 @@ export const deleteBuilding = async (req, res) => {
     }
 
     await buildingRepository.remove(id);
-
     res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la suppression du bâtiment.' });
+    res.status(500).json({ error: 'Une erreur est survenue lors de la suppression du building.' });
   }
-};
+}
 
 
 // Path: docker/local_api/app/controller/building.controller.js
