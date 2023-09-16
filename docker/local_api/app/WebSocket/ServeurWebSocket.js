@@ -2,10 +2,60 @@ import WebSocket from 'ws';
 
 class SyncService {
   constructor() {
+    this.ws = null;
+    this.retryCount = 0;
+    this.maxRetries = 30; // Maximum number of retries
+    this.isConnected = false; 
+    this.connect();
+  }
+
+  connect() {
+    if (this.retryCount >= this.maxRetries || this.isConnected) {
+      console.error('Nombre max de reconnexion atteint ou déjà connecté. Tentative de reconnexion stoppée');
+      return;
+    }
+
+    if (this.ws) {
+      this.ws.removeEventListener('open', this.onOpen.bind(this));
+      this.ws.removeEventListener('error', this.onError.bind(this));
+      this.ws.removeEventListener('close', this.onClose.bind(this));
+    }
+
     this.ws = new WebSocket('ws://appmysql:8081/');
-    console.log('Début websocket');
-    this.ws.on('open', () => console.log('Connexion WebSocket établie avec succès.'));
-    this.ws.on('error', error => console.error('Erreur de connexion WebSocket :', error));
+
+    this.ws.addEventListener('open', this.onOpen.bind(this));
+    this.ws.addEventListener('error', this.onError.bind(this));
+    this.ws.addEventListener('close', this.onClose.bind(this));
+  }
+
+  onOpen() {
+    this.isConnected = true; // Indicateur lorsque la connexion est établie
+    this.retryCount = 0; 
+    console.log("Connexion WebSocket établie avec succès.");
+    setTimeout(() => this.checkConnection(), 60000);
+  }
+
+  onError(error) {
+    this.isConnected = false; 
+    this.retryCount += 1;
+    setTimeout(() => this.connect(), 5000 * this.retryCount); 
+  }
+
+  onClose() {
+    this.isConnected = false; 
+    this.retryCount += 1;
+    setTimeout(() => this.connect(), 5000 * this.retryCount); 
+  }
+
+  checkConnection() {
+    if (this.ws.readyState !== WebSocket.OPEN) {
+      this.isConnected = false; 
+      this.retryCount += 1;
+      this.connect();
+    } else {
+      // Prochaine vérification de la connexion
+      setTimeout(() => this.checkConnection(), 60000);
+    }
   }
 
   //Envoit des données avec la WebSocket
@@ -16,7 +66,6 @@ class SyncService {
       action: action,
       data: data,
     };
-    console.log("Web Socket ouverte");
     if (this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(sendData));
       console.log('Message envoyé');

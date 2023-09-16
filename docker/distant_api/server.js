@@ -48,11 +48,8 @@ const switchController = require("./app/controllers/switch.controller");
 
 const wss = new WebSocket.Server({ port: 8081 });
 
-console.log('Création serveur Websocket.');
-
 wss.on('connection', (ws) => {
-  console.log('Nouvelle connexion WebSocket établie.');
-
+  console.log("Connexion établie avec succès")
   ws.on('message', async message => {
     try {
       const data = JSON.parse(message);
@@ -61,29 +58,23 @@ wss.on('connection', (ws) => {
       switch(data.type) {
         case 'user':
           await userController.handleWebSocketMessage(data);
-          console.log("Message envoyé au controller user");
           break;
   
         case 'building':
           await buildingController.handleWebSocketMessageBuilding(data);
-          console.log("Message envoyé au controller building");
           await buildingUsersController.handleWebSocketMessageBuildingUsers(data);
-          console.log("Message envoyé au controller buildingUsers");
           break;
   
         case 'room':
           await roomController.handleWebSocketMessage(data);
-          console.log("Message envoyé au controller room");
           break;
   
         case 'sensor':
           await sensorController.handleWebSocketMessage(data);
-          console.log("Message envoyé au controller sensor");
           break;
   
         case 'switch':
           await switchController.handleWebSocketMessage(data);
-          console.log("Message envoyé au controller switch");
           break;
   
         default:
@@ -92,5 +83,10 @@ wss.on('connection', (ws) => {
     } catch (error) {
       console.error('Erreur lors de l"analyse du message JSON :', error);
     }
-  });  
+  }); 
+  
+  ws.on('close', () => {
+    console.log('Connexion WebSocket fermée.');
+  });
+  
 });

@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
 const dbConfig = require("../config/db.config.js");
+const { createUserTriggers, createBuildingTriggers, createBuildingUsersTriggers, createRoomTriggers, createSensorTriggers, createSwitchTriggers } = require('./dbTriggers');
 
 const db = mysql.createPool({
   host: dbConfig.HOST,
@@ -30,6 +31,16 @@ async function createTables() {
 
     await connection.execute("CREATE TABLE IF NOT EXISTS Switches (id VARCHAR(36) PRIMARY KEY, switchId VARCHAR(36), name VARCHAR(255), roomId VARCHAR(36), status BOOL, FOREIGN KEY (roomId) REFERENCES Rooms(id) ON DELETE CASCADE );");
     console.log("Create table Switches.");
+
+    await connection.execute(`CREATE TABLE IF NOT EXISTS Journal (ID INT AUTO_INCREMENT PRIMARY KEY, TableName VARCHAR(255), OperationType VARCHAR(255), OldValue JSON, NewValue JSON, ChangeDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP );`);
+    console.log("Create table Journal.");
+
+    await createUserTriggers(connection);
+    await createBuildingTriggers(connection);
+    await createBuildingUsersTriggers(connection);
+    await createRoomTriggers(connection);
+    await createSensorTriggers(connection);
+    await createSwitchTriggers(connection);
 
     console.log("Successfully connected to the database.");
    

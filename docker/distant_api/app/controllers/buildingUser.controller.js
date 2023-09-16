@@ -5,30 +5,24 @@ const buildingController = require("./building.controller");
 // Logique pour gérer les messages WebSocket pour la lier des bâtiments à des utilisateurs
 exports.handleWebSocketMessageBuildingUsers = async (message) => {
   if (message.action === 'create' || message.action === 'update') {
-    console.log("action récupérée");
-    
-    // Step 2: Récupérer les IDs des utilisateurs basés sur leurs e-mails
+
+    // Récupération des IDs des utilisateurs basés sur leurs mails
     const userIdPromises = message.data.users.map(email => 
       exports.findUserIdByEmail({ params: { email } }, null)
     );
     const userIdResponses = await Promise.all(userIdPromises);
     const userIds = userIdResponses.filter(Boolean);
     
-    console.log("Ids des utilisateurs trouvés: ", userIds);
-    // Step 3: Assigner chaque utilisateur au bâtiment
+    // Assigner chaque utilisateur au bâtiment
     await exports.removeUsersFromBuilding({ params: { buildingId: message.data.id } }, null);
     for (let userId of userIds) {
       await exports.assignUserToBuilding({ body: { buildingId: message.data.id, userId } });
-    }
-    
-    console.log("utilisateurs assignés au bâtiment sur mysql");
+    }   
   } 
 
   if (message.action === 'delete') {
     await exports.removeUsersFromBuilding({ params: { buildingId: message.data.id } }, null);
-
     await buildingController.delete({ params: { id: message.data.id } }, null);
-    console.log("données supprimées sur mysql");
   }
 };
 

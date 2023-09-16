@@ -3,21 +3,15 @@ const User = require('../models/user.model.js');
  // Logique pour gérer les messages WebSocket pour les utilisateurs
 exports.handleWebSocketMessage = async (message) => {
   if (message.action === 'create') {
-    console.log("action récupérée");
     await exports.addExternalUser({ body: message.data });
-    console.log("données stockées sur mysql");
   } 
 
   if(message.action === 'delete') {
-    console.log("action récupérée");
     await exports.delete({ params: { id: message.data.id } }, null);
-    console.log("données supprimées sur mysql");
   }
 
   if(message.action === 'update') {
-    console.log("action récupérée");
     await exports.update({ params: { id: message.data.id }, body: message.data }, null);
-    console.log("données mises à jour sur mysql");
   }
 };
 

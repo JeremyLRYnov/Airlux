@@ -4,17 +4,14 @@ const Room = require('../models/room.model.js');
  exports.handleWebSocketMessage = async (message) => {
   if (message.action === 'create') {
     await exports.create({ body: message.data });
-    console.log("données stockées sur mysql");
   } 
 
   if(message.action === 'delete') {
     await exports.delete({ params: { id: message.data.id } }, null);
-    console.log("données supprimées sur mysql");
   }
 
   if(message.action === 'update') {
     await exports.update({ params: { id: message.data.id }, body: message.data }, null);
-    console.log("données mises à jour sur mysql");
   }
 };
 
