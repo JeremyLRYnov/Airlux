@@ -4,11 +4,11 @@ import mqttClient from '../mqtt/mqttHandler.js'
 
 export const createSwitch = async (req, res) => {
   const { name, switchId, roomId, status } = req.body
-  const existingSwitch = await switchRepository.search().where('name').is.equalTo(name).return.first()
-  // check if switch already registered with the name
-  if (existingSwitch) {
-    return res.status(400).json({ message: 'Un switch est déjà enregistré sous ce nom.' })
-  }
+  // const existingSwitch = await switchRepository.search().where('name').is.equalTo(name).return.first()
+  // // check if switch already registered with the name
+  // if (existingSwitch) {
+  //   return res.status(400).json({ message: 'Un switch est déjà enregistré sous ce nom.' })
+  // }
   const switchSensor = await switchRepository.createAndSave({ name: `${name}`, switchId, roomId, status })
   const { entityId, ...rest } = switchSensor.toJSON()
   const data = { id: switchSensor.entityId, ...rest }
@@ -118,6 +118,15 @@ export const deleteSwitch = async (req, res) => {
   res.status(200).json({ message: 'Switch ' + id + ' Supprimé avec succès.' })
 
   syncService.syncData({id: id}, 'switch', 'delete');
+}
+
+export const getSwitchesByRoomId = async (req, res) => {
+  const { id } = req.params
+  const switches = await switchRepository.search().where('roomId').is.equalTo(id).return.all()
+  if (!switches) {
+    return res.status(404).json({ message: 'Aucun switch trouvé pour cette chambre.' })
+  }
+  res.status(200).json({ result: switches })
 }
 
 // Path: docker/local_api/app/controller/switch.controller.js

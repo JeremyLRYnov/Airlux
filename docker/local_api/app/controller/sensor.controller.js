@@ -3,11 +3,11 @@ import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const createSensor = async (req, res) => {
   const { name, sensorId ,roomId, value, unit } = req.body
-  const existingSensor = await sensorRepository.search().where('name').is.equalTo(name).return.first()
-  // check if sensor already registered with the name
-  if (existingSensor) {
-    return res.status(400).json({ message: 'Un sensor est déjà enregistré sous ce nom.' })
-  }
+  // const existingSensor = await sensorRepository.search().where('name').is.equalTo(name).return.first()
+  // // check if sensor already registered with the name
+  // if (existingSensor) {
+  //   return res.status(400).json({ message: 'Un sensor est déjà enregistré sous ce nom.' })
+  // }
   const sensor = await sensorRepository.createAndSave({ name: `${name}`, sensorId ,roomId, value, unit })
   const { entityId, ...rest } = sensor.toJSON()
   const data = { id: sensor.entityId, ...rest }
@@ -94,6 +94,15 @@ export const deleteSensor = async (req, res) => {
   res.status(200).json({ message: 'Sensor ' + id + ' Supprimé avec succès.' })
 
   syncService.syncData({id: id}, 'sensor', 'delete');
+}
+
+export const getSensorsByRoomId = async (req, res) => {
+  const { id } = req.params
+  const sensors = await sensorRepository.search().where('roomId').is.equalTo(id).return.all()
+  if (!sensors) {
+    return res.status(404).json({ message: 'Aucun sensor trouvé pour cette chambre.' })
+  }
+  res.status(200).json({ result: sensors })
 }
 
 // Path: docker/local_api/app/controller/sensor.controller.js
