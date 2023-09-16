@@ -45,6 +45,9 @@ export const deleteRoom = async (req, res) => {
 export const getRoomsByBuildingId = async (req, res) => {
   const { id } = req.params
   const rooms = await roomRepository.search().where('buildingId').is.equalTo(id).return.all()
+  if (!rooms) {
+    return res.status(400).json({ message: 'Aucune room trouvée.' })
+  }
   res.status(200).json({ result: rooms })
 }
 

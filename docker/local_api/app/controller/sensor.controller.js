@@ -61,4 +61,13 @@ export const deleteSensor = async (req, res) => {
   res.status(200).json({ message: 'Sensor ' + id + ' Supprimé avec succès.' })
 }
 
+export const getSensorsByRoomId = async (req, res) => {
+  const { id } = req.params
+  const sensors = await sensorRepository.search().where('roomId').is.equalTo(id).return.all()
+  if (!sensors) {
+    return res.status(404).json({ message: 'Aucun sensor trouvé pour cette chambre.' })
+  }
+  res.status(200).json({ result: sensors })
+}
+
 // Path: docker/local_api/app/controller/sensor.controller.js

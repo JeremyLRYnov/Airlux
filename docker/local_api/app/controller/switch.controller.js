@@ -76,4 +76,13 @@ export const deleteSwitch = async (req, res) => {
   res.status(200).json({ message: 'Switch ' + id + ' Supprimé avec succès.' })
 }
 
+export const getSwitchesByRoomId = async (req, res) => {
+  const { id } = req.params
+  const switches = await switchRepository.search().where('roomId').is.equalTo(id).return.all()
+  if (!switches) {
+    return res.status(404).json({ message: 'Aucun switch trouvé pour cette chambre.' })
+  }
+  res.status(200).json({ result: switches })
+}
+
 // Path: docker/local_api/app/controller/switch.controller.js
