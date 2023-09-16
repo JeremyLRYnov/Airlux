@@ -21,7 +21,11 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+    child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -171,6 +175,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+    ),
     );
   }
 }

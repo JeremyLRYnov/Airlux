@@ -7,8 +7,15 @@ import { syncService } from '../WebSocket/ServeurWebSocket.js';
 export const signup = async (req, res) => {
     console.log(req.body);
     const { name, email, admin } = req.body;
+
+    // validate email
+    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    if (!email.match(emailRegex)) {
+        return res.status(400).json({ message: "Format de l'adresse e-mail invalide." });
+    }
+
     const existingUser = await userRepository.search().where("email").is.equalTo(email).return.first();
-    //check if user already registered with the email
+    // check if user already registered with the email
     if (existingUser) {
       return res.status(400).json({ message: "Un user est déjà enregistré sous ce nom." });
     }
@@ -40,16 +47,16 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     const { email } = req.body;
     const existingUser = await userRepository.search().where("email").is.equalTo(email).return.first();
-    //check if user exists
+    // check if user exists
     if (!existingUser) {
       return res.status(404).json({ message: "Utilisateur introuvable." });
     }
-    //check for correct password
+    // check for correct password
     const isPasswordCorrect = await bcrypt.compare(req.body.password, existingUser.password);
     if (!isPasswordCorrect) {
       return res.status(404).json({ message: "Mot de passe invalide." });
     }
-    //create auth token
+    // create auth token
     const token = jwt.sign({ email: existingUser.email, id: existingUser.entityId }, process.env.JWT_TOKEN_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
