@@ -2,11 +2,11 @@ import { roomRepository } from '../models/room.models.js'
 
 export const createRoom = async (req, res) => {
   const { name, buildingId } = req.body
-  const existingRoom = await roomRepository.search().where('name').is.equalTo(name).return.first()
-  // check if room already registered with the name
-  if (existingRoom) {
-    return res.status(400).json({ message: 'Une room est déjà enregistrée sous ce nom.' })
-  }
+  // const existingRoom = await roomRepository.search().where('name').is.equalTo(name).return.first()
+  // // check if room already registered with the name
+  // if (existingRoom) {
+  //   return res.status(400).json({ message: 'Une room est déjà enregistrée sous ce nom.' })
+  // }
   const room = await roomRepository.createAndSave({ name: `${name}`, buildingId })
   const { entityId, ...rest } = room.toJSON()
   const data = { id: room.entityId, ...rest }

@@ -3,11 +3,11 @@ import mqttClient from '../mqtt/mqttHandler.js'
 
 export const createSwitch = async (req, res) => {
   const { name, switchId, roomId, status } = req.body
-  const existingSwitch = await switchRepository.search().where('name').is.equalTo(name).return.first()
-  // check if switch already registered with the name
-  if (existingSwitch) {
-    return res.status(400).json({ message: 'Un switch est déjà enregistré sous ce nom.' })
-  }
+  // const existingSwitch = await switchRepository.search().where('name').is.equalTo(name).return.first()
+  // // check if switch already registered with the name
+  // if (existingSwitch) {
+  //   return res.status(400).json({ message: 'Un switch est déjà enregistré sous ce nom.' })
+  // }
   const switchSensor = await switchRepository.createAndSave({ name: `${name}`, switchId, roomId, status })
   const { entityId, ...rest } = switchSensor.toJSON()
   const data = { id: switchSensor.entityId, ...rest }

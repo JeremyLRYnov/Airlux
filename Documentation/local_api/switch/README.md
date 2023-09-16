@@ -114,6 +114,34 @@ Résultat :
 }
 ```
 
+## Mise à jour du status d'un switch
+
+PATCH ``http://localhost:6869/switch/updateStatus``
+
+Pour notre exemple : ``http://localhost:6869/switch/updateStatus/01HA7BHS6EYTTQTNYXJGHRJ7Q8``
+
+JSON exemple à envoyer : 
+
+```JSON
+{
+    "status": false
+}
+```
+
+Résultat : 
+
+```JSON
+{
+    "result": {
+        "entityId": "01HA7BHS6EYTTQTNYXJGHRJ7Q8",
+        "name": "lumiere",
+        "switchId": "3",
+        "roomId": "01HA7BF7CQ4F1T7XXECGF0A8W3",
+        "status": false
+    }
+}
+```
+
 Vous pouvez retrouver les différentes routes ici :
 
 | Routes de user | Routes de building | Routes de room | Routes de sensor | Routes de switch |
