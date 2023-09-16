@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
 import '../widgets/room_item.dart';
 
 class RoomPage extends StatefulWidget {
@@ -45,6 +47,30 @@ class _RoomPageState extends State<RoomPage> {
           setState(() {
             rooms = List<Map<String, dynamic>>.from(data);
           });
+
+          final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+          final roomList = rooms.map((room) {
+            final roomName = room['name'].toString();
+            String imageAsset = 'logo.png';
+
+            if (roomName.contains('Salle de bain')) {
+              imageAsset = 'bathroom.jpg';
+            } else if (roomName.contains('Bureau')) {
+              imageAsset = 'office.png';
+            } else if (roomName.contains('Salle de classe')) {
+              imageAsset = 'classroom.jpg';
+            } else if (roomName.contains('Cuisine')) {
+              imageAsset = 'kitchen.jpg';
+            } else if (roomName.contains('Salon')) {
+              imageAsset = 'livingroom.png';
+            } else if (roomName.contains('Chambre')) {
+              imageAsset = 'bedroom.jpg';
+            }
+
+            return RoomModel(name: roomName, imageUrl: imageAsset);
+          }).toList();
+
+          roomProvider.setRooms(roomList);
         } else {
           print("Invalid data structure in JSON response");
           print(jsonData);
@@ -52,8 +78,7 @@ class _RoomPageState extends State<RoomPage> {
       } else {
         print(response.body);
       }
-    }
-    catch (error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -115,4 +140,11 @@ class _RoomPageState extends State<RoomPage> {
       ),
     );
   }
+}
+
+class RoomModel {
+  final String name;
+  final String imageUrl;
+
+  RoomModel({required this.name, required this.imageUrl});
 }

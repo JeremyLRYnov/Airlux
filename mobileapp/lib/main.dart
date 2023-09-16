@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
+import 'package:mobileapp/screens/room_page.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,17 +12,23 @@ void main() async {
   final token = prefs.getString('token');
 
   runApp(
-    MaterialApp(
-      title: 'Home Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RoomProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Home Page',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: token != null && await isTokenValid(token)
+            ? const FooterMenu()
+            : const WelcomeScreen(),
       ),
-      home: token != null && await isTokenValid(token)
-          ? const FooterMenu()
-          : const WelcomeScreen(),
     ),
   );
 }
+
 
 Future<bool> isTokenValid(String token) async {
   try{
@@ -41,5 +49,14 @@ Future<bool> isTokenValid(String token) async {
   {
     print(error);
     return false;
+  }
+}
+
+class RoomProvider extends ChangeNotifier {
+  List<RoomModel> rooms = [];
+
+  void setRooms(List<RoomModel> newRooms) {
+    rooms = newRooms;
+    notifyListeners();
   }
 }

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
+import 'package:mobileapp/screens/room_page.dart';
 import 'package:mobileapp/widgets/device_item.dart';
 import 'package:mobileapp/widgets/room_item.dart';
+import 'package:provider/provider.dart';
+
+import '../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    final roomProvider = Provider.of<RoomProvider>(context);
+    final roomList = roomProvider.rooms;
     return WillPopScope(
         onWillPop: () async {
           return false;
@@ -124,50 +130,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView(
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        RoomItem(
-                          text: "Salle de bain",
-                          piece: "bathroom.jpg",
+                      itemCount: roomList.length,
+                      itemBuilder: (context, index) {
+                        final room = roomList[index];
+                        return RoomItem(
+                          text: room.name,
+                          piece: room.imageUrl,
+                          isselected: selectedIndex == index,
                           width: 150,
                           height: 150,
-                          isselected: selectedIndex == 0,
                           onpressed: () {
-                            _onItemSelected(0);
+                            _onItemSelected(index);
                           },
-                        ),
-                        RoomItem(
-                          text: "Salon",
-                          piece: "livingroom.png",
-                          width: 150,
-                          height: 150,
-                          isselected: selectedIndex == 1,
-                          onpressed: () {
-                            _onItemSelected(1);
-                          },
-                        ),
-                        RoomItem(
-                          text: "Cuisine",
-                          piece: "kitchen.jpg",
-                          width: 150,
-                          height: 150,
-                          isselected: selectedIndex == 2,
-                          onpressed: () {
-                            _onItemSelected(2);
-                          },
-                        ),
-                        RoomItem(
-                          text: "Chambre",
-                          piece: "bedroom.jpg",
-                          width: 150,
-                          height: 150,
-                          isselected: selectedIndex == 3,
-                          onpressed: () {
-                            _onItemSelected(3);
-                          },
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ],),
