@@ -4,9 +4,6 @@ import { userRepository } from '../models/user.models.js';
 import WebSocket from 'ws';
 import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
-//import { sendWebSocketMessage } from '../WebSocket/EnvoiMessage.js';
-
-
 export const signup = async (req, res) => {
     console.log(req.body);
     const { name, email, admin } = req.body;
@@ -37,23 +34,7 @@ export const signup = async (req, res) => {
     };
 
     syncService.syncData(dataToSend, 'user', 'create');
-    /*const ws = new WebSocket('ws://appmysql:8081/'); // Remplacez l'URL par celle de votre serveur WebSocket.
-    console.log('Début websocket');
-
-    // Événement déclenché lorsque la connexion WebSocket est ouverte.
-    ws.on('open', () => {
-    console.log('Connexion WebSocket établie avec succès.');
     
-    // Vous pouvez envoyer des messages après la connexion.
-    ws.send(JSON.stringify(req.body));
-      console.log('Message envoyer');
-    });
-
-    ws.on('error', function (error) {
-      console.error('Erreur de connexion WebSocket :', error);
-    });
-    */
-
 };
 
 export const signin = async (req, res) => {
@@ -120,17 +101,3 @@ export const getUsers = async (req, res) => {
     const users = await userRepository.search().return.all();
     res.status(200).json({ result: users });
 };
-// Path: docker/local_api/app/controller/user.controller.js
-
-// const sendWebSocketMessage = (message) => {
-//   const socket = new WebSocket('ws://localhost:8080'); // Remplacez l'URL par celle de votre serveur WebSocket.
-
-//   // Événement déclenché lorsque la connexion WebSocket est ouverte.
-//   socket.addEventListener('open', (message) => {
-//   console.log('Connexion WebSocket établie avec succès.');
-  
-//   // Vous pouvez envoyer des messages après la connexion.
-//   socket.send(message);
-
-//   });
-// };

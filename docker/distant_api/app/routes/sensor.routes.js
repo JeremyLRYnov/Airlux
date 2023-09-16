@@ -15,6 +15,9 @@ module.exports = app => {
   // Retrieve a single Sensor with id
   router.get("/:id", sensors.findOne);
 
+  // Update Sensor status with sensorId 
+  router.put('/updateStatus', sensors.updateValueBySensorId);
+
   // Update a Sensor with id
   router.put("/:id", sensors.update);
 

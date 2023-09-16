@@ -13,7 +13,10 @@ module.exports = app => {
   
     // Retrieve a single Switch with id
     router.get("/:id", switches.findOne);
-  
+
+    // Update Switch status with switchId 
+    router.put('/updateStatus', switches.updateStatusBySwitchId);
+
     // Update a Switch with id
     router.put("/:id", switches.update);
   

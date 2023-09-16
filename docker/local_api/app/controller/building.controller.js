@@ -1,4 +1,6 @@
 import { buildingRepository } from '../models/building.models.js'
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
+
 
 export const createBuilding = async (req, res) => {
   const { name, createdBy, users } = req.body
@@ -73,12 +75,23 @@ export const updateBuilding = async (req, res) => {
   await buildingRepository.save(building)
 
   res.status(200).json({ result: building })
+
+  const dataToSend = {
+    id: id,
+    name: building.name,
+    createdBy: building.createdBy,
+    users: building.users
+  };
+
+  syncService.syncData(dataToSend, 'building', 'update');
 }
 
 export const deleteBuilding = async (req, res) => {
   const { id } = req.params
   await buildingRepository.remove(id)
   res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' })
+
+  syncService.syncData({id: id}, 'building', 'delete');
 }
 
 // Path: docker/local_api/app/controller/building.controller.js

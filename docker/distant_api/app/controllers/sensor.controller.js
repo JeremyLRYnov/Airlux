@@ -1,5 +1,28 @@
 const Sensor = require('../models/sensor.model.js');
 
+ // Logique pour gérer les messages WebSocket pour les capteurs
+ exports.handleWebSocketMessage = async (message) => {
+  if (message.action === 'create') {
+    await exports.create({ body: message.data });
+    console.log("données stockées sur mysql");
+  } 
+
+  if(message.action === 'delete') {
+    await exports.delete({ params: { id: message.data.id } }, null);
+    console.log("données supprimées sur mysql");
+  }
+
+  if(message.action === 'update') {
+    await exports.update({ params: { id: message.data.id }, body: message.data }, null);
+    console.log("données mises à jour sur mysql");
+  }
+
+  if (message.action === 'updateStatus') {
+    await exports.updateValueBySensorId({ body: message.data }, null);
+    console.log("données mises à jour sur mysql");
+  }
+};
+
 // Create and Save a new Sensor
 exports.create = async (req, res) => {
   // Validate request
@@ -21,11 +44,44 @@ exports.create = async (req, res) => {
 
   try {
     const data = await Sensor.create(sensor);
-    res.send(data);
+    if(res) {
+      res.send(data);
+    } else {
+      console.log("Le capteur a bien été créé");
+    }
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while creating the Sensor."
+    if(res) {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the Sensor."
+      });
+    }
+    console.error("User is not authorized to create a sensor");
+    return;
+  }
+};
+
+exports.updateValueBySensorId = async (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
     });
+  }
+
+  try {
+    const data = await Sensor.updateBySensorId(req.body.sensorId, new Sensor(req.body)); 
+    if(res){
+      res.send(data);
+    }
+  } catch (err) {
+    if (err.kind === "not_found") {
+      if(res) {
+        res.status(404).send({
+          message: err.message || `Not found sensor with sensorId ${req.body.sensorId}.`  
+        });
+      }
+      console.error(err.message || "Error updating sensor with sensorId " + req.body.sensorId); 
+    }
   }
 };
 
@@ -83,16 +139,17 @@ exports.update = async (req, res) => {
 
   try {
     const data = await Sensor.updateById(req.params.id, new Sensor(req.body));
-    res.send(data);
+    if(res){
+      res.send(data);
+    }
   } catch (err) {
     if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Sensor with id ${req.params.id}.`
-      });
-    } else {
-      res.status(500).send({
-        message: "Error updating Sensor with id " + req.params.id
-      });
+      if(res) {
+        res.status(500).send({
+          message: err.message || `Not found senor with id ${req.params.id}.`
+        });
+      }
+      console.error(err.message || "Error updating sensor with id " + req.params.id);
     }
   }
 };
@@ -101,16 +158,27 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     await Sensor.remove(req.params.id);
-    res.send({ message: `Sensor was deleted successfully!` });
+    if(res) {
+      res.send({ message: `Sensor was deleted successfully!` });
+    }
+    console.log("Sensor was deleted successfully")
   } catch (err) {
     if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Sensor with id ${req.params.id}.`
-      });
+      if (res) {
+        res.status(404).send({
+          message: `Capteur non trouvé avec l'id ${req.params.id}.`
+        });
+      } else {
+        console.error(`Capteur non trouvé avec l'id ${req.params.id}.`);
+      }
     } else {
-      res.status(500).send({
-        message: "Could not delete Sensor with id " + req.params.id
-      });
+      if (res) {
+        res.status(500).send({
+          message: "Impossible de supprimer le capteur avec l'id " + req.params.id
+        });
+      } else {
+        console.error("Impossible de supprimer le capteur avec l'id " + req.params.id);
+      }
     }
   }
 };

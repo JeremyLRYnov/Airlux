@@ -2,29 +2,42 @@ const Building = require('../models/building.model.js');
 const User = require('../models/user.model.js');
 
 // Logique pour gérer les messages WebSocket pour les bâtiments
-exports.handleWebSocketMessage = async (message) => {
+exports.handleWebSocketMessageBuilding = async (message) => {
   if (message.action === 'create') {
     console.log("action récupérée");
-    await exports.create({ body: message.data });
+    await exports.create({ body: message.data }, null);
     console.log("données stockées sur mysql");
   } 
+
+  if(message.action === "update") {
+    await exports.update({ params: { id: message.data.id }, body: message.data }, null);
+    console.log("données mises à jour sur mysql");
+  }
 };
 
-// Create and Save a new Building
 exports.create = async (req, res) => {
   // Validate request
   if (!req.body) {
-    return res.status(400).send({
-      message: "Content can not be empty!"
-    });
+    if(res) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+    }
+    console.error("Content can not be empty!");
+    return;
   }
+
   try {
     // Check if the user is an admin
     const user = await User.findById(req.body.createdBy);
     if (!user.admin) {
-      return res.status(403).send({
-        message: "User is not authorized to create a building"
-      });
+      if(res) {
+        res.status(403).send({
+          message: "User is not authorized to create a building"
+        });
+      }
+      console.error("User is not authorized to create a building");
+      return;
     }
 
     // Create a Building
@@ -35,11 +48,16 @@ exports.create = async (req, res) => {
     });
 
     const data = await Building.create(building);
-    res.send(data);
+    if(res) {
+      res.send(data);
+    }
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while creating the Building."
-    });
+    if(res) {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the Building."
+      });
+    }
+    console.error(err.message || "Some error occurred while creating the Building.");
   }
 };
 
@@ -79,24 +97,27 @@ exports.findOne = async (req, res) => {
 exports.update = async (req, res) => {
   // Validate Request
   if (!req.body) {
-    return res.status(400).send({
-      message: "Content can not be empty!"
-    });
+    if(res) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+    }
+    console.error("Content can not be empty!");
+    return;
   }
 
   try {
     const data = await Building.updateById(req.params.id, new Building(req.body));
-    res.send(data);
+    if(res){
+      res.send(data);
+    }    
   } catch (err) {
-    if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Building with id ${req.params.id}.`
-      });
-    } else {
+    if(res) {
       res.status(500).send({
-        message: "Error updating Building with id " + req.params.id
+        message: err.message || `Not found Building with id ${req.params.id}.`
       });
     }
+    console.error(err.message || "Error updating Building with id " + req.params.id);
   }
 };
 
@@ -104,16 +125,28 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     await Building.remove(req.params.id);
-    res.send({ message: `Building was deleted successfully!` });
+    if (res) {
+      res.send({ message: `Building was deleted successfully!` });
+    } else {
+      console.log(`Building was deleted successfully!`);
+    }
   } catch (err) {
     if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Building with id ${req.params.id}.`
-      });
+      if (res) {
+        res.status(404).send({
+          message: `Bâtiment non trouvé avec l'id ${req.params.id}.`
+        });
+      } else {
+        console.error(`Bâtiment non trouvé avec l'id ${req.params.id}.`);
+      }
     } else {
-      res.status(500).send({
-        message: "Could not delete Building with id " + req.params.id
-      });
+      if (res) {
+        res.status(500).send({
+          message: "Impossible de supprimer le bâtiment avec l'id " + req.params.id
+        });
+      } else {
+        console.error("Impossible de supprimer le bâtiment avec l'id " + req.params.id);
+      }
     }
   }
 };

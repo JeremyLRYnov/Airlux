@@ -1,5 +1,23 @@
 const Room = require('../models/room.model.js');
 
+ // Logique pour gérer les messages WebSocket pour les pièces
+ exports.handleWebSocketMessage = async (message) => {
+  if (message.action === 'create') {
+    await exports.create({ body: message.data });
+    console.log("données stockées sur mysql");
+  } 
+
+  if(message.action === 'delete') {
+    await exports.delete({ params: { id: message.data.id } }, null);
+    console.log("données supprimées sur mysql");
+  }
+
+  if(message.action === 'update') {
+    await exports.update({ params: { id: message.data.id }, body: message.data }, null);
+    console.log("données mises à jour sur mysql");
+  }
+};
+
 // Create and Save a new Room
 exports.create = async (req, res) => {
   // Validate request
@@ -18,11 +36,20 @@ exports.create = async (req, res) => {
 
   try {
     const data = await Room.create(room);
-    res.send(data);
+    if(res){
+      res.send(data);
+    } else {
+      console.log("La pièce à bien été créée");
+      return;
+    }
   } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while creating the Room."
-    });
+    if(res) {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the Room."
+      });
+    }
+    console.error("User is not authorized to create a room");
+    return;
   }
 };
 
@@ -80,17 +107,16 @@ exports.update = async (req, res) => {
 
   try {
     const data = await Room.updateById(req.params.id, new Room(req.body));
-    res.send(data);
+    if(res){
+      res.send(data);
+    }
   } catch (err) {
-    if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Room with id ${req.params.id}.`
-      });
-    } else {
+    if(res) {
       res.status(500).send({
-        message: "Error updating Room with id " + req.params.id
+        message: err.message || `Not found room with id ${req.params.id}.`
       });
     }
+    console.error(err.message || "Error updating room with id " + req.params.id);
   }
 };
 
@@ -98,16 +124,27 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     await Room.remove(req.params.id);
-    res.send({ message: `Room was deleted successfully!` });
+    if(res) {
+      res.send({ message: `Room was deleted successfully!` });
+    }
+    console.log("Room was deleted successfully")
   } catch (err) {
     if (err.kind === "not_found") {
-      res.status(404).send({
-        message: `Not found Room with id ${req.params.id}.`
-      });
+      if (res) {
+        res.status(404).send({
+          message: `Pièce non trouvée avec l'id ${req.params.id}.`
+        });
+      } else {
+        console.error(`Pièce non trouvée avec l'id ${req.params.id}.`);
+      }
     } else {
-      res.status(500).send({
-        message: "Could not delete Room with id " + req.params.id
-      });
+      if (res) {
+        res.status(500).send({
+          message: "Impossible de supprimer la pièce avec l'id " + req.params.id
+        });
+      } else {
+        console.error("Impossible de supprimer la pièece avec l'id " + req.params.id);
+      }
     }
   }
 };

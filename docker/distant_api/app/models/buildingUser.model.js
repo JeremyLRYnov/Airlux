@@ -28,6 +28,17 @@ class BuildingUser {
     }
   }
 
+  static async removeUsersFromBuilding(buildingId) {
+    try {
+      const [results] = await db.query("DELETE FROM BuildingUsers WHERE buildingId = ?", [buildingId]);
+      console.log(`Deleted users from building id: ${buildingId}`);
+      return results;
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }  
+
   static async findBuildingsByUserId(userId) {
     try {
       const [results] = await db.query("SELECT Buildings.* FROM Buildings INNER JOIN BuildingUsers ON Buildings.id = BuildingUsers.buildingId WHERE BuildingUsers.userId = ?", [userId]);

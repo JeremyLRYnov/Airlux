@@ -25,6 +25,21 @@ class Sensor {
     }
   }
 
+  static async updateBySensorId(sensorId, sensor) {  
+    try {
+      const [results] = await db.query("UPDATE Sensors SET value = ? WHERE sensorId = ?", [sensor.value, sensorId]); 
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated sensor: ", { sensorId: sensorId, ...sensor }); 
+        return { sensorId: sensorId, ...sensor }; 
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
+    }
+  }  
+  
   static async findById(id) {
     try {
       const [results] = await db.query(`SELECT * FROM Sensors WHERE id = ?`, [id]);

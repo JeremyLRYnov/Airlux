@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 class Switch {
   constructor(switchEntity) {
     this.id = switchEntity.id;
-    this.swichId = switchEntity.swichId;
+    this.switchId = switchEntity.switchId;
     this.name = switchEntity.name;
     this.roomId = switchEntity.roomId;
     this.status = switchEntity.status;
@@ -65,6 +65,21 @@ class Switch {
     }
   }
 
+  static async updateBySwitchId(switchId, status) {
+    try {
+      const [results] = await db.query("UPDATE Switches SET status = ? WHERE switchId = ?", [status, switchId]);
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated switch: ", { switchId, status });
+        return { switchId, status };
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }
+  
   static async updateById(id, switchEntity) {
     try {
       const [results] = await db.query("UPDATE Switches SET name = ?, roomId = ?, status = ? WHERE id = ?", [switchEntity.name, switchEntity.roomId, switchEntity.status, id]);

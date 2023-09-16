@@ -15,6 +15,12 @@ module.exports = app => {
     // Delete all buildings by user ID
     router.delete("/users/:userId", buildingUsers.removeBuildingsByUserId);
 
+    // Delete all links between users and a building 
+    router.delete("/:buildingId", buildingUsers.removeUsersFromBuilding);
+
+    // Find User Id from email
+    router.get("/", buildingUsers.findUserIdByEmail);
+
     app.use('/api/buildingUsers', router);
   };
   

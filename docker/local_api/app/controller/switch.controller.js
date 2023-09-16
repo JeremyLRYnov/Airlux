@@ -1,4 +1,5 @@
 import { switchRepository } from '../models/switch.models.js'
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const createSwitch = async (req, res) => {
   const { name, switchId, roomId, status } = req.body
@@ -11,6 +12,17 @@ export const createSwitch = async (req, res) => {
   const { entityId, ...rest } = switchSensor.toJSON()
   const data = { id: switchSensor.entityId, ...rest }
   res.status(200).json({ result: data })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: switchSensor.entityId,
+    switchId: switchId,
+    name: name,
+    roomId: roomId,
+    status: status
+  };
+
+  syncService.syncData(dataToSend, 'switch', 'create');
 }
 
 export const getSwitches = async (req, res) => {
@@ -36,6 +48,16 @@ export const updateSwitch = async (req, res) => {
 
   res.status(200).json({ result: switchSensor })
 
+  //Data to send in the socket
+  const dataToSend = {
+    id: id,
+    name: switchSensor.name,
+    roomId: switchSensor.roomId,
+    status: switchSensor.status 
+  };
+
+  syncService.syncData(dataToSend, 'switch', 'update');
+
 }
 
 export const updateSwitchBoolean = async (switchId, newStatus) => {
@@ -53,12 +75,22 @@ export const updateSwitchBoolean = async (switchId, newStatus) => {
   } catch (error) {
     console.error(`Erreur lors de la mise à jour du switch ${switchId} :`, error);
   }
+
+    //Data to send in the socket
+    const dataToSend = {
+      switchId: switchId,
+      status: newStatus
+    };
+  
+    syncService.syncData(dataToSend, 'switch', 'updateStatus');
 }
 
 export const deleteSwitch = async (req, res) => {
   const { id } = req.params
   await switchRepository.remove(id)
   res.status(200).json({ message: 'Switch ' + id + ' Supprimé avec succès.' })
+
+  syncService.syncData({id: id}, 'switch', 'delete');
 }
 
 // Path: docker/local_api/app/controller/switch.controller.js

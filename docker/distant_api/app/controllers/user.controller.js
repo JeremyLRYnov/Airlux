@@ -132,6 +132,24 @@ exports.findOne = async (req, res) => {
   }
 };
 
+exports.findUserIdByEmail = async (req, res) => {
+  try {
+    if (!req.body.email) {
+      res.status(400).send({
+        message: "L'email est requis"
+      });
+      return;
+    }
+
+    const userId = await User.findUserIdByEmail(req.body.email);
+    res.send({ id: userId });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Une erreur est survenue lors de la récupération de l'ID de l'utilisateur."
+    });
+  }
+};
+
 exports.delete = async (req, res) => {
   try {
     const data = await User.remove(req.params.id);

@@ -16,6 +16,7 @@ class SyncService {
       action: action,
       data: data,
     };
+    console.log("Web Socket ouverte");
     if (this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(sendData));
       console.log('Message envoyé');

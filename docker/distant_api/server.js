@@ -42,6 +42,9 @@ setTimeout(() => {
 const userController = require("./app/controllers/user.controller");
 const buildingController = require("./app/controllers/building.controller");
 const buildingUsersController = require("./app/controllers/buildingUser.controller");
+const roomController = require("./app/controllers/room.controller");
+const sensorController = require("./app/controllers/sensor.controller");
+const switchController = require("./app/controllers/switch.controller");
 
 const wss = new WebSocket.Server({ port: 8081 });
 
@@ -54,20 +57,40 @@ wss.on('connection', (ws) => {
     try {
       const data = JSON.parse(message);
       console.log('Message reçu :', data);
-
-      // Envois du message au bon contrôleur en fonction du type de de données (user, building, sensor, room, switch)
-      if (data.type === 'user') {
-        await userController.handleWebSocketMessage(data);
-        console.log("message envoyé au controller user");
-      } else if (data.type == 'building') {
-        await buildingController.handleWebSocketMessage(data);
-        console.log("message envoyé au controller building");
-        await buildingUsersController.handleWebSocketMessage(data);
-        console.log("message envoyé au controller buildingUsers");
-      } 
-
+  
+      switch(data.type) {
+        case 'user':
+          await userController.handleWebSocketMessage(data);
+          console.log("Message envoyé au controller user");
+          break;
+  
+        case 'building':
+          await buildingController.handleWebSocketMessageBuilding(data);
+          console.log("Message envoyé au controller building");
+          await buildingUsersController.handleWebSocketMessageBuildingUsers(data);
+          console.log("Message envoyé au controller buildingUsers");
+          break;
+  
+        case 'room':
+          await roomController.handleWebSocketMessage(data);
+          console.log("Message envoyé au controller room");
+          break;
+  
+        case 'sensor':
+          await sensorController.handleWebSocketMessage(data);
+          console.log("Message envoyé au controller sensor");
+          break;
+  
+        case 'switch':
+          await switchController.handleWebSocketMessage(data);
+          console.log("Message envoyé au controller switch");
+          break;
+  
+        default:
+          console.warn('Type de message non reconnu:', data.type);
+      }
     } catch (error) {
       console.error('Erreur lors de l"analyse du message JSON :', error);
     }
-  });
+  });  
 });

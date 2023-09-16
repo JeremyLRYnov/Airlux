@@ -77,6 +77,21 @@ class User {
       throw { kind: "unexpected_error", message: error.message };
     }
   }
+
+  static async findUserIdByEmail(email) {
+    try {
+      const [results] = await db.query("SELECT id FROM Users WHERE email = ?", [email]);
+      if (results.length) {
+        return results[0].id;
+      } else {
+        throw { kind: "not_found", message: "No user found with this email" };
+      }
+    } catch (error) {
+      console.log("erreur: ", error);
+      throw error;
+    }
+  }  
+  
 };
 
 User.findById = async (id) => {
