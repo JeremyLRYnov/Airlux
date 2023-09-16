@@ -42,4 +42,10 @@ export const deleteRoom = async (req, res) => {
   res.status(200).json({ message: 'Room ' + id + ' Supprimée avec succès.' })
 }
 
+export const getRoomsByBuildingId = async (req, res) => {
+  const { id } = req.params
+  const rooms = await roomRepository.search().where('buildingId').is.equalTo(id).return.all()
+  res.status(200).json({ result: rooms })
+}
+
 // Path: docker/local_api/app/controller/room.controller.js
