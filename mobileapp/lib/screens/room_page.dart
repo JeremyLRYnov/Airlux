@@ -27,24 +27,34 @@ class _RoomPageState extends State<RoomPage> {
     token = prefs.getString('token')!;
     buildingId = prefs.getString('buildingId')!;
 
-    final response = await http.get(
-      Uri.parse('http://10.0.2.2:6869/building/$buildingId'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:6869/room/buildingId/$buildingId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
 
-      final List<dynamic> data = jsonData['result'] as List<dynamic>;
-      setState(() {
-        rooms = List<Map<String, dynamic>>.from(data);
-      });
-    } else {
-      // TODO
+        if (jsonData['result'] is List) {
+          final data = jsonData['result'] as List<dynamic>;
+          setState(() {
+            rooms = List<Map<String, dynamic>>.from(data);
+          });
+        } else {
+          print("Invalid data structure in JSON response");
+          print(jsonData);
+        }
+      } else {
+        print(response.body);
+      }
+    }
+    catch (error) {
+      print(error);
     }
   }
 
@@ -71,10 +81,27 @@ class _RoomPageState extends State<RoomPage> {
               margin: const EdgeInsets.only(left: 20, right: 20),
               child: Row(
                 children: rooms.map<Widget>((room) {
-                  final roomName = room['name'].toString(); // Conversion en chaîne
+                  final roomName = room['name'].toString();
+                  final isSelected = false;
+                  String imageAsset;
+
+                  if (roomName.contains('Salle de bain')) {
+                    imageAsset = 'bathroom.jpg';
+                  } else if (roomName.contains('Bureau')) {
+                    imageAsset = 'office.png';
+                  } else if (roomName.contains('Salle de classe')) {
+                    imageAsset = 'classroom.jpg';
+                  } else if (roomName.contains('Cuisine')) {
+                    imageAsset = 'kitchen.jpg';
+                  } else if (roomName.contains('Salon')) {
+                    imageAsset = 'livingroom.png';
+                  } else if (roomName.contains('Chambre')) {
+                    imageAsset = 'bedroom.jpg';
+                  }else imageAsset = 'logo.png';
+
                   return RoomItem(
                     text: roomName,
-                    piece: roomName + '.jpg',
+                    piece: imageAsset,
                     isselected: true,
                     width: 160,
                     height: 180,
