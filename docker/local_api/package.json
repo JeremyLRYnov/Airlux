@@ -5,9 +5,16 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test:unit": "jest --testPathPattern=app/test",
+    "test:unit": "jest --testPathPattern=app/test --coverage",
     "lint:fix": "eslint --fix ./*.js app/**/*.js",
     "start": "node server.js"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
   },
   "keywords": [
     "nodejs",
