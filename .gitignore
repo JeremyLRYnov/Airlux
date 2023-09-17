@@ -10,6 +10,7 @@ docker/redis-stack/*.rdb
 docker/redis_stack/
 docker/distant_api/data/
 docker/mysql/
+docker/grafana/
 
 # Miscellaneous
 *.class

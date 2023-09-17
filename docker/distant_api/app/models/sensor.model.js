@@ -1,7 +1,10 @@
 const { db } = require("./db.js");
+const { v4: uuidv4 } = require('uuid');
 
 class Sensor {
   constructor(sensor) {
+    this.id = sensor.id,
+    this.sensorId = sensor.sensorId,
     this.name = sensor.name;
     this.roomId = sensor.roomId;
     this.value = sensor.value;
@@ -10,15 +13,33 @@ class Sensor {
 
   static async create(newSensor) {
     try {
+      if(!newSensor.id) {
+        newSensor.id = uuidv4();  // Génére un UUID si aucun ID n'est fourni
+      }
       const [result] = await db.query("INSERT INTO Sensors SET ?", newSensor);
-      console.log("created sensor: ", { id: result.insertId, ...newSensor });
-      return { id: result.insertId, ...newSensor };
+      console.log("created sensor: ", { id: newSensor.id, ...newSensor });
+      return { id: newSensor.id, ...newSensor };
     } catch (error) {
       console.log("grosse erreur: ", error);
       throw error;
     }
   }
 
+  static async updateBySensorId(sensorId, sensor) {  
+    try {
+      const [results] = await db.query("UPDATE Sensors SET value = ? WHERE sensorId = ?", [sensor.value, sensorId]); 
+      if (results.affectedRows == 0) {
+        throw { kind: "not_found" };
+      } else {
+        console.log("updated sensor: ", { sensorId: sensorId, ...sensor }); 
+        return { sensorId: sensorId, ...sensor }; 
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      throw error;
+    }
+  }  
+  
   static async findById(id) {
     try {
       const [results] = await db.query(`SELECT * FROM Sensors WHERE id = ?`, [id]);

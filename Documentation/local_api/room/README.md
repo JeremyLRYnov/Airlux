@@ -43,7 +43,7 @@ Résultat :
 }
 ```
 
-## Récupérer tous les rooms
+## Récupérer toutes les rooms
 
 GET ``http://localhost:6869/room/``
 
@@ -104,6 +104,48 @@ Résultat :
         "name": "Chambre",
         "buildingId": "01H9Z9MBXDRRQKWF7YF3ABK5DQ"
     }
+}
+```
+
+## Récupérer les rooms à partir de l'Id d'un building
+
+GET ``http://localhost:6869/room/buildingId/:id``
+
+Pour notre exemple : ``http://localhost:6869/room/buildingId/01HA7BBQJJJY0T1H1K0WKB1GYW``
+
+L'ID que l'on utilise est celui d'un building !
+
+Résultat : 
+
+```JSON
+{
+    "result": [
+        {
+            "entityId": "01HA7BF7CQ4F1T7XXECGF0A8W3",
+            "name": "Salon",
+            "buildingId": "01HA7BBQJJJY0T1H1K0WKB1GYW"
+        },
+        {
+            "entityId": "01HAF05830T0V53W1MX2MD6P1R",
+            "name": "Chambre",
+            "buildingId": "01HA7BBQJJJY0T1H1K0WKB1GYW"
+        },
+        {
+            "entityId": "01HAF05JGKQHB42HCWGPM4PTSD",
+            "name": "Toilettes",
+            "buildingId": "01HA7BBQJJJY0T1H1K0WKB1GYW"
+        },
+        {
+            "entityId": "01HAF05R1Q0YDQKFC1SVWZQM19",
+            "name": "Cuisine",
+            "buildingId": "01HA7BBQJJJY0T1H1K0WKB1GYW"
+        },
+        {
+            "entityId": "01HAF05XZGPCRE4FCDHRE42SYB",
+            "name": "Garage",
+            "buildingId": "01HA7BBQJJJY0T1H1K0WKB1GYW"
+        }
+    ]
 }
 ```
 
