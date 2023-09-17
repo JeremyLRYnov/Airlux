@@ -21,6 +21,7 @@ services:
       depends_on:
         - redis-stack
         - mysql
+        - mysql
       build: ./local_api
       restart: unless-stopped
       env_file: ./.env
