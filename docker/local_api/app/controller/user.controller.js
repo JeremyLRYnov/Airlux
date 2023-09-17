@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { userRepository } from '../models/user.models.js';
-import WebSocket from 'ws';
 import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const signup = async (req, res) => {

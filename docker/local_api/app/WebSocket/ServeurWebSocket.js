@@ -11,7 +11,6 @@ class SyncService {
 
   connect() {
     if (this.retryCount >= this.maxRetries || this.isConnected) {
-      console.error('Nombre max de reconnexion atteint ou déjà connecté. Tentative de reconnexion stoppée');
       return;
     }
 
@@ -35,9 +34,10 @@ class SyncService {
     setTimeout(() => this.checkConnection(), 60000);
   }
 
-  onError(error) {
+  onError() {
     this.isConnected = false; 
     this.retryCount += 1;
+    console.log("Échec de la connexion WebSocket")
     setTimeout(() => this.connect(), 5000 * this.retryCount); 
   }
 
@@ -51,6 +51,7 @@ class SyncService {
     if (this.ws.readyState !== WebSocket.OPEN) {
       this.isConnected = false; 
       this.retryCount += 1;
+      console.log("Tentative de connexion...")
       this.connect();
     } else {
       // Prochaine vérification de la connexion

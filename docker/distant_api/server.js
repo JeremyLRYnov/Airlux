@@ -49,7 +49,7 @@ const switchController = require("./app/controllers/switch.controller");
 const wss = new WebSocket.Server({ port: 8081 });
 
 wss.on('connection', (ws) => {
-  console.log("Connexion établie avec succès")
+  console.log("Connexion WebSocket établie avec succès")
   ws.on('message', async message => {
     try {
       const data = JSON.parse(message);
