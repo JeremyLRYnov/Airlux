@@ -85,7 +85,7 @@ services:
         GF_DATABASE_USER: $MYSQLDB_USER
         GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
       volumes:
-        - ./grafana/data:/var/lib/grafana
+        - ./grafana/dashboards:/var/lib/grafana/dashboards
 
     # Création du container Mosquitto       
     mosquitto:
