@@ -148,65 +148,101 @@ class _RoomPageState extends State<RoomPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: kPrimaryBlue,
         onPressed: () {
+          String subtitle = '';
+          String nameToSend = '';
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Ajouter une pièce'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Nom de la pièce',
-                      ),
-                      onChanged: (value) {
-                        selectedRoomName = value;
-                      },
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Annuler'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      token = prefs.getString('token')!;
-                      buildingId = prefs.getString('buildingId')!;
-
-                      final newRoom = NewRoom(
-                        name: selectedRoomName,
-                        buildingId: buildingId,
-                      );
-                      try {
-                        final response = await http.post(
-                          Uri.parse('http://10.0.2.2:6869/room/create'),
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer $token',
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return AlertDialog(
+                    title: const Text('Ajouter une pièce'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DropdownButton<String>(
+                          value: selectedRoomName,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedRoomName = newValue!;
+                            });
                           },
-                          body: jsonEncode(newRoom.toJson()),
-                        );
-                        if (response.statusCode == 200) {
-                          print(response.body);
+                          items: <String>[
+                            'Salon',
+                            'Salle de bain',
+                            'Bureau',
+                            'Salle de classe',
+                            'Cuisine',
+                            'Chambre',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                        TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Sous-titre de la pièce',
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              subtitle = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
                           Navigator.of(context).pop();
-                          fetchRooms();
-                        } else {
-                          print(response.body);
-                        }
-                      } catch (error) {
-                        print(error);
-                      }
-                    },
-                    child: const Text('Ajouter'),
-                  ),
-                ],
+                        },
+                        child: const Text('Annuler'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          token = prefs.getString('token')!;
+                          buildingId = prefs.getString('buildingId')!;
+                          if(subtitle != '')
+                            {
+                              nameToSend = selectedRoomName + ' ' + subtitle;
+                            }
+                          else
+                            {
+                              nameToSend = selectedRoomName;
+                            }
+                          final newRoom = NewRoom(
+                            name: nameToSend,
+                            buildingId: buildingId,
+                          );
+                          try {
+                            final response = await http.post(
+                              Uri.parse('http://10.0.2.2:6869/room/create'),
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'Authorization': 'Bearer $token',
+                              },
+                              body: jsonEncode(newRoom.toJson()),
+                            );
+                            if (response.statusCode == 200) {
+                              print(response.body);
+                              Navigator.of(context).pop();
+                              fetchRooms();
+                            } else {
+                              print(response.body);
+                            }
+                          } catch (error) {
+                            print(error);
+                          }
+                        },
+                        child: const Text('Ajouter'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           );
