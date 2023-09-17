@@ -15,6 +15,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController prenomController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController motDePasseController = TextEditingController();
@@ -41,6 +42,8 @@ class _RegistrationScreenState extends State<Register> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,25 +58,37 @@ class _RegistrationScreenState extends State<Register> {
                 const SizedBox(
                   height: 48.0,
                 ),
-                TextField(
+                TextFormField(
                   controller: prenomController,
                   decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Entrez votre prénom',
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Entrez votre prénom';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 24.0,
                 ),
-                TextField(
+                TextFormField(
                   controller: emailController,
                   decoration: kTextFieldDecoration.copyWith(
                     hintText: 'Entrez votre email',
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Entrez votre email';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 24.0,
                 ),
-                TextField(
+                TextFormField(
                   controller: motDePasseController,
                   obscureText: _isObscure,
                   decoration: kTextFieldDecoration.copyWith(
@@ -90,6 +105,12 @@ class _RegistrationScreenState extends State<Register> {
                       },
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Entrez votre mot de passe';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 24.0,
@@ -97,67 +118,48 @@ class _RegistrationScreenState extends State<Register> {
                 RectangleButton(
                   title: "S'INSCRIRE",
                   onPressed: () async {
-                    if (prenomController.text.isEmpty ||
-                        emailController.text.isEmpty ||
-                        motDePasseController.text.isEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Champs obligatoires"),
-                            content: Text("Veuillez remplir tous les champs."),
-                            actions: [
-                              TextButton(
-                                child: Text("OK"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      return;
-                    }
-                    setState(() {
-                      _saving = true;
-                    });
-                    await Future.delayed(const Duration(seconds: 1));
-                    setState(() {
-                      _saving = false;
-                    });
-
-                    try {
-                      final response = await http.post(
-                        Uri.parse('http://10.0.2.2:6869/user/signup'),
-                        body: {
-                          'name': prenomController.text,
-                          'email': emailController.text,
-                          'password': motDePasseController.text,
-                        },
-                      );
-
+                    if (_formKey.currentState!.validate()) {
+                      // Le formulaire est valide, procédez ici
                       setState(() {
-                        if (response.statusCode == 200) {
-                          final jsonResponse = json.decode(response.body);
-                          _message = jsonResponse['message'].toString();
-                          _color = Colors.green;
-                          print('Connexion à Redis réussie !');
-                        } else {
-                          final jsonResponse = json.decode(response.body);
-                          _message = jsonResponse['message'].toString();
+                        _saving = true;
+                      });
+                      await Future.delayed(const Duration(seconds: 1));
+                      setState(() {
+                        _saving = false;
+                      });
+
+
+                      try {
+                        final response = await http.post(
+                          Uri.parse('http://10.0.2.2:6869/user/signup'),
+                          body: {
+                            'name': prenomController.text,
+                            'email': emailController.text,
+                            'password': motDePasseController.text,
+                          },
+                        );
+
+                        setState(() {
+                          if (response.statusCode == 200) {
+                            final jsonResponse = json.decode(response.body);
+                            _message = jsonResponse['message'].toString();
+                            _color = Colors.green;
+                            print('Connexion à Redis réussie !');
+                          } else {
+                            final jsonResponse = json.decode(response.body);
+                            _message = jsonResponse['message'].toString();
+                            _color = Colors.red;
+                            print(
+                                'Erreur de connexion au serveur : ${response.statusCode} => $_message');
+                          }
+                        });
+                      } catch (error) {
+                        print('Erreur de connexion à Redis : $error');
+                        setState(() {
+                          _message = error.toString();
                           _color = Colors.red;
-                          print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
-                        }
-                      });
-                    }
-                    catch (error)
-                    {
-                      print('Erreur de connexion à Redis : $error');
-                      setState((){
-                        _message = error.toString();
-                        _color = Colors.red;
-                      });
+                        });
+                      }
                     }
                   },
                   color: kPrimaryBlue,
@@ -176,6 +178,7 @@ class _RegistrationScreenState extends State<Register> {
           ),
         ),
       ),
+    ),
     );
   }
 }
