@@ -130,9 +130,6 @@ class _RegistrationScreenState extends State<Register> {
 
 
                       try {
-                        print(prenomController.text);
-                        print(emailController.text);
-                        print(motDePasseController.text);
                         final response = await http.post(
                           Uri.parse('http://10.0.2.2:6869/user/signup'),
                           body: {
