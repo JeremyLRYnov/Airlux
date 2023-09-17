@@ -19,6 +19,7 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController motDePasseController = TextEditingController();
   bool _saving = false;
@@ -49,7 +50,8 @@ class _Login extends State<Login> {
           child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child : SingleChildScrollView(
-
+                child: Form(
+                  key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,17 +64,23 @@ class _Login extends State<Login> {
                     const SizedBox(
                       height: 48.0,
                     ),
-                    TextField(
+                    TextFormField(
                       controller: emailController,
                       decoration: kTextFieldDecoration.copyWith(
                         hintText: 'Entrez votre email',
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Entrez votre email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(
                       height: 24.0,
                     ),
 
-                    TextField(
+                    TextFormField(
                       obscureText: _obscureText,
                       controller: motDePasseController,
                       decoration: kTextFieldDecoration.copyWith(
@@ -88,6 +96,12 @@ class _Login extends State<Login> {
                           child: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
                         ),
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Entrez votre mot de passe';
+                        }
+                        return null;
+                      },
                     ),
 
                     const SizedBox(
@@ -97,75 +111,54 @@ class _Login extends State<Login> {
                     RectangleButton(
                       title: 'SE CONNECTER',
                       onPressed: () async {
-                        if (emailController.text.isEmpty ||
-                            motDePasseController.text.isEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Champs obligatoires"),
-                                content: Text("Veuillez remplir tous les champs."),
-                                actions: [
-                                  TextButton(
-                                    child: Text("OK"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                          return;
-                        }
-                        setState(() {
-                          _saving = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 1));
-                        setState(() {
-                          _saving = false;
-                        });
+                        if (_formKey.currentState!.validate()) {
+                          // Le formulaire est valide, procédez ici
+                          setState(() {
+                            _saving = true;
+                          });
+                          await Future.delayed(const Duration(seconds: 1));
+                          setState(() {
+                            _saving = false;
+                          });
 
-                        try
-                        {
-                          final response = await http.post(
-                            // TODO put IP inside a conf file
-                            Uri.parse('http://10.0.2.2:6869/user/signin'),
-                            body: {
-                              'email': emailController.text,
-                              'password': motDePasseController.text,
-                            },
-                          );
-                          if (response.statusCode == 200) {
-                            print('Connexion à Redis réussie !');
-
-                            final jsonResponse = json.decode(response.body);
-                            final String token = jsonResponse['token'].toString();
-                            final String userId = jsonResponse['result']['id'].toString();
-                            final String email = jsonResponse['result']['email'].toString();
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('token', token);
-                            await prefs.setString('userId', userId);
-                            await prefs.setString('email', email);
-                            print("id :" + userId);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BuildingListPage()),
+                          try {
+                            final response = await http.post(
+                              // TODO mettre l'IP dans un fichier de configuration
+                              Uri.parse('http://10.0.2.2:6869/user/signin'),
+                              body: {
+                                'email': emailController.text,
+                                'password': motDePasseController.text,
+                              },
                             );
-                          } else {
-                            final jsonResponse = json.decode(response.body);
-                            setState(() {
-                              _message = jsonResponse['message'].toString();
-                            });
-                            print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
+                            if (response.statusCode == 200) {
+                              print('Connexion à Redis réussie !');
+
+                              final jsonResponse = json.decode(response.body);
+                              final String token = jsonResponse['token'].toString();
+                              final String userId = jsonResponse['result']['id'].toString();
+                              final String email = jsonResponse['result']['email'].toString();
+                              final prefs = await SharedPreferences.getInstance();
+                              await prefs.setString('token', token);
+                              await prefs.setString('userId', userId);
+                              await prefs.setString('email', email);
+                              print("id :" + userId);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => BuildingListPage()),
+                              );
+                            } else {
+                              final jsonResponse = json.decode(response.body);
+                              setState(() {
+                                _message = jsonResponse['message'].toString();
+                              });
+                              print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
+                            }
+                          } catch (error) {
+                            print('Erreur de connexion à Redis : $error');
                           }
                         }
-                        catch (error)
-                        {
-                          print('Erreur de connexion à Redis : $error');
-                        }
-
-                      }, color: kPrimaryBlue,
+                      },
+                      color: kPrimaryBlue,
                     ),
                     const SizedBox(
                       height: 16.0,
@@ -184,6 +177,7 @@ class _Login extends State<Login> {
               ),
           ),
         ),
+      ),
     );
   }
 }
