@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { userRepository } from '../models/user.models.js'
+import { userRepository } from '../models/user.models.js';
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const signup = async (req, res) => {
     console.log(req.body);
@@ -17,10 +18,7 @@ export const signup = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "Un user est déjà enregistré sous ce nom." });
     }
-    // if (req.body.password !== confirmPassword) {
-    //   return res.status(400).json({ message: "Passwords don't match." });
-    // }
-  
+
     //hash password
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     const user = await userRepository.createAndSave({ name: `${name}`, email, password: hashedPassword, admin });
@@ -30,7 +28,19 @@ export const signup = async (req, res) => {
     });
     const { entityId, password, ...rest } = user.toJSON();
     const data = { id: user.entityId, ...rest };
-    res.status(200).json({message: "Inscription réussi.", result: data, token });
+    res.status(200).json({message: "Inscription réussi", result: data, token });
+
+    //Data to send in the socket
+    const dataToSend = {
+      id: user.entityId,
+      name: name,
+      email: email,
+      password: hashedPassword, 
+      admin: admin
+    };
+
+    syncService.syncData(dataToSend, 'user', 'create');
+    
 };
 
 export const signin = async (req, res) => {
@@ -66,12 +76,26 @@ export const updateUser = async (req, res) => {
   await userRepository.save(user)
 
   res.status(200).json({ result: user })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: id,
+    name: user.name,
+    email: user.email,
+    password: user.password, 
+    admin: user.admin
+  };
+
+  syncService.syncData(dataToSend, 'user', 'update');
 }
 
 export const deleteUser = async (req, res) => {
   const { id } = req.params
   await userRepository.remove(id)
   res.status(200).json({ result: 'User ' + id + ' Supprimé avec succès.' })
+
+  //WebSocket
+  syncService.syncData({id: id}, 'user', 'delete');
 }
 
 export const getUser = async (req, res) => {
@@ -83,4 +107,3 @@ export const getUsers = async (req, res) => {
     const users = await userRepository.search().return.all();
     res.status(200).json({ result: users });
 };
-// Path: docker/local_api/app/controller/user.controller.js

@@ -1,4 +1,5 @@
 import { sensorRepository } from '../models/sensor.models.js'
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const createSensor = async (req, res) => {
   const { name, sensorId ,roomId, value, unit } = req.body
@@ -11,6 +12,18 @@ export const createSensor = async (req, res) => {
   const { entityId, ...rest } = sensor.toJSON()
   const data = { id: sensor.entityId, ...rest }
   res.status(200).json({ result: data })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: sensor.entityId,
+    sensorId: sensorId,
+    name: name,
+    roomId: roomId,
+    value: value, 
+    unit: unit
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'create');
 }
 
 export const getSensors = async (req, res) => {
@@ -36,6 +49,18 @@ export const updateSensor = async (req, res) => {
   await sensorRepository.save(sensor)
 
   res.status(200).json({ result: sensor })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: id,
+    name: sensor.name,
+    roomId: sensor.roomId,
+    value: sensor.value, 
+    unit: sensor.unit
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'update');
+
 }
 
 export const updateSensorValue = async (sensorId, newValue) => {
@@ -53,12 +78,22 @@ export const updateSensorValue = async (sensorId, newValue) => {
   } catch (error) {
     console.error(`Erreur lors de la mise à jour du sensor ${sensorId} :`, error);
   }
+
+  //Data to send in the socket
+  const dataToSend = {
+    sensorId: sensorId,
+    value: newValue
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'updateStatus');
 };
 
 export const deleteSensor = async (req, res) => {
   const { id } = req.params
   await sensorRepository.remove(id)
   res.status(200).json({ message: 'Sensor ' + id + ' Supprimé avec succès.' })
+
+  syncService.syncData({id: id}, 'sensor', 'delete');
 }
 
 export const getSensorsByRoomId = async (req, res) => {
