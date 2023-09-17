@@ -4,7 +4,7 @@ module.exports = app => {
     var router = require("express").Router();
   
     // Create a new Building
-    router.post("/", buildings.create);
+    router.post("/create", buildings.create);
   
     // Retrieve all Buildings
     router.get("/", buildings.findAll);
@@ -21,6 +21,6 @@ module.exports = app => {
     // Delete all Buildings
     router.delete("/", buildings.deleteAll);
   
-    app.use('/api/buildings', router);
+    app.use('/building', router);
   };
   

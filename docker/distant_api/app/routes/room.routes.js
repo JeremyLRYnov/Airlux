@@ -3,7 +3,7 @@ module.exports = app => {
     var router = require("express").Router();
   
     // Create a new Room
-    router.post("/", rooms.create);
+    router.post("/create", rooms.create);
 
     // Retrieve all Rooms from a specific building
     router.get("/building/:buildingId", rooms.findAllByBuilding);
@@ -26,6 +26,6 @@ module.exports = app => {
     // Delete all Rooms from a specific building
     router.delete("/building/:buildingId", rooms.deleteAllByBuilding);
   
-    app.use('/api/rooms', router);
+    app.use('/room', router);
   };
   
