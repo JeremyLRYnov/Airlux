@@ -68,7 +68,7 @@ jobs:
           docker ps
       
       - name: Run unit tests
-        run: npm run test:unit
+        run: npm run test:unit --coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4-beta
         env:
