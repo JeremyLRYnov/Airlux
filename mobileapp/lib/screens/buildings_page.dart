@@ -85,7 +85,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
 
   Future<void> navigateToHomePage(String entityId) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selectedBuildingEntityId', entityId);
+    await prefs.setString('buildingId', entityId);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => FooterMenu(),
     ));

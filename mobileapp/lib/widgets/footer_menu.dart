@@ -19,7 +19,7 @@ class _FooterMenuState extends State<FooterMenu> {
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   final screens = [
     const HomePage(),
-    const RoomPage(),
+    RoomPage(),
     const ScriptPage(),
     const SettingsPage(),
   ];
