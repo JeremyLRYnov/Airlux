@@ -133,7 +133,7 @@ void connectionWifi() {
 void gestionConnectedObjects(){
       gestionSensors();
       gestionSwitchs();
-      delay(5000);
+      delay(3000);
 }
 
 void gestionSensors(){
