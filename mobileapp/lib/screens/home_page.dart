@@ -14,6 +14,7 @@ import '../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
   static const String id = 'HomePage';
 
   @override
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   Timer? timer;
 
+  List<String> entityIds = [];
+
   void startTimer() {
     const duration = Duration(seconds: 1);
     timer = Timer.periodic(duration, (_) {
@@ -42,8 +45,6 @@ class _HomePageState extends State<HomePage> {
       getSwitchValue();
     });
   }
-
-
 
   void _onItemSelected(int index) {
     setState(() {
@@ -55,13 +56,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    switchId = "01HA71KKG9KDHD8G1N7RD7QB4C";
-    tempId = "01HA6ZKPJ53QDXV4WNHMBAAJ6Z";
-    humId = "01HAKPXRX1JPB039B981D8G2B5";
-    // Démarrez le minuteur lorsque le widget est initialisé.
+    recupSensorsIds();
+    recupSwitchIds();
     startTimer();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +70,7 @@ class _HomePageState extends State<HomePage> {
         return false;
       },
       child: Scaffold(
-        body:
-        Column(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
@@ -125,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           Column(
-                            children:[
+                            children: [
                               DeviceItem(
                                 icon: Icons.ac_unit_rounded,
                                 text: "Température",
@@ -140,7 +137,9 @@ class _HomePageState extends State<HomePage> {
                                   icon: Icons.light_rounded,
                                   text: "Lumière",
                                   value: lightState,
-                                  color: lightState == 'allumée' ? kPrimaryButtonActive : kPrimaryButtonInactive,
+                                  color: lightState == 'allumée'
+                                      ? kPrimaryButtonActive
+                                      : kPrimaryButtonInactive,
                                 ),
                               ),
                             ],
@@ -203,13 +202,90 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> recupSensorsIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/sensor/');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final result = jsonData['result'];
+          for (var sensorData in result) {
+            final name = sensorData['name'] as String?;
+            final entityId = sensorData['entityId'] as String;
+
+            if (name == "temperature") {
+              tempId = entityId;
+            } else if (name == "humidite") {
+              humId = entityId;
+            }
+          }
+        }
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> recupSwitchIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/switch/');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final result = jsonData['result'];
+          for (var switchData in result) {
+            final name = switchData['name'] as String?;
+            if (name == "lumiere") {
+              final entityId = switchData['entityId'] as String;
+              entityIds.add(entityId);
+              switchId = entityIds.isNotEmpty ? entityIds[0] : '';
+            }
+          }
+        }
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> switchLight() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
     switchId = "01HA71KKG9KDHD8G1N7RD7QB4C";
 
     try {
-      final url = Uri.parse('http://10.0.2.2:6869/switch/updateStatus/$switchId');
+      final url =
+          Uri.parse('http://10.0.2.2:6869/switch/updateStatus/$switchId');
       final response = await http.patch(
         url,
         headers: {
@@ -230,13 +306,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
-
   Future<void> getTempValue() async {
-
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
-
 
     try {
       final url = Uri.parse('http://10.0.2.2:6869/sensor/$tempId');
@@ -256,18 +328,15 @@ class _HomePageState extends State<HomePage> {
           final result = jsonData['result'];
           final value = result['value'];
 
+          final roundedValue = value.toStringAsFixed(2);
+          final unit = result['unit'];
 
-            final roundedValue = value.toStringAsFixed(2);
-            final unit = result['unit'];
-
-            final temperatureValue = '$roundedValue $unit';
-            setState(() {
-              this.tempVal = temperatureValue;
-            });
-          }
-           else {
-            print('La valeur n\'est pas de type double');
-
+          final temperatureValue = '$roundedValue $unit';
+          setState(() {
+            this.tempVal = temperatureValue;
+          });
+        } else {
+          print('La valeur n\'est pas de type double');
         }
       } else {
         print(response.body);
@@ -278,10 +347,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getHumValue() async {
-
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
-
 
     try {
       final url = Uri.parse('http://10.0.2.2:6869/sensor/$humId');
@@ -302,14 +369,13 @@ class _HomePageState extends State<HomePage> {
           final value = result['value'];
           final unit = result['unit'];
 
-            final humidityValue = '$value $unit';
-            setState(() {
-              this.humVal = humidityValue;
-            });
-          } else {
-            print('La valeur n\'est pas de type double');
-          }
-
+          final humidityValue = '$value $unit';
+          setState(() {
+            this.humVal = humidityValue;
+          });
+        } else {
+          print('La valeur n\'est pas de type double');
+        }
       } else {
         print(response.body);
       }
@@ -319,7 +385,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getSwitchValue() async {
-
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
 
@@ -340,9 +405,9 @@ class _HomePageState extends State<HomePage> {
         if (jsonData['result'] != null) {
           final result = jsonData['result'];
           final status = result['status'];
-            setState(() {
-              this.lightState = status == true ? 'allumée' : 'éteinte';
-            });
+          setState(() {
+            this.lightState = status == true ? 'allumée' : 'éteinte';
+          });
         }
       } else {
         print(response.body);
@@ -351,5 +416,4 @@ class _HomePageState extends State<HomePage> {
       print(error);
     }
   }
-
 }
