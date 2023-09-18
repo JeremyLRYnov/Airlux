@@ -76,4 +76,22 @@ class SyncService {
   }
 }
 
+const wss = new WebSocket.Server({ port: 8081 });  
+
+wss.on('connection', (ws) => {
+  console.log("Connexion WebSocket établie avec succès")
+  ws.on('message', async message => {
+    try {
+      const data = JSON.parse(message);
+      console.log('Message reçu :', data);
+    } catch (error) {
+      console.error('Erreur lors de l"analyse du message JSON :', error);
+    }
+  });
+  
+  ws.on('close', () => {
+    console.log('Connexion WebSocket fermée.');
+  });
+});
+
 export const syncService = new SyncService();

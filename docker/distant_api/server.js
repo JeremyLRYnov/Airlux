@@ -83,6 +83,24 @@ wss.on('connection', (ws) => {
     } catch (error) {
       console.error('Erreur lors de l"analyse du message JSON :', error);
     }
+
+    //Envoit des données avec la WebSocket vers Redis
+    function syncDataToRedis(data, entityType, action) {
+      const sendData = {
+        type: entityType,
+        action: action,
+        data: data,
+        origin: 'distant'
+      };
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(sendData));
+        console.log('Message envoyé');
+      } else {
+        console.error('Connexion WebSocket non disponible');
+      }
+    }
+
+    module.exports = { syncDataToRedis };
   }); 
   
   ws.on('close', () => {
@@ -90,3 +108,6 @@ wss.on('connection', (ws) => {
   });
   
 });
+
+
+
