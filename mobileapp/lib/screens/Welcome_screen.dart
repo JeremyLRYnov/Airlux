@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobileapp/screens/Login.dart';
 import 'package:mobileapp/screens/register.dart';
 import 'package:mobileapp/screens/settings_page.dart';
@@ -37,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Expanded(
                   child: SizedBox(
                     height: 200.0,
-                    child: Image.asset('assets/images/logo.png'),
+                    child: Image.asset('assets/images/logo.png').animate().fadeIn(duration: 500.ms).move(duration: 500.ms),
 
                   ),
                 ),
@@ -54,7 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   MaterialPageRoute(builder: (context) => const Login()),
                 );
               }, color: kPrimaryBlue,
-            ),
+            ).animate(delay: 500.ms).fadeIn(duration: 500.ms).move(duration: 500.ms),
             const SizedBox(
               height: 24.0,
             ),
@@ -66,7 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   MaterialPageRoute(builder: (context) => const Register()),
                 );
               }, color: kPrimaryBlue,
-            ),
+            ).animate(delay: 1000.ms).fadeIn(duration: 500.ms).move(duration: 500.ms),
           ],
         ),
       ),

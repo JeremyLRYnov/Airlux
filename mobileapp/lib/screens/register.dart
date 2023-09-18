@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/settings_page.dart';
@@ -69,7 +70,7 @@ class _RegistrationScreenState extends State<Register> {
                     }
                     return null;
                   },
-                ),
+                ).animate().fadeIn(duration: 300.ms).move(duration: 300.ms),
                 const SizedBox(
                   height: 24.0,
                 ),
@@ -84,7 +85,7 @@ class _RegistrationScreenState extends State<Register> {
                     }
                     return null;
                   },
-                ),
+                ).animate(delay: 300.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
                 const SizedBox(
                   height: 24.0,
                 ),
@@ -111,7 +112,7 @@ class _RegistrationScreenState extends State<Register> {
                     }
                     return null;
                   },
-                ),
+                ).animate(delay: 600.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
                 const SizedBox(
                   height: 24.0,
                 ),
@@ -131,7 +132,7 @@ class _RegistrationScreenState extends State<Register> {
 
                       try {
                         final response = await http.post(
-                          Uri.parse('http://10.0.2.2:6869/user/signup'),
+                          Uri.parse('${api}user/signup'),
                           body: {
                             'name': prenomController.text,
                             'email': emailController.text,
@@ -163,7 +164,7 @@ class _RegistrationScreenState extends State<Register> {
                     }
                   },
                   color: kPrimaryBlue,
-                ),
+                ).animate(delay: 900.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
                 const SizedBox(
                   height: 16.0,
                 ),

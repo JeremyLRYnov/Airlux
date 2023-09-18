@@ -34,7 +34,7 @@ class _RoomPageState extends State<RoomPage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:6869/room/buildingId/$buildingId'),
+        Uri.parse('${api}room/buildingId/$buildingId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -94,7 +94,7 @@ class _RoomPageState extends State<RoomPage> {
     print(roomId);
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:6869/room/$roomId'),
+        Uri.parse('${api}room/$roomId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -264,7 +264,7 @@ class _RoomPageState extends State<RoomPage> {
                                 );
                                 try {
                                   final response = await http.post(
-                                    Uri.parse('http://10.0.2.2:6869/room/create'),
+                                    Uri.parse('${api}room/create'),
                                     headers: {
                                       'Content-Type': 'application/json',
                                       'Accept': 'application/json',
