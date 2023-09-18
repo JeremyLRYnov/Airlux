@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/room_page.dart';
 import 'package:mobileapp/widgets/device_item.dart';
 import 'package:mobileapp/widgets/room_item.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import '../main.dart';
 
@@ -18,11 +23,45 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
+  late String token;
+  late String switchId;
+  late String tempId;
+  late String humId;
+
+  String tempVal = '';
+  String humVal = '';
+  String lightState = '';
+
+  Timer? timer;
+
+  void startTimer() {
+    const duration = Duration(seconds: 1);
+    timer = Timer.periodic(duration, (_) {
+      getTempValue();
+      getHumValue();
+      getSwitchValue();
+    });
+  }
+
+
+
   void _onItemSelected(int index) {
     setState(() {
       selectedIndex = index;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+
+    switchId = "01HA71KKG9KDHD8G1N7RD7QB4C";
+    tempId = "01HA6ZKPJ53QDXV4WNHMBAAJ6Z";
+    humId = "01HAKPXRX1JPB039B981D8G2B5";
+    // Démarrez le minuteur lorsque le widget est initialisé.
+    startTimer();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +72,8 @@ class _HomePageState extends State<HomePage> {
         return false;
       },
       child: Scaffold(
-        body: Column(
+        body:
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
@@ -85,44 +125,41 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           Column(
-                            children: const [
+                            children:[
                               DeviceItem(
                                 icon: Icons.ac_unit_rounded,
-                                text: "température",
+                                text: "Température",
+                                value: tempVal,
                                 color: kPrimaryButtonActive,
                               ),
-                              DeviceItem(
-                                icon: Icons.light_rounded,
-                                text: "lumière",
-                                color: kPrimaryButtonInactive,
+                              GestureDetector(
+                                onTap: () {
+                                  switchLight();
+                                },
+                                child: DeviceItem(
+                                  icon: Icons.light_rounded,
+                                  text: "Lumière",
+                                  value: lightState,
+                                  color: lightState == 'allumée' ? kPrimaryButtonActive : kPrimaryButtonInactive,
+                                ),
                               ),
                             ],
                           ),
                           Column(
-                            children: const [
+                            children: [
                               DeviceItem(
                                 icon: Icons.water_rounded,
-                                text: "humidité",
-                                color: kPrimaryButtonInactive,
-                              ),
-                              DeviceItem(
-                                icon: Icons.bolt_rounded,
-                                text: "prise",
+                                text: "Humidité",
+                                value: humVal,
                                 color: kPrimaryButtonActive,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: const [
-                              DeviceItem(
-                                icon: Icons.tv_rounded,
-                                text: "télevision",
-                                color: kPrimaryButtonInactive,
                               ),
                             ],
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
                     ),
                     Container(
                       margin: const EdgeInsets.only(bottom: 10.0),
@@ -165,4 +202,154 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<void> switchLight() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+    switchId = "01HA71KKG9KDHD8G1N7RD7QB4C";
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/switch/updateStatus/$switchId');
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        print(jsonData);
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+
+
+  Future<void> getTempValue() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/sensor/$tempId');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final result = jsonData['result'];
+          final value = result['value'];
+
+
+            final roundedValue = value.toStringAsFixed(2);
+            final unit = result['unit'];
+
+            final temperatureValue = '$roundedValue $unit';
+            setState(() {
+              this.tempVal = temperatureValue;
+            });
+          }
+           else {
+            print('La valeur n\'est pas de type double');
+
+        }
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> getHumValue() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/sensor/$humId');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final result = jsonData['result'];
+          final value = result['value'];
+          final unit = result['unit'];
+
+            final humidityValue = '$value $unit';
+            setState(() {
+              this.humVal = humidityValue;
+            });
+          } else {
+            print('La valeur n\'est pas de type double');
+          }
+
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> getSwitchValue() async {
+
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token')!;
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:6869/switch/$switchId');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData['result'] != null) {
+          final result = jsonData['result'];
+          final status = result['status'];
+            setState(() {
+              this.lightState = status == true ? 'allumée' : 'éteinte';
+            });
+        }
+      } else {
+        print(response.body);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
 }
