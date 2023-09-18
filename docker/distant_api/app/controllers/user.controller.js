@@ -103,7 +103,7 @@ exports.signin = async (req, res) => {
     const data = await User.signin(email, password);
     res.send(data);
   } catch (err) {
-    res.status(500).send({
+    res.status(400).send({
       message: err.message || "Une erreur est survenue lors de l'authentification."
     });
   }

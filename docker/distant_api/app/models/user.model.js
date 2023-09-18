@@ -62,10 +62,11 @@ class User {
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         
         if (isPasswordCorrect) {
+          delete user.password;
           const token = jwt.sign({ email: user.email, id: user.id }, process.env.JWT_TOKEN_SECRET, {
             expiresIn: process.env.JWT_EXPIRE,
           });
-          return { user, token };
+          return { result: user, token };
         } else {
           throw { kind: "invalid_credentials", message: "Invalid password" };
         }
