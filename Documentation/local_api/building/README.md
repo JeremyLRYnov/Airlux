@@ -306,6 +306,70 @@ Résultat :
 ```
 On peut remarquer que, du coup, le bureau apparaît deux fois. Il ne faut surtout pas renseigner l'adresse e-mail dans le champ "users" de l'utilisateur qui a créé le bâtiment.
 
+## Recherche de buldings par l'ID d'un user
+
+GET ``http://localhost:6869/building/userId/:id``
+
+Pour notre exemple : ``http://localhost:6869/building/userId/01HA7B9G4A8YHVX21WPCEPCTM0``
+
+Résultat : 
+
+```JSON
+{
+    "result": [
+        {
+            "entityId": "01HA7BBQJJJY0T1H1K0WKB1GYW",
+            "name": "Maison",
+            "createdBy": "01HA7B9G4A8YHVX21WPCEPCTM0",
+            "users": [
+                "jeremy@orange.fr"
+            ]
+        },
+        {
+            "entityId": "01HAF03K78JHSZVFZAVC0Q44A7",
+            "name": "Appartement",
+            "createdBy": "01HA7B9G4A8YHVX21WPCEPCTM0",
+            "users": [
+                "jeremy@orange.fr",
+                "test@test.fr"
+            ]
+        }
+    ]
+}
+```
+
+## Recherche de buildings par l'email d'un user
+
+GET ``http://localhost:6869/building/userEmail/:email``
+
+Pour notre exemple : ``http://localhost:6869/building/userEmail/jeremy@orange.fr``
+
+Résultat :
+
+```JSON
+{
+    "result": [
+        {
+            "entityId": "01HA7BBQJJJY0T1H1K0WKB1GYW",
+            "name": "Maison",
+            "createdBy": "01HA7B9G4A8YHVX21WPCEPCTM0",
+            "users": [
+                "jeremy@orange.fr"
+            ]
+        },
+        {
+            "entityId": "01HAF03K78JHSZVFZAVC0Q44A7",
+            "name": "Appartement",
+            "createdBy": "01HA7B9G4A8YHVX21WPCEPCTM0",
+            "users": [
+                "jeremy@orange.fr",
+                "test@test.fr"
+            ]
+        }
+    ]
+}
+```
+
 ____
 
 Vous pouvez retrouver les différentes routes ici :

@@ -1,5 +1,11 @@
 import { buildingRepository } from '../models/building.models.js'
 
+import { roomRepository } from '../models/room.models.js'
+import { sensorRepository } from '../models/sensor.models.js'
+import { switchRepository } from '../models/switch.models.js'
+
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
+
 export const createBuilding = async (req, res) => {
   const { name, createdBy, users } = req.body
   const existingBuilding = await buildingRepository.search().where('name').is.equalTo(name).return.first()
@@ -11,6 +17,16 @@ export const createBuilding = async (req, res) => {
   const { entityId, ...rest } = building.toJSON()
   const data = { id: building.entityId, ...rest }
   res.status(200).json({ result: data })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: building.entityId,
+    name: name,
+    createdBy: createdBy,
+    users: users
+  };
+
+  syncService.syncData(dataToSend, 'building', 'create');
 }
 
 export const getBuildings = async (req, res) => {
@@ -63,12 +79,51 @@ export const updateBuilding = async (req, res) => {
   await buildingRepository.save(building)
 
   res.status(200).json({ result: building })
+
+  const dataToSend = {
+    id: id,
+    name: building.name,
+    createdBy: building.createdBy,
+    users: building.users
+  };
+
+  syncService.syncData(dataToSend, 'building', 'update');
 }
 
 export const deleteBuilding = async (req, res) => {
-  const { id } = req.params
-  await buildingRepository.remove(id)
-  res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' })
+  const { id } = req.params;
+
+  try {
+    const roomsInBuilding = await roomRepository.search().where('buildingId').is.equalTo(id).return.all();
+
+    for (const room of roomsInBuilding) {
+      const roomId = room.entityId;
+
+      const sensorsInRoom = await sensorRepository.search().where('roomId').is.equalTo(roomId).return.all();
+
+      for (const sensor of sensorsInRoom) {
+        await sensorRepository.remove(sensor.entityId);
+      }
+
+      const switchesInRoom = await switchRepository.search().where('roomId').is.equalTo(roomId).return.all();
+
+      for (const _switch of switchesInRoom) {
+        await switchRepository.remove(_switch.entityId);
+      }
+
+      await roomRepository.remove(roomId);
+    }
+
+    await buildingRepository.remove(id);
+    res.status(200).json({ message: 'Building ' + id + ' Supprimé avec succès.' });
+
+    syncService.syncData({id: id}, 'building', 'delete');
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Une erreur est survenue lors de la suppression du building.' });
+  }
 }
+
 
 // Path: docker/local_api/app/controller/building.controller.js

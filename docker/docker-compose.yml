@@ -20,6 +20,7 @@ services:
       container_name: api_local
       depends_on:
         - redis-stack
+        - mysql
       build: ./local_api
       restart: unless-stopped
       env_file: ./.env
@@ -39,8 +40,13 @@ services:
         - MYSQL_DATABASE=$MYSQLDB_DATABASE
       ports:
         - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-      volumes:  
-        - ./mysql/data:/var/lib/mysql 
+      volumes:
+      - ./mysql/data:/var/lib/mysql
+      healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        interval: 10s
+        timeout: 10s
+        retries: 3
 
     # Création du conteneur API distante
     appmysql:
@@ -78,6 +84,8 @@ services:
         GF_DATABASE_NAME: $MYSQLDB_DATABASE
         GF_DATABASE_USER: $MYSQLDB_USER
         GF_DATABASE_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+      volumes:
+        - ./grafana/dashboards:/var/lib/grafana/dashboards
 
     # Création du container Mosquitto       
     mosquitto:

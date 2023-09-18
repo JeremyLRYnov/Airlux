@@ -1,16 +1,29 @@
 import { sensorRepository } from '../models/sensor.models.js'
+import { syncService } from '../WebSocket/ServeurWebSocket.js';
 
 export const createSensor = async (req, res) => {
   const { name, sensorId ,roomId, value, unit } = req.body
-  const existingSensor = await sensorRepository.search().where('name').is.equalTo(name).return.first()
-  // check if sensor already registered with the name
-  if (existingSensor) {
-    return res.status(400).json({ message: 'Un sensor est déjà enregistré sous ce nom.' })
-  }
+  // const existingSensor = await sensorRepository.search().where('name').is.equalTo(name).return.first()
+  // // check if sensor already registered with the name
+  // if (existingSensor) {
+  //   return res.status(400).json({ message: 'Un sensor est déjà enregistré sous ce nom.' })
+  // }
   const sensor = await sensorRepository.createAndSave({ name: `${name}`, sensorId ,roomId, value, unit })
   const { entityId, ...rest } = sensor.toJSON()
   const data = { id: sensor.entityId, ...rest }
   res.status(200).json({ result: data })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: sensor.entityId,
+    sensorId: sensorId,
+    name: name,
+    roomId: roomId,
+    value: value, 
+    unit: unit
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'create');
 }
 
 export const getSensors = async (req, res) => {
@@ -36,6 +49,18 @@ export const updateSensor = async (req, res) => {
   await sensorRepository.save(sensor)
 
   res.status(200).json({ result: sensor })
+
+  //Data to send in the socket
+  const dataToSend = {
+    id: id,
+    name: sensor.name,
+    roomId: sensor.roomId,
+    value: sensor.value, 
+    unit: sensor.unit
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'update');
+
 }
 
 export const updateSensorValue = async (sensorId, newValue) => {
@@ -53,12 +78,31 @@ export const updateSensorValue = async (sensorId, newValue) => {
   } catch (error) {
     console.error(`Erreur lors de la mise à jour du sensor ${sensorId} :`, error);
   }
+
+  //Data to send in the socket
+  const dataToSend = {
+    sensorId: sensorId,
+    value: newValue
+  };
+
+  syncService.syncData(dataToSend, 'sensor', 'updateStatus');
 };
 
 export const deleteSensor = async (req, res) => {
   const { id } = req.params
   await sensorRepository.remove(id)
   res.status(200).json({ message: 'Sensor ' + id + ' Supprimé avec succès.' })
+
+  syncService.syncData({id: id}, 'sensor', 'delete');
+}
+
+export const getSensorsByRoomId = async (req, res) => {
+  const { id } = req.params
+  const sensors = await sensorRepository.search().where('roomId').is.equalTo(id).return.all()
+  if (!sensors) {
+    return res.status(404).json({ message: 'Aucun sensor trouvé pour cette chambre.' })
+  }
+  res.status(200).json({ result: sensors })
 }
 
 // Path: docker/local_api/app/controller/sensor.controller.js

@@ -1,22 +1,27 @@
 const { db } = require("./db.js");
+const { v4: uuidv4 } = require('uuid');
 
 class Building {
   constructor(building) {
+    this.id = building.id;
     this.name = building.name;
     this.createdBy = building.createdBy;
   }
 
   static async create(newBuilding) {
     try {
+      if(!newBuilding.id) {
+        newBuilding.id = uuidv4();  // Génére un UUID si aucun ID n'est fourni
+      }
       const [result] = await db.query("INSERT INTO Buildings SET ?", newBuilding);
-      console.log("created building: ", { id: result.insertId, ...newBuilding });
-      return { id: result.insertId, ...newBuilding };
+      console.log("created building: ", { id: newBuilding.id, ...newBuilding });
+      return { id: newBuilding.id, ...newBuilding };
     } catch (error) {
       console.log("erreur: ", error);
       throw error;
     }
   }
-
+  
   static async findById(id) {
     try {
       const [results] = await db.query("SELECT * FROM Buildings WHERE id = ?", [id]);
