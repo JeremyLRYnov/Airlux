@@ -5,8 +5,9 @@ class SyncService {
     this.ws = null;
     this.retryCount = 0;
     this.maxRetries = 30; // Maximum number of retries
-    this.isConnected = false; 
+    this.isConnected = false;
     this.connect();
+    this.messageQueue = [];
   }
 
   connect() {
@@ -32,6 +33,13 @@ class SyncService {
     this.retryCount = 0; 
     console.log("Connexion WebSocket établie avec succès.");
     setTimeout(() => this.checkConnection(), 60000);
+
+    while (this.messageQueue.length > 0) {
+      const message = this.messageQueue.shift();
+      this.ws.send(JSON.stringify(message));
+      console.log('Send 2');
+      console.log('Message de la file d"attente envoyé');
+    }
   }
 
   onError() {
@@ -68,9 +76,17 @@ class SyncService {
       data: data,
     };
     if (this.ws.readyState === WebSocket.OPEN) {
+        // while (this.messageQueue.length > 0) {
+        //   const message = this.messageQueue.shift();
+        //   this.ws.send(JSON.stringify(message));
+        //   console.log('Message de la file d"attente envoyé');
+        // }
+      console.log('Send 1');
       this.ws.send(JSON.stringify(sendData));
       console.log('Message envoyé');
     } else {
+      this.messageQueue.push(sendData);
+      console.error('Dans le Tampon');
       console.error('Connexion WebSocket non disponible');
     }
   }
