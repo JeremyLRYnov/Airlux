@@ -25,9 +25,9 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   late String token;
-  late String switchId = "";
-  late String tempId ="";
-  late String humId="";
+  late String switchId = '';
+  late String tempId = '';
+  late String humId = '';
 
   String tempVal = '';
   String humVal = '';
