@@ -25,9 +25,9 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   late String token;
-  late String switchId;
-  late String tempId;
-  late String humId;
+  late String switchId = "";
+  late String tempId ="";
+  late String humId="";
 
   String tempVal = '';
   String humVal = '';
@@ -327,14 +327,15 @@ class _HomePageState extends State<HomePage> {
         if (jsonData['result'] != null) {
           final result = jsonData['result'];
           final value = result['value'];
-
-          final roundedValue = value.toStringAsFixed(2);
           final unit = result['unit'];
 
-          final temperatureValue = '$roundedValue $unit';
-          setState(() {
-            this.tempVal = temperatureValue;
-          });
+          if (value != null && unit != null) {
+            final roundedValue = value.toStringAsFixed(2);
+            final temperatureValue = '$roundedValue $unit';
+            setState(() {
+              this.tempVal = temperatureValue;
+            });
+          }
         } else {
           print('La valeur n\'est pas de type double');
         }
@@ -369,10 +370,12 @@ class _HomePageState extends State<HomePage> {
           final value = result['value'];
           final unit = result['unit'];
 
-          final humidityValue = '$value $unit';
-          setState(() {
-            this.humVal = humidityValue;
-          });
+          if (value != null && unit != null) {
+            final humidityValue = '$value $unit';
+            setState(() {
+              this.humVal = humidityValue;
+            });
+          }
         } else {
           print('La valeur n\'est pas de type double');
         }
@@ -405,9 +408,11 @@ class _HomePageState extends State<HomePage> {
         if (jsonData['result'] != null) {
           final result = jsonData['result'];
           final status = result['status'];
-          setState(() {
-            this.lightState = status == true ? 'allumée' : 'éteinte';
-          });
+          if (status != null) {
+            setState(() {
+              this.lightState = status == true ? 'allumée' : 'éteinte';
+            });
+          }
         }
       } else {
         print(response.body);
