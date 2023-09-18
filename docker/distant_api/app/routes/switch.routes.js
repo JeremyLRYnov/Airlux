@@ -3,7 +3,7 @@ module.exports = app => {
     var router = require("express").Router();
   
     // Create a new Switch
-    router.post("/", switches.create);
+    router.post("/create", switches.create);
   
     // Retrieve all Switches 
     router.get("/", switches.findAll);
@@ -29,6 +29,6 @@ module.exports = app => {
     // Delete all Switches from a room
     router.delete("/room/:roomId", switches.deleteAllByRoom);
   
-    app.use('/api/switches', router);
+    app.use('/switch', router);
   };
   

@@ -4,7 +4,7 @@ module.exports = app => {
   var router = require("express").Router();
 
   // Create a new Sensor
-  router.post("/", sensors.create);
+  router.post("/create", sensors.create);
 
   // Retrieve all Sensors
   router.get("/", sensors.findAll);
@@ -30,5 +30,5 @@ module.exports = app => {
   // Delete all Sensors from a specific room
   router.delete("/room/:roomId", sensors.deleteAllByRoom);
 
-  app.use('/api/sensors', router);
+  app.use('/sensor', router);
 };

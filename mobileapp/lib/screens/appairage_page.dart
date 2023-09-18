@@ -17,6 +17,7 @@ class _AppairagePageState extends State<AppairagePage> {
   final _formKey = GlobalKey<FormState>();
   String _ssid = "";
   String _password = "";
+  bool _isObscure = true;
 
   _submit() async {
     print("Submit");
@@ -94,10 +95,21 @@ class _AppairagePageState extends State<AppairagePage> {
                       height: 20.0,
                     ),
                     TextFormField(
+                      obscureText: _isObscure,
                       decoration: kTextFieldDecoration.copyWith(
                         hintText: 'Mot de passe du Wifi',
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            !_isObscure ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
                       ),
-                      obscureText: true,
                       onSaved: (value) => _password = value!,
                     ),
                     SizedBox(
