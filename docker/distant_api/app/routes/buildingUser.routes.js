@@ -21,6 +21,6 @@ module.exports = app => {
     // Find User Id from email
     router.get("/", buildingUsers.findUserIdByEmail);
 
-    app.use('/api/buildingUsers', router);
+    app.use('/buildingUsers', router);
   };
   
