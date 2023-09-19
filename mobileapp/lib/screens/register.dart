@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/settings_page.dart';
@@ -22,8 +23,6 @@ class _RegistrationScreenState extends State<Register> {
   TextEditingController motDePasseController = TextEditingController();
   bool _isObscure = true;
   bool _saving = false;
-  Color _color = Colors.red;
-  String _message = '';
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +119,6 @@ class _RegistrationScreenState extends State<Register> {
                   title: "S'INSCRIRE",
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Le formulaire est valide, procédez ici
                       setState(() {
                         _saving = true;
                       });
@@ -142,38 +140,36 @@ class _RegistrationScreenState extends State<Register> {
 
                         setState(() {
                           if (response.statusCode == 200) {
-                            final jsonResponse = json.decode(response.body);
-                            _message = jsonResponse['message'].toString();
-                            _color = Colors.green;
-                            print('Connexion à Redis réussie !');
+                            Fluttertoast.showToast(
+                              msg: 'Inscription réussie !',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,);
                           } else {
                             final jsonResponse = json.decode(response.body);
-                            _message = jsonResponse['message'].toString();
-                            _color = Colors.red;
-                            print(
-                                'Erreur de connexion au serveur : ${response.statusCode} => $_message');
+                            Fluttertoast.showToast(
+                              msg: 'Impossible de s\'incrire: ${jsonResponse['message']}',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,);
                           }
                         });
                       } catch (error) {
-                        print('Erreur de connexion à Redis : $error');
                         setState(() {
-                          _message = error.toString();
-                          _color = Colors.red;
+                          Fluttertoast.showToast(
+                            msg: 'Erreur de connexion à Redis : $error',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,);
                         });
                       }
                     }
                   },
                   color: kPrimaryBlue,
                 ).animate(delay: 900.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                Center(
-                  child: MessageText(
-                    message: _message,
-                    color: _color,
-                  ),
-                ),
               ],
             ),
           ),

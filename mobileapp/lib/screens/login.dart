@@ -156,7 +156,7 @@ class _Login extends State<Login> {
                               final jsonResponse = json.decode(response.body);
                               setState(() {
                                 Fluttertoast.showToast(
-                                    msg: jsonResponse['message'].toString(),
+                                    msg: 'Impossible de se connecter: ${jsonResponse['message']}',
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     backgroundColor: Colors.black,
