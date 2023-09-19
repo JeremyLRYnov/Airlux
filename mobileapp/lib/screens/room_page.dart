@@ -231,13 +231,13 @@ class _RoomPageState extends State<RoomPage> {
                                   labelText: 'Sous-titre de la pièce',
                                 ),
                                 onChanged: (value) {
-                                  if (value.length <= 16) {
+                                  if (value.length <= 8) {
                                     setState(() {
                                       subtitle = value;
                                     });
                                   }
                                 },
-                                maxLength: 16,
+                                maxLength: 8,
                               ),
                             ],
                           ),

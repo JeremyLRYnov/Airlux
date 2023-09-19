@@ -7,12 +7,12 @@ class DeviceItem extends StatelessWidget {
   final String value;
 
   const DeviceItem({
-    super.key,
+    Key? key,
     required this.text,
     required this.icon,
     required this.color,
     required this.value,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,39 +28,40 @@ class DeviceItem extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(4),
+            child: Icon(
+              icon,
+              color: Colors.white,
+            ),
           ),
-          Icon(icon,
-          color: Colors.white,),
-          Container(
-            margin: const EdgeInsets.all(4),
-          ),
-          Column(
+          Expanded(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-            children:[
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-
+              children: [
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              value,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            ]
           ),
         ],
       ),
     );
   }
 }
+
