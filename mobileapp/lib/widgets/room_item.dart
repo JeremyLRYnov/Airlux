@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobileapp/models/constants.dart';
 
@@ -7,8 +6,11 @@ class RoomItem extends StatelessWidget {
   final double height;
   final String text;
   final String piece;
+  final String roomId;
   final bool isselected;
+  final bool isToDelete;
   final VoidCallback onpressed;
+  final Function(String)? onDelete;
 
   const RoomItem({
     super.key,
@@ -18,6 +20,9 @@ class RoomItem extends StatelessWidget {
     required this.piece,
     required this.isselected,
     required this.onpressed,
+    required this.roomId,
+    this.onDelete,
+    required this.isToDelete,
   });
 
   @override
@@ -35,32 +40,59 @@ class RoomItem extends StatelessWidget {
           color: isselected ? kPrimaryButtonBlue : kPrimaryButtonInactive,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Column(
+        child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-              child: Image.asset(
-                "assets/images/$piece",
-                width: double.infinity,
-              ),
+            Column(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  child: Image.asset(
+                    "assets/images/$piece",
+                    width: double.infinity,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(15),
+                ),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.all(15),
-            ),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            if (isToDelete)
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      onDelete!(roomId);
+                    },
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),
     );
   }
 }
+

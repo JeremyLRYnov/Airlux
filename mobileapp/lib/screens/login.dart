@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/buildings_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
@@ -75,7 +76,7 @@ class _Login extends State<Login> {
                         }
                         return null;
                       },
-                    ),
+                    ).animate().fadeIn(duration: 300.ms).move(duration: 300.ms),
                     const SizedBox(
                       height: 24.0,
                     ),
@@ -102,7 +103,7 @@ class _Login extends State<Login> {
                         }
                         return null;
                       },
-                    ),
+                    ).animate(delay: 300.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
 
                     const SizedBox(
                       height: 24.0,
@@ -123,8 +124,7 @@ class _Login extends State<Login> {
 
                           try {
                             final response = await http.post(
-                              // TODO mettre l'IP dans un fichier de configuration
-                              Uri.parse('http://10.0.2.2:6869/user/signin'),
+                              Uri.parse('${api}user/signin'),
                               body: {
                                 'email': emailController.text,
                                 'password': motDePasseController.text,
@@ -159,7 +159,7 @@ class _Login extends State<Login> {
                         }
                       },
                       color: kPrimaryBlue,
-                    ),
+                    ).animate(delay: 600.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
                     const SizedBox(
                       height: 16.0,
                     ),

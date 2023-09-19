@@ -44,7 +44,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:6869/building'),
+        Uri.parse('${api}building'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -100,7 +100,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
       final jsonData = jsonEncode(await newBuilding.toJson());
       try {
         final response = await http.post(
-          Uri.parse('http://10.0.2.2:6869/building/create'),
+          Uri.parse('${api}building/create'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -123,7 +123,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
   Future<void> removeBuilding(String id) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:6869/building/$id'),
+        Uri.parse('${api}building/$id'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

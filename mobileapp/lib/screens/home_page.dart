@@ -182,9 +182,10 @@ class _HomePageState extends State<HomePage> {
                             isselected: selectedIndex == index,
                             width: 150,
                             height: 150,
+                            isToDelete: false,
                             onpressed: () {
                               _onItemSelected(index);
-                            },
+                            }, roomId: '',
                           );
                         },
                       ),
