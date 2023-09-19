@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -106,11 +107,30 @@ class _RoomPageState extends State<RoomPage> {
         print('Room deleted successfully');
         print(response.body);
         fetchRooms();
+        Fluttertoast.showToast(
+          msg: 'Salle supprimée',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
       } else {
         print(response.body);
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
       }
     } catch (error) {
-      print(error);
+      Fluttertoast.showToast(
+        msg: 'Erreur : $error',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,);
     }
   }
 
@@ -118,7 +138,7 @@ class _RoomPageState extends State<RoomPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.only(top: 80, left: 20),
+        margin: const EdgeInsets.only(top: 80, left: 20, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -276,11 +296,29 @@ class _RoomPageState extends State<RoomPage> {
                                     print(response.body);
                                     Navigator.of(context).pop();
                                     fetchRooms();
+                                    Fluttertoast.showToast(
+                                      msg: 'Salle ajoutée',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                    );
                                   } else {
                                     print(response.body);
+                                    Fluttertoast.showToast(
+                                      msg: response.body,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,);
                                   }
                                 } catch (error) {
-                                  print(error);
+                                  Fluttertoast.showToast(
+                                    msg: 'Erreur : $error',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,);
                                 }
                               },
                               child: const Text('Ajouter'),
