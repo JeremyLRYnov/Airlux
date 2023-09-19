@@ -149,7 +149,7 @@ class _RegistrationScreenState extends State<Register> {
                           } else {
                             final jsonResponse = json.decode(response.body);
                             Fluttertoast.showToast(
-                              msg: 'Impossible de s\'incrire: ${jsonResponse['message']}',
+                              msg: jsonResponse['message'].toString(),
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               backgroundColor: Colors.black,

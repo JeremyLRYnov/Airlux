@@ -119,7 +119,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
           fetchBuildings();
         } else {
           Fluttertoast.showToast(
-            msg: 'Impossible d\'ajouter le batiment: ${response.body}',
+            msg: response.body,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.black,
@@ -156,7 +156,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
         fetchBuildings();
       } else {
         Fluttertoast.showToast(
-          msg: 'Impossible de supprimer le batiment: ${response.body}',
+          msg: response.body,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.black,

@@ -113,7 +113,6 @@ class _Login extends State<Login> {
                       title: 'SE CONNECTER',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Le formulaire est valide, procédez ici
                           setState(() {
                             _saving = true;
                           });
@@ -156,7 +155,7 @@ class _Login extends State<Login> {
                               final jsonResponse = json.decode(response.body);
                               setState(() {
                                 Fluttertoast.showToast(
-                                    msg: 'Impossible de se connecter: ${jsonResponse['message']}',
+                                    msg: jsonResponse['message'].toString(),
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.BOTTOM,
                                     backgroundColor: Colors.black,
