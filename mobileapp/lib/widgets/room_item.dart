@@ -57,12 +57,16 @@ class RoomItem extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.all(15),
                 ),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],

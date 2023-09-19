@@ -29,9 +29,9 @@ class _HomePageState extends State<HomePage> {
   late String tempId = '';
   late String humId = '';
 
-  String tempVal = '';
-  String humVal = '';
-  String lightState = '';
+  String tempVal = 'Pas de valeur';
+  String humVal = 'Pas de valeur';
+  String lightState = 'Pas de valeur';
 
   Timer? timer;
 
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 0.0,
                     ),
                     Container(
                       margin: const EdgeInsets.only(bottom: 10.0),
