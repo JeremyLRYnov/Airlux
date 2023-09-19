@@ -1,12 +1,15 @@
 import WebSocket from 'ws';
+import fs from 'fs';
 
 class SyncService {
   constructor() {
     this.ws = null;
     this.retryCount = 0;
     this.maxRetries = 30; // Maximum number of retries
-    this.isConnected = false; 
+    this.isConnected = false;
     this.connect();
+    this.messageQueue = [];
+    this.logFilePath = 'sync_log.json';
   }
 
   connect() {
@@ -32,6 +35,18 @@ class SyncService {
     this.retryCount = 0; 
     console.log("Connexion WebSocket établie avec succès.");
     setTimeout(() => this.checkConnection(), 60000);
+
+    // while (this.messageQueue.length > 0) {
+    //   const message = this.messageQueue.shift();
+    //   this.ws.send(JSON.stringify(message));
+    //   console.log('Send 2');
+    //   console.log('Message de la file d"attente envoyé');
+    // }
+
+    if (fs.existsSync(this.logFilePath)) {
+      // Lire et envoyer les données du fichier journal
+      this.sendLogData();
+    }
   }
 
   onError() {
@@ -39,6 +54,9 @@ class SyncService {
     this.retryCount += 1;
     console.log("Échec de la connexion WebSocket")
     setTimeout(() => this.connect(), 5000 * this.retryCount); 
+    // if (!fs.existsSync(this.logFilePath)) {
+    // this.createLogfile();
+    // }
   }
 
   onClose() {
@@ -68,12 +86,67 @@ class SyncService {
       data: data,
     };
     if (this.ws.readyState === WebSocket.OPEN) {
+    
       this.ws.send(JSON.stringify(sendData));
       console.log('Message envoyé');
     } else {
+      //this.messageQueue.push(sendData);
+      this.logMessage(sendData);
+      console.error('Dans le fichier log');
       console.error('Connexion WebSocket non disponible');
+
     }
   }
+
+  // createLogfile() {
+  //   fs.writeFile(this.logFilePath, '', (err) => {
+  //     if (err) {
+  //       console.error('Erreur lors de la création du fichier log :', err);
+  //     } else {
+  //       console.log('Nouveau fichier log créé.');
+  //     }
+  //   });
+  // }
+  
+logMessage(message) {
+  fs.appendFile(this.logFilePath, JSON.stringify(message) + '\n', (err) => {
+    if (err) {
+      console.error('Erreur lors de l"enregistrement dans le fichier log :', err);
+    }
+  });
 }
+
+  // Lire et envoyer les données du fichier journal
+  sendLogData() {
+    fs.readFile(this.logFilePath, 'utf8', (err, data) => {
+      if (err) {
+        console.error('Erreur lors de la lecture du fichier journal :', err);
+        return;
+      }
+      const lines = data.trim().split('\n');
+      lines.forEach((line) => {
+        if (line.trim() !== '') {
+          try {
+            const message = JSON.parse(line);
+            this.ws.send(JSON.stringify(message));
+            console.log('Message du fichier log envoyé');
+          } catch (parseError) {
+            console.error('Erreur lors de l"analyse du message JSON du fichier log :', parseError);
+          }
+        }
+      });
+      
+      // Une fois que toutes les données du fichier journal ont été envoyées, supprimez le fichier
+      fs.truncate(this.logFilePath, 0, (err) => {
+        if (err) {
+          console.error('Erreur lors de l"effacement du contenu du fichier log :', err);
+        } else {
+          console.log('Contenu du fichier log effacé avec succès.');
+        }
+      });
+    });
+  }
+}
+
 
 export const syncService = new SyncService();
