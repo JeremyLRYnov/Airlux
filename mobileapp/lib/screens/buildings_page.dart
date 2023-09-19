@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
@@ -109,13 +110,28 @@ class _BuildingListPageState extends State<BuildingListPage> {
           body: jsonData,
         );
         if (response.statusCode == 200) {
-          print('done !');
+          Fluttertoast.showToast(
+            msg: 'Batiment ajouté !',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,);
           fetchBuildings();
         } else {
-          print(response.body);
+          Fluttertoast.showToast(
+            msg: 'Impossible d\'ajouter le batiment: ${response.body}',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,);
         }
       } catch (error) {
-        print(error);
+        Fluttertoast.showToast(
+          msg: 'Erreur: $error',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
       }
     }
   }
@@ -131,13 +147,28 @@ class _BuildingListPageState extends State<BuildingListPage> {
         },
       );
       if (response.statusCode == 200) {
-        print('Building deleted successfully');
+        Fluttertoast.showToast(
+          msg: 'Batiment supprimé !',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
         fetchBuildings();
       } else {
-        print('Failed to delete building: ${response.body}');
+        Fluttertoast.showToast(
+          msg: 'Impossible de supprimer le batiment: ${response.body}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
       }
     } catch (error) {
-      print('Error: $error');
+      Fluttertoast.showToast(
+        msg: 'Erreur: $error',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,);
     }
   }
 
