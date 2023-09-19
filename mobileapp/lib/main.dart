@@ -15,15 +15,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
 
-  bool isLocalApiAvailable = false;
-  if (await isApiAvailable(localApi)) {
-    isLocalApiAvailable = true;
-    print("LocalApi");
-    api = localApi;
-  } else {
-    print("distantApi");
-    api = distantApi;
-  }
+  await isApiAvailable();
 
   runApp(
     MultiProvider(
@@ -43,12 +35,22 @@ void main() async {
   );
 }
 
-Future<bool> isApiAvailable(String apiUrl) async {
+Future<void> isApiAvailable() async {
   try {
-    final response = await http.get(Uri.parse(apiUrl)).timeout(Duration(seconds: 2));
-    return response.statusCode == 200;
+    final response = await http.get(Uri.parse(localApi)).timeout(Duration(seconds: 2));
+    if(response.statusCode == 200)
+      {
+        api = localApi;
+        print("LOCAL API");
+      }
+    else
+      {
+        api = distantApi;
+        print("DISTANT API");
+      }
   } catch (error) {
-    return false;
+    api = distantApi;
+    print("DISTANT API");
   }
 }
 Future<bool> isTokenValid(String token) async {
@@ -58,7 +60,7 @@ Future<bool> isTokenValid(String token) async {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
-        });
+        }).timeout(const Duration(seconds: 2));
     if (response.statusCode == 200) {
       return true;
     } else {

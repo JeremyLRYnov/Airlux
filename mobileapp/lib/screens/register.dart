@@ -8,6 +8,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 class Register extends StatefulWidget {
   static const String id = 'register_screen';
 
@@ -127,7 +129,7 @@ class _RegistrationScreenState extends State<Register> {
                         _saving = false;
                       });
 
-
+                      await isApiAvailable();
                       try {
                         final response = await http.post(
                           Uri.parse('${api}user/signup'),

@@ -6,6 +6,8 @@ import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class Building {
   late final String entityId;
   late final String userEmail;
@@ -40,12 +42,14 @@ class _BuildingListPageState extends State<BuildingListPage> {
   late String userId;
 
   Future<void> fetchBuildings() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
+    userId = prefs.getString('userId')!;
 
     try {
       final response = await http.get(
-        Uri.parse('${api}building'),
+        Uri.parse('${api}building/userEmail/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -93,6 +97,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
   }
 
   Future<void> addBuilding() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getString('userId')!;
     final String name = nameController.text;
@@ -137,6 +142,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
   }
 
   Future<void> removeBuilding(String id) async {
+    await isApiAvailable();
     try {
       final response = await http.delete(
         Uri.parse('${api}building/$id'),

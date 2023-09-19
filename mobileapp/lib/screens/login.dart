@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../main.dart';
+
 
 class Login extends StatefulWidget {
 
@@ -121,6 +123,7 @@ class _Login extends State<Login> {
                             _saving = false;
                           });
 
+                          await isApiAvailable();
                           try {
                             final response = await http.post(
                               Uri.parse('${api}user/signin'),

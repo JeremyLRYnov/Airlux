@@ -29,6 +29,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> fetchRooms() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
     buildingId = prefs.getString('buildingId')!;
@@ -92,7 +93,7 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> deleteRoom(String roomId) async {
-    print(roomId);
+    await isApiAvailable();
     try {
       final response = await http.delete(
         Uri.parse('${api}room/$roomId'),
@@ -272,6 +273,7 @@ class _RoomPageState extends State<RoomPage> {
                                 backgroundColor: kPrimaryBlue,
                               ),
                               onPressed: () async {
+                                await isApiAvailable();
                                 final prefs = await SharedPreferences.getInstance();
                                 token = prefs.getString('token')!;
                                 buildingId = prefs.getString('buildingId')!;
