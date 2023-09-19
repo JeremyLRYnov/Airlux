@@ -104,16 +104,15 @@ class _RoomPageState extends State<RoomPage> {
       );
 
       if (response.statusCode == 200) {
-        print('Room deleted successfully');
-        print(response.body);
-        fetchRooms();
         Fluttertoast.showToast(
-          msg: 'Salle supprimée',
+          msg: 'Salle supprimée !',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.black,
           textColor: Colors.white,
         );
+        print(response.body);
+        fetchRooms();
       } else {
         print(response.body);
         Fluttertoast.showToast(
@@ -268,7 +267,10 @@ class _RoomPageState extends State<RoomPage> {
                               },
                               child: const Text('Annuler'),
                             ),
-                            TextButton(
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: kPrimaryBlue,
+                              ),
                               onPressed: () async {
                                 final prefs = await SharedPreferences.getInstance();
                                 token = prefs.getString('token')!;
@@ -293,16 +295,16 @@ class _RoomPageState extends State<RoomPage> {
                                     body: jsonEncode(newRoom.toJson()),
                                   );
                                   if (response.statusCode == 200) {
-                                    print(response.body);
-                                    Navigator.of(context).pop();
-                                    fetchRooms();
                                     Fluttertoast.showToast(
-                                      msg: 'Salle ajoutée',
+                                      msg: 'Salle ajoutée !',
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.BOTTOM,
                                       backgroundColor: Colors.black,
                                       textColor: Colors.white,
                                     );
+                                    print(response.body);
+                                    Navigator.of(context).pop();
+                                    fetchRooms();
                                   } else {
                                     print(response.body);
                                     Fluttertoast.showToast(
