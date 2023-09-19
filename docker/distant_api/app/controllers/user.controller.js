@@ -1,5 +1,5 @@
 const User = require('../models/user.model.js');
-const { syncDataToRedis } = require('../../server.js');
+const webSocketService = require('../WebSocket/serviceWebSocket.js');
 
  // Logique pour gérer les messages WebSocket pour les utilisateurs
 exports.handleWebSocketMessage = async (message) => {
@@ -38,19 +38,19 @@ exports.signup = async (req, res) => {
   // Enregistrer l'utilisateur dans la base de données
   try {
     const data = await User.signup(user);
-    res.send(data);
 
     //Data to send in the socket
     const dataToSend = {
-      id: user.entityId,
-      name: name,
-      email: email,
-      password: hashedPassword, 
-      admin: admin
-    };
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      admin: data.admin,
+    }
 
-    syncDataToRedis(dataToSend, 'user', 'create')
-    
+    webSocketService.syncDataToRedis(dataToSend, 'user', 'create');
+
+    res.send(data);
   } catch (err) {
     res.status(500).send({
       message: err.message || "Une erreur est survenue lors de la création de l'utilisateur."

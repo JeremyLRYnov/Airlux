@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import { WebSocket } from 'ws';
 
 class SyncService {
   constructor() {
@@ -16,6 +16,7 @@ class SyncService {
 
     if (this.ws) {
       this.ws.removeEventListener('open', this.onOpen.bind(this));
+      this.ws.removeEventListener('message', this.onMessage.bind(this));
       this.ws.removeEventListener('error', this.onError.bind(this));
       this.ws.removeEventListener('close', this.onClose.bind(this));
     }
@@ -23,15 +24,28 @@ class SyncService {
     this.ws = new WebSocket('ws://appmysql:8081/');
 
     this.ws.addEventListener('open', this.onOpen.bind(this));
+    this.ws.addEventListener('message', this.onMessage.bind(this));
     this.ws.addEventListener('error', this.onError.bind(this));
     this.ws.addEventListener('close', this.onClose.bind(this));
   }
 
   onOpen() {
-    this.isConnected = true; // Indicateur lorsque la connexion est établie
+    this.isConnected = true; 
     this.retryCount = 0; 
     console.log("Connexion WebSocket établie avec succès.");
     setTimeout(() => this.checkConnection(), 60000);
+  }
+
+  onMessage(event) {
+    try {
+      const data = JSON.parse(event.data);
+      if(data.origin === 'local') {
+        return;
+      }
+      console.log('Message reçu :', data);
+    } catch (error) {
+      console.error('Erreur lors de l"analyse du message JSON :', error);
+    }
   }
 
   onError() {
@@ -54,15 +68,13 @@ class SyncService {
       console.log("Tentative de connexion...")
       this.connect();
     } else {
-      // Prochaine vérification de la connexion
       setTimeout(() => this.checkConnection(), 60000);
     }
   }
 
-  //Envoit des données avec la WebSocket
   syncData(data, entityType, action) {
-    //Informations sur la donnée à envoyer : type(ex: user, sensor,...), action(ex: create, delete, ...) et data(req.body)
     const sendData = {
+      origin: 'local',
       type: entityType,
       action: action,
       data: data,
@@ -75,23 +87,5 @@ class SyncService {
     }
   }
 }
-
-const wss = new WebSocket.Server({ port: 8081 });  
-
-wss.on('connection', (ws) => {
-  console.log("Connexion WebSocket établie avec succès")
-  ws.on('message', async message => {
-    try {
-      const data = JSON.parse(message);
-      console.log('Message reçu :', data);
-    } catch (error) {
-      console.error('Erreur lors de l"analyse du message JSON :', error);
-    }
-  });
-  
-  ws.on('close', () => {
-    console.log('Connexion WebSocket fermée.');
-  });
-});
 
 export const syncService = new SyncService();

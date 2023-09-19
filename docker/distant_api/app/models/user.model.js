@@ -22,6 +22,7 @@ class User {
       console.log('Inserting user:', newUser);
       const [res] = await db.query("INSERT INTO Users SET ?", newUser);
       console.log("Utilisateur créé: ", { id: newUser.id, ...newUser});
+
       return { id: newUser.id, ...newUser };
     } catch (error) {
       console.log("erreur: ", error);

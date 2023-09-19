@@ -38,76 +38,61 @@ setTimeout(() => {
   createTables();
 }, 30000); 
 
+const webSocketService = require('./app/WebSocket/serviceWebSocket');
 
-const userController = require("./app/controllers/user.controller");
-const buildingController = require("./app/controllers/building.controller");
-const buildingUsersController = require("./app/controllers/buildingUser.controller");
-const roomController = require("./app/controllers/room.controller");
-const sensorController = require("./app/controllers/sensor.controller");
-const switchController = require("./app/controllers/switch.controller");
+/*const wss = new WebSocket.Server({ port: 8081 });
 
-const wss = new WebSocket.Server({ port: 8081 });
+async function handleMessage(message) {
+  try {
+    const data = JSON.parse(message);
+    if(data.origin === 'distant') {
+      return;
+    }
+    console.log('Message reçu :', data);
+    
+    switch(data.type) {
+      case 'user':
+        await userController.handleWebSocketMessage(data);
+        break;
 
+      case 'building':
+        await buildingController.handleWebSocketMessageBuilding(data);
+        await buildingUsersController.handleWebSocketMessageBuildingUsers(data);
+        break;
+
+      case 'room':
+        await roomController.handleWebSocketMessage(data);
+        break;
+
+      case 'sensor':
+        await sensorController.handleWebSocketMessage(data);
+        break;
+
+      case 'switch':
+        await switchController.handleWebSocketMessage(data);
+        break;
+
+      default:
+        console.warn('Type de message non reconnu:', data.type);
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'analyse du message JSON :', error);
+  }
+}
+  
 wss.on('connection', (ws) => {
-  console.log("Connexion WebSocket établie avec succès")
+  console.log("Connexion WebSocket établie avec succès");
+  
   ws.on('message', async message => {
-    try {
-      const data = JSON.parse(message);
-      console.log('Message reçu :', data);
-  
-      switch(data.type) {
-        case 'user':
-          await userController.handleWebSocketMessage(data);
-          break;
-  
-        case 'building':
-          await buildingController.handleWebSocketMessageBuilding(data);
-          await buildingUsersController.handleWebSocketMessageBuildingUsers(data);
-          break;
-  
-        case 'room':
-          await roomController.handleWebSocketMessage(data);
-          break;
-  
-        case 'sensor':
-          await sensorController.handleWebSocketMessage(data);
-          break;
-  
-        case 'switch':
-          await switchController.handleWebSocketMessage(data);
-          break;
-  
-        default:
-          console.warn('Type de message non reconnu:', data.type);
-      }
-    } catch (error) {
-      console.error('Erreur lors de l"analyse du message JSON :', error);
-    }
-
-    //Envoit des données avec la WebSocket vers Redis
-    function syncDataToRedis(data, entityType, action) {
-      const sendData = {
-        type: entityType,
-        action: action,
-        data: data,
-        origin: 'distant'
-      };
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(sendData));
-        console.log('Message envoyé');
-      } else {
-        console.error('Connexion WebSocket non disponible');
-      }
-    }
-
-    module.exports = { syncDataToRedis };
-  }); 
+    handleMessage(message);
+  });
   
   ws.on('close', () => {
     console.log('Connexion WebSocket fermée.');
   });
-  
-});
+});*/
+
+
 
 
 
