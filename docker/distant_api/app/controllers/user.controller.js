@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    admin: req.body.admin,
+    admin: req.body.admin !== undefined ? req.body.admin : true,
   });
 
   // Enregistrer l'utilisateur dans la base de données
@@ -62,7 +62,7 @@ exports.addExternalUser = async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password, //mot de passe déjà hashé
-    admin: req.body.admin,
+    admin: req.body.admin !== undefined ? req.body.admin : true,
   });
 
   try {

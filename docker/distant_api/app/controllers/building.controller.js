@@ -25,17 +25,6 @@ exports.create = async (req, res) => {
   }
 
   try {
-    // Check if the user is an admin
-    const user = await User.findById(req.body.createdBy);
-    if (!user.admin) {
-      if(res) {
-        res.status(403).send({
-          message: "User is not authorized to create a building"
-        });
-      }
-      console.error("User is not authorized to create a building");
-      return;
-    }
 
     // Create a Building
     const building = new Building({
