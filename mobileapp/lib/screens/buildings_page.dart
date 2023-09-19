@@ -49,7 +49,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
 
     try {
       final response = await http.get(
-        Uri.parse('${api}building/userEmail/$userId'),
+        Uri.parse('${api}building/userId/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
