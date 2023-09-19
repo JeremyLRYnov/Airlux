@@ -131,7 +131,7 @@ class _Login extends State<Login> {
                                 'email': emailController.text,
                                 'password': motDePasseController.text,
                               },
-                            );
+                            ).timeout(Duration(seconds: 2));
                             if (response.statusCode == 200) {
                               final jsonResponse = json.decode(response.body);
                               final String token = jsonResponse['token'].toString();

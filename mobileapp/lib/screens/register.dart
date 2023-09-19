@@ -138,7 +138,7 @@ class _RegistrationScreenState extends State<Register> {
                             'email': emailController.text,
                             'password': motDePasseController.text,
                           },
-                        );
+                        ).timeout(Duration(seconds: 2));
 
                         setState(() {
                           if (response.statusCode == 200) {
@@ -149,6 +149,7 @@ class _RegistrationScreenState extends State<Register> {
                               backgroundColor: Colors.black,
                               textColor: Colors.white,);
                           } else {
+                            print(response.body);
                             final jsonResponse = json.decode(response.body);
                             Fluttertoast.showToast(
                               msg: jsonResponse['message'].toString(),
@@ -159,6 +160,7 @@ class _RegistrationScreenState extends State<Register> {
                           }
                         });
                       } catch (error) {
+                        print(error);
                         setState(() {
                           Fluttertoast.showToast(
                             msg: 'Erreur de connexion à Redis : $error',
