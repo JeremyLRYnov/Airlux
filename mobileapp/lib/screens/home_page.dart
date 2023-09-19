@@ -37,11 +37,20 @@ class _HomePageState extends State<HomePage> {
 
   List<String> entityIds = [];
 
-  void startTimer() {
-    const duration = Duration(seconds: 1);
+  void startTimerSensors() {
+    const duration = Duration(seconds: 10);
     timer = Timer.periodic(duration, (_) {
+      recupSensorsIds();
+      recupSwitchIds();
       getTempValue();
       getHumValue();
+    });
+  }
+
+  void startTimerSwitchs() {
+    const duration = Duration(seconds: 1);
+    timer = Timer.periodic(duration, (_) {
+      recupSwitchIds();
       getSwitchValue();
     });
   }
@@ -58,7 +67,8 @@ class _HomePageState extends State<HomePage> {
 
     recupSensorsIds();
     recupSwitchIds();
-    startTimer();
+    startTimerSensors();
+    startTimerSwitchs();
   }
 
   @override
@@ -185,7 +195,8 @@ class _HomePageState extends State<HomePage> {
                             isToDelete: false,
                             onpressed: () {
                               _onItemSelected(index);
-                            }, roomId: '',
+                            },
+                            roomId: '',
                           );
                         },
                       ),
@@ -206,7 +217,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> recupSensorsIds() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
-
     try {
       final url = Uri.parse('http://10.0.2.2:6869/sensor/');
       final response = await http.get(
@@ -217,20 +227,24 @@ class _HomePageState extends State<HomePage> {
           'Authorization': 'Bearer $token',
         },
       );
-
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
 
         if (jsonData['result'] != null) {
           final result = jsonData['result'];
-          for (var sensorData in result) {
-            final name = sensorData['name'] as String?;
-            final entityId = sensorData['entityId'] as String;
+          if (result is List && result.isEmpty) {
+            tempId = '';
+            humId = '';
+          } else {
+            for (var sensorData in result) {
+              final name = sensorData['name'] as String?;
+              final entityId = sensorData['entityId'] as String;
 
-            if (name == "temperature") {
-              tempId = entityId;
-            } else if (name == "humidite") {
-              humId = entityId;
+              if (name == "temperature") {
+                tempId = entityId;
+              } else if (name == "humidite") {
+                humId = entityId;
+              }
             }
           }
         }
@@ -262,6 +276,9 @@ class _HomePageState extends State<HomePage> {
 
         if (jsonData['result'] != null) {
           final result = jsonData['result'];
+          if (result is List && result.isEmpty) {
+            switchId = '';
+          }
           for (var switchData in result) {
             final name = switchData['name'] as String?;
             if (name == "lumiere") {
@@ -282,7 +299,6 @@ class _HomePageState extends State<HomePage> {
   Future<void> switchLight() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
-    switchId = "01HA71KKG9KDHD8G1N7RD7QB4C";
 
     try {
       final url =
@@ -311,40 +327,46 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
 
-    try {
-      final url = Uri.parse('http://10.0.2.2:6869/sensor/$tempId');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+    if (tempId != '') {
+      try {
+        final url = Uri.parse('http://10.0.2.2:6869/sensor/$tempId');
+        final response = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          final jsonData = jsonDecode(response.body);
 
-        if (jsonData['result'] != null) {
-          final result = jsonData['result'];
-          final value = result['value'];
-          final unit = result['unit'];
+          if (jsonData['result'] != null) {
+            final result = jsonData['result'];
+            final value = result['value'];
+            final unit = result['unit'];
 
-          if (value != null && unit != null) {
-            final roundedValue = value.toStringAsFixed(2);
-            final temperatureValue = '$roundedValue $unit';
-            setState(() {
-              this.tempVal = temperatureValue;
-            });
+            if (value != null || unit != null) {
+              final roundedValue = value.toStringAsFixed(2);
+              final temperatureValue = '$roundedValue $unit';
+              setState(() {
+                this.tempVal = temperatureValue;
+              });
+            }
+          } else {
+            print('La valeur n\'est pas bonne');
           }
         } else {
-          print('La valeur n\'est pas de type double');
+          print(response.body);
         }
-      } else {
-        print(response.body);
+      } catch (error) {
+        print(error);
       }
-    } catch (error) {
-      print(error);
+    } else {
+      setState(() {
+        this.tempVal = 'Pas de valeur';
+      });
     }
   }
 
@@ -352,74 +374,85 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
 
-    try {
-      final url = Uri.parse('http://10.0.2.2:6869/sensor/$humId');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+    if (humId != '') {
+      try {
+        final url = Uri.parse('http://10.0.2.2:6869/sensor/$humId');
+        final response = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          final jsonData = jsonDecode(response.body);
 
-        if (jsonData['result'] != null) {
-          final result = jsonData['result'];
-          final value = result['value'];
-          final unit = result['unit'];
+          if (jsonData['result'] != null) {
+            final result = jsonData['result'];
+            final value = result['value'];
+            final unit = result['unit'];
 
-          if (value != null && unit != null) {
-            final humidityValue = '$value $unit';
-            setState(() {
-              this.humVal = humidityValue;
-            });
+            if (value != null) {
+              final humidityValue = '$value $unit';
+              setState(() {
+                this.humVal = humidityValue;
+              });
+            }
+          } else {
+            print('La valeur n\'est pas bonne');
           }
         } else {
-          print('La valeur n\'est pas de type double');
+          print(response.body);
         }
-      } else {
-        print(response.body);
+      } catch (error) {
+        print(error);
       }
-    } catch (error) {
-      print(error);
+    } else {
+      setState(() {
+        this.humVal = 'Pas de valeur';
+      });
     }
   }
 
   Future<void> getSwitchValue() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
+    if (switchId != '') {
+      try {
+        final url = Uri.parse('http://10.0.2.2:6869/switch/$switchId');
+        final response = await http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
 
-    try {
-      final url = Uri.parse('http://10.0.2.2:6869/switch/$switchId');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+        if (response.statusCode == 200) {
+          final jsonData = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-
-        if (jsonData['result'] != null) {
-          final result = jsonData['result'];
-          final status = result['status'];
-          if (status != null) {
-            setState(() {
-              this.lightState = status == true ? 'allumée' : 'éteinte';
-            });
+          if (jsonData['result'] != null) {
+            final result = jsonData['result'];
+            final status = result['status'];
+            if (status != null) {
+              setState(() {
+                this.lightState = status == true ? 'allumée' : 'éteinte';
+              });
+            }
           }
+        } else {
+          print(response.body);
         }
-      } else {
-        print(response.body);
+      } catch (error) {
+        print(error);
       }
-    } catch (error) {
-      print(error);
+    } else {
+      setState(() {
+        this.lightState = 'Pas de valeur';
+      });
     }
   }
 }
