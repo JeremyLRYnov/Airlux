@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
     try {
-      final url = Uri.parse('http://10.0.2.2:6869/sensor/');
+      final url = Uri.parse('${api}sensor/');
       final response = await http.get(
         url,
         headers: {
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
     token = prefs.getString('token')!;
 
     try {
-      final url = Uri.parse('http://10.0.2.2:6869/switch/');
+      final url = Uri.parse('${api}switch/');
       final response = await http.get(
         url,
         headers: {
@@ -302,7 +302,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final url =
-          Uri.parse('http://10.0.2.2:6869/switch/updateStatus/$switchId');
+          Uri.parse('${api}switch/updateStatus/$switchId');
       final response = await http.patch(
         url,
         headers: {
@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
 
     if (tempId != '') {
       try {
-        final url = Uri.parse('http://10.0.2.2:6869/sensor/$tempId');
+        final url = Uri.parse('${api}sensor/$tempId');
         final response = await http.get(
           url,
           headers: {
@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> {
 
     if (humId != '') {
       try {
-        final url = Uri.parse('http://10.0.2.2:6869/sensor/$humId');
+        final url = Uri.parse('${api}sensor/$humId');
         final response = await http.get(
           url,
           headers: {
@@ -421,7 +421,7 @@ class _HomePageState extends State<HomePage> {
     token = prefs.getString('token')!;
     if (switchId != '') {
       try {
-        final url = Uri.parse('http://10.0.2.2:6869/switch/$switchId');
+        final url = Uri.parse('${api}switch/$switchId');
         final response = await http.get(
           url,
           headers: {

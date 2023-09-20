@@ -99,7 +99,7 @@ class _SensorsState extends State<Sensors> {
     token = prefs.getString('token')!;
     buildingId = prefs.getString('buildingId')!;
     try {
-      final url = Uri.parse('http://10.0.2.2:6869/room');
+      final url = Uri.parse('${api}room');
       final response = await http.get(
         url,
         headers: {
