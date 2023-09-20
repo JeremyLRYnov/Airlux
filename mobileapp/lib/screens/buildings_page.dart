@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/widgets/footer_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
 
 class Building {
   late final String entityId;
@@ -39,12 +42,14 @@ class _BuildingListPageState extends State<BuildingListPage> {
   late String userId;
 
   Future<void> fetchBuildings() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
+    userId = prefs.getString('userId')!;
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:6869/building'),
+        Uri.parse('${api}building/userId/$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -92,6 +97,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
   }
 
   Future<void> addBuilding() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getString('userId')!;
     final String name = nameController.text;
@@ -100,7 +106,7 @@ class _BuildingListPageState extends State<BuildingListPage> {
       final jsonData = jsonEncode(await newBuilding.toJson());
       try {
         final response = await http.post(
-          Uri.parse('http://10.0.2.2:6869/building/create'),
+          Uri.parse('${api}building/create'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -109,21 +115,37 @@ class _BuildingListPageState extends State<BuildingListPage> {
           body: jsonData,
         );
         if (response.statusCode == 200) {
-          print('done !');
+          Fluttertoast.showToast(
+            msg: 'Batiment ajouté !',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,);
           fetchBuildings();
         } else {
-          print(response.body);
+          Fluttertoast.showToast(
+            msg: response.body,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,);
         }
       } catch (error) {
-        print(error);
+        Fluttertoast.showToast(
+          msg: 'Erreur: $error',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
       }
     }
   }
 
   Future<void> removeBuilding(String id) async {
+    await isApiAvailable();
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:6869/building/$id'),
+        Uri.parse('${api}building/$id'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -131,13 +153,28 @@ class _BuildingListPageState extends State<BuildingListPage> {
         },
       );
       if (response.statusCode == 200) {
-        print('Building deleted successfully');
+        Fluttertoast.showToast(
+          msg: 'Batiment supprimé !',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
         fetchBuildings();
       } else {
-        print('Failed to delete building: ${response.body}');
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,);
       }
     } catch (error) {
-      print('Error: $error');
+      Fluttertoast.showToast(
+        msg: 'Erreur: $error',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,);
     }
   }
 

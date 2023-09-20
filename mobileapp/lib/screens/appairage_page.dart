@@ -2,8 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobileapp/screens/home_page.dart';
+import 'package:mobileapp/screens/sensors_page.dart';
 
 import '../models/constants.dart';
+import '../widgets/footer_menu.dart';
+import 'buildings_page.dart';
 import 'settings_page.dart';
 
 class AppairagePage extends StatefulWidget {
@@ -17,6 +22,7 @@ class _AppairagePageState extends State<AppairagePage> {
   final _formKey = GlobalKey<FormState>();
   String _ssid = "";
   String _password = "";
+  bool _isObscure = true;
 
   _submit() async {
     print("Submit");
@@ -35,6 +41,16 @@ class _AppairagePageState extends State<AppairagePage> {
         print(response);
         // Fermer la connexion
         socket.close();
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        Fluttertoast.showToast(
+          msg: 'Connexion réussie !',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
       } catch (e) {
         print(e);
       }
@@ -52,7 +68,6 @@ class _AppairagePageState extends State<AppairagePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 24.0),
             child: Text(
               'Étape 1 : Connectez-vous à l\'ESP32',
@@ -73,7 +88,8 @@ class _AppairagePageState extends State<AppairagePage> {
                   children: <Widget>[
                     Text(
                       'Étape 2 : Insérez les identifiants WiFi',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 20.0,
@@ -94,10 +110,23 @@ class _AppairagePageState extends State<AppairagePage> {
                       height: 20.0,
                     ),
                     TextFormField(
+                      obscureText: _isObscure,
                       decoration: kTextFieldDecoration.copyWith(
                         hintText: 'Mot de passe du Wifi',
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            !_isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
                       ),
-                      obscureText: true,
                       onSaved: (value) => _password = value!,
                     ),
                     SizedBox(

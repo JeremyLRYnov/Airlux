@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/room_page.dart';
@@ -6,10 +8,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'models/constants.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
+
+  await isApiAvailable();
 
   runApp(
     MultiProvider(
@@ -29,24 +35,38 @@ void main() async {
   );
 }
 
-
-Future<bool> isTokenValid(String token) async {
-  try{
-    final response = await http.get(Uri.parse('http://10.0.2.2:6869/building'),
-    headers: {'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',}
-    );
-    if(response.statusCode == 200) {
-      return true;
-    }
+Future<void> isApiAvailable() async {
+  try {
+    final response = await http.get(Uri.parse(localApi)).timeout(Duration(seconds: 2));
+    if(response.statusCode == 200)
+      {
+        api = localApi;
+        print("LOCAL API");
+      }
     else
       {
-        return false;
+        api = distantApi;
+        print("DISTANT API");
       }
+  } catch (error) {
+    api = distantApi;
+    print("DISTANT API");
   }
-  catch (error)
-  {
+}
+Future<bool> isTokenValid(String token) async {
+  try {
+    final response = await http.get(Uri.parse('${api}building'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        }).timeout(const Duration(seconds: 2));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
     print(error);
     return false;
   }

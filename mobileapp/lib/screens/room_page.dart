@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -19,6 +20,7 @@ class _RoomPageState extends State<RoomPage> {
   late String token;
   late String buildingId;
   late String selectedRoomName = 'Salon';
+  bool isDeleting = false;
 
   @override
   void initState() {
@@ -27,13 +29,14 @@ class _RoomPageState extends State<RoomPage> {
   }
 
   Future<void> fetchRooms() async {
+    await isApiAvailable();
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token')!;
     buildingId = prefs.getString('buildingId')!;
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:6869/room/buildingId/$buildingId'),
+        Uri.parse('${api}room/buildingId/$buildingId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -50,10 +53,13 @@ class _RoomPageState extends State<RoomPage> {
             rooms = List<Map<String, dynamic>>.from(data);
           });
 
-          final roomProvider =
-              Provider.of<RoomProvider>(context, listen: false);
+          final roomProvider = Provider.of<RoomProvider>(context, listen: false);
           final roomList = rooms.map((room) {
+            final roomId = room['entityId'].toString();
             final roomName = room['name'].toString();
+
+            print(roomName + " " +roomId);
+
             String imageAsset = 'logo.png';
 
             if (roomName.contains('Salle de bain')) {
@@ -70,7 +76,7 @@ class _RoomPageState extends State<RoomPage> {
               imageAsset = 'bedroom.jpg';
             }
 
-            return RoomModel(name: roomName, imageUrl: imageAsset);
+            return RoomModel(id: roomId, name: roomName, imageUrl: imageAsset);
           }).toList();
 
           roomProvider.setRooms(roomList);
@@ -86,11 +92,53 @@ class _RoomPageState extends State<RoomPage> {
     }
   }
 
+  Future<void> deleteRoom(String roomId) async {
+    await isApiAvailable();
+    try {
+      final response = await http.delete(
+        Uri.parse('${api}room/$roomId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+          msg: 'Salle supprimée !',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
+        print(response.body);
+        fetchRooms();
+      } else {
+        print(response.body);
+        Fluttertoast.showToast(
+          msg: response.body,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+        );
+      }
+    } catch (error) {
+      Fluttertoast.showToast(
+        msg: 'Erreur : $error',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.only(top: 80, left: 20),
+        margin: const EdgeInsets.only(top: 80, left: 20, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -130,13 +178,15 @@ class _RoomPageState extends State<RoomPage> {
                   } else {
                     imageAsset = 'logo.png';
                   }
-
                   return RoomItem(
                     text: roomName,
                     piece: imageAsset,
                     isselected: true,
                     width: 160,
                     height: 180,
+                    roomId: room['entityId'].toString(),
+                    isToDelete: isDeleting,
+                    onDelete: deleteRoom,
                     onpressed: () {},
                   );
                 },
@@ -145,119 +195,166 @@ class _RoomPageState extends State<RoomPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kPrimaryBlue,
-        onPressed: () {
-          String subtitle = '';
-          String nameToSend = '';
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  return AlertDialog(
-                    title: const Text('Ajouter une pièce'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DropdownButton<String>(
-                          value: selectedRoomName,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedRoomName = newValue!;
-                            });
-                          },
-                          items: <String>[
-                            'Salon',
-                            'Salle de bain',
-                            'Bureau',
-                            'Salle de classe',
-                            'Cuisine',
-                            'Chambre',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        TextField(
-                          decoration: const InputDecoration(
-                            labelText: 'Sous-titre de la pièce',
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                setState(() {
+                  isDeleting = !isDeleting;
+                });
+              },
+              child: Icon(isDeleting ? Icons.close : Icons.delete),
+            ),
+            SizedBox(height: 16),
+            FloatingActionButton(
+              backgroundColor: kPrimaryBlue,
+              onPressed: () {
+                String subtitle = '';
+                String nameToSend = '';
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return AlertDialog(
+                          title: const Text('Ajouter une pièce'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DropdownButton<String>(
+                                value: selectedRoomName,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedRoomName = newValue!;
+                                  });
+                                },
+                                items: <String>[
+                                  'Salon',
+                                  'Salle de bain',
+                                  'Bureau',
+                                  'Salle de classe',
+                                  'Cuisine',
+                                  'Chambre',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                              TextField(
+                                decoration: const InputDecoration(
+                                  labelText: 'Sous-titre de la pièce',
+                                ),
+                                onChanged: (value) {
+                                  if (value.length <= 8) {
+                                    setState(() {
+                                      subtitle = value;
+                                    });
+                                  }
+                                },
+                                maxLength: 8,
+                              ),
+                            ],
                           ),
-                          onChanged: (value) {
-                            setState(() {
-                              subtitle = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Annuler'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          token = prefs.getString('token')!;
-                          buildingId = prefs.getString('buildingId')!;
-                          if(subtitle != '')
-                            {
-                              nameToSend = selectedRoomName + ' ' + subtitle;
-                            }
-                          else
-                            {
-                              nameToSend = selectedRoomName;
-                            }
-                          final newRoom = NewRoom(
-                            name: nameToSend,
-                            buildingId: buildingId,
-                          );
-                          try {
-                            final response = await http.post(
-                              Uri.parse('http://10.0.2.2:6869/room/create'),
-                              headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'Authorization': 'Bearer $token',
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
                               },
-                              body: jsonEncode(newRoom.toJson()),
-                            );
-                            if (response.statusCode == 200) {
-                              print(response.body);
-                              Navigator.of(context).pop();
-                              fetchRooms();
-                            } else {
-                              print(response.body);
-                            }
-                          } catch (error) {
-                            print(error);
-                          }
-                        },
-                        child: const Text('Ajouter'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          );
-        },
-        child: const Icon(Icons.add),
+                              child: const Text('Annuler'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: kPrimaryBlue,
+                              ),
+                              onPressed: () async {
+                                await isApiAvailable();
+                                final prefs = await SharedPreferences.getInstance();
+                                token = prefs.getString('token')!;
+                                buildingId = prefs.getString('buildingId')!;
+                                if (subtitle != '') {
+                                  nameToSend = '$selectedRoomName $subtitle';
+                                } else {
+                                  nameToSend = selectedRoomName;
+                                }
+                                final newRoom = NewRoom(
+                                  name: nameToSend,
+                                  buildingId: buildingId,
+                                );
+                                try {
+                                  final response = await http.post(
+                                    Uri.parse('${api}room/create'),
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'Accept': 'application/json',
+                                      'Authorization': 'Bearer $token',
+                                    },
+                                    body: jsonEncode(newRoom.toJson()),
+                                  );
+                                  if (response.statusCode == 200) {
+                                    Fluttertoast.showToast(
+                                      msg: 'Salle ajoutée !',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                    );
+                                    print(response.body);
+                                    Navigator.of(context).pop();
+                                    fetchRooms();
+                                  } else {
+                                    print(response.body);
+                                    Fluttertoast.showToast(
+                                      msg: response.body,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,);
+                                  }
+                                } catch (error) {
+                                  Fluttertoast.showToast(
+                                    msg: 'Erreur : $error',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,);
+                                }
+                              },
+                              child: const Text('Ajouter'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+              child: Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class RoomModel {
+  final String id;
   final String name;
   final String imageUrl;
+  bool isSelectedForDeletion;
 
-  RoomModel({required this.name, required this.imageUrl});
+  RoomModel({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+    this.isSelectedForDeletion = false,
+  });
 }
 
 class NewRoom {
