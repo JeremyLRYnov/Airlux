@@ -9,6 +9,8 @@ services:
       container_name: redis-stack
       restart: unless-stopped
       hostname: redis
+      environment:
+        - REDIS_ARGS=--save 20 1 --loglevel warning --logfile /data/redis.log
       volumes:
         - ./redis_stack/data:/data
       ports:
