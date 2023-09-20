@@ -4,13 +4,15 @@ class DeviceItem extends StatelessWidget {
   final String text;
   final IconData icon;
   final Color color;
+  final String value;
 
   const DeviceItem({
-    super.key,
+    Key? key,
     required this.text,
     required this.icon,
     required this.color,
-  });
+    required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +28,35 @@ class DeviceItem extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(4),
-          ),
-          Icon(icon,
-          color: Colors.white,),
-          Container(
-            margin: const EdgeInsets.all(4),
-          ),
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            child: Icon(
+              icon,
               color: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  value,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -46,3 +64,4 @@ class DeviceItem extends StatelessWidget {
     );
   }
 }
+

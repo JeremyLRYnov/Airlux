@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobileapp/models/constants.dart';
 import 'package:mobileapp/screens/buildings_page.dart';
 import 'package:mobileapp/screens/settings_page.dart';
@@ -7,6 +9,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import '../main.dart';
 
 
 class Login extends StatefulWidget {
@@ -23,7 +27,6 @@ class _Login extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController motDePasseController = TextEditingController();
   bool _saving = false;
-  String _message = '';
   bool _obscureText = true;
 
   @override
@@ -75,7 +78,7 @@ class _Login extends State<Login> {
                         }
                         return null;
                       },
-                    ),
+                    ).animate().fadeIn(duration: 300.ms).move(duration: 300.ms),
                     const SizedBox(
                       height: 24.0,
                     ),
@@ -102,7 +105,7 @@ class _Login extends State<Login> {
                         }
                         return null;
                       },
-                    ),
+                    ).animate(delay: 300.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
 
                     const SizedBox(
                       height: 24.0,
@@ -112,7 +115,6 @@ class _Login extends State<Login> {
                       title: 'SE CONNECTER',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Le formulaire est valide, procédez ici
                           setState(() {
                             _saving = true;
                           });
@@ -121,18 +123,16 @@ class _Login extends State<Login> {
                             _saving = false;
                           });
 
+                          await isApiAvailable();
                           try {
                             final response = await http.post(
-                              // TODO mettre l'IP dans un fichier de configuration
-                              Uri.parse('http://10.0.2.2:6869/user/signin'),
+                              Uri.parse('${api}user/signin'),
                               body: {
                                 'email': emailController.text,
                                 'password': motDePasseController.text,
                               },
-                            );
+                            ).timeout(Duration(seconds: 2));
                             if (response.statusCode == 200) {
-                              print('Connexion à Redis réussie !');
-
                               final jsonResponse = json.decode(response.body);
                               final String token = jsonResponse['token'].toString();
                               final String userId = jsonResponse['result']['id'].toString();
@@ -141,7 +141,15 @@ class _Login extends State<Login> {
                               await prefs.setString('token', token);
                               await prefs.setString('userId', userId);
                               await prefs.setString('email', email);
-                              print("id :" + userId);
+
+                              Fluttertoast.showToast(
+                                msg: 'Connexion réussie !',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                              );
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => BuildingListPage()),
@@ -149,29 +157,26 @@ class _Login extends State<Login> {
                             } else {
                               final jsonResponse = json.decode(response.body);
                               setState(() {
-                                _message = jsonResponse['message'].toString();
+                                Fluttertoast.showToast(
+                                    msg: jsonResponse['message'].toString(),
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,);
                               });
-                              print('Erreur de connexion au serveur : ${response.statusCode} => $_message');
                             }
                           } catch (error) {
-                            print('Erreur de connexion à Redis : $error');
+                            Fluttertoast.showToast(
+                              msg: 'Erreur : $error',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,);
                           }
                         }
                       },
                       color: kPrimaryBlue,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Center(
-                      child: Text(
-                        _message,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ),
+                    ).animate(delay: 600.ms).fadeIn(duration: 300.ms).move(duration: 300.ms),
                   ],
                 ),
               ),

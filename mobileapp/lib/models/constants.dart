@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 const kPrimaryBlue = Color(0xFF295299);
 
+  const localApi = 'http://10.0.2.2:6869/';
+  const distantApi = 'http://10.0.2.2:6868/';
+  String api = localApi;
 
 const kTextFieldDecoration = InputDecoration(
   hintText: 'Entrez votre mot de passe',
