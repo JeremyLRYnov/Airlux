@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/screens/Welcome_screen.dart';
 import 'package:mobileapp/screens/buildings_page.dart';
 import 'package:mobileapp/screens/appairage_page.dart';
+import 'package:mobileapp/screens/sensors_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/constants.dart';
@@ -17,28 +18,67 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            RectangleButton(title: 'GERER VOS BATIMENTS', onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BuildingListPage()),
-              );
-            }, color: kPrimaryBlue),
-            SizedBox(height: 40.0,),
-            RectangleButton(title: 'APPAIRER VOTRE BOX', onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AppairagePage()),
-              );
-            }, color: kPrimaryBlue),
-            SizedBox(height: 40.0,),
-            RectangleButton(title: 'SE DECONNECTER', onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.setString('token', '');
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-              );
-            }, color: Colors.red,
+            FractionallySizedBox(
+              widthFactor: 0.9,
+              child: RectangleButton(
+                  title: 'GERER VOS BATIMENTS',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BuildingListPage()),
+                    );
+                  },
+                  color: kPrimaryBlue),
+            ),
+            SizedBox(
+              height: 40.0,
+            ),
+            FractionallySizedBox(
+              widthFactor: 0.9,
+              child: RectangleButton(
+                  title: 'APPAIRER VOTRE BOX',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AppairagePage()),
+                    );
+                  },
+                  color: kPrimaryBlue),
+            ),
+            SizedBox(
+              height: 40.0,
+            ),
+            FractionallySizedBox(
+              widthFactor: 0.9,
+              child: RectangleButton(
+                  title: 'AJOUTER DES APPAREILS',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Sensors()),
+                    );
+                  },
+                  color: kPrimaryBlue),
+            ),
+            SizedBox(
+              height: 40.0,
+            ),
+            FractionallySizedBox(
+              widthFactor: 0.7,
+              child: RectangleButton(
+                title: 'SE DECONNECTER',
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('token', '');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen()),
+                  );
+                },
+                color: Colors.red,
+              ),
             ),
           ],
         ),
